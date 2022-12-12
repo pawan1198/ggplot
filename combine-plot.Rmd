@@ -1,0 +1,370 @@
+---
+title: "Combining plots in ggplot2"
+name: Pawan
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+The ggplot2 package doesn’t providing function to arrange multiples plots in a single figure, but there are some packages, that allow combine multiples plots into a single figure with custom layouts, width, height, such as <mark>cowplot</mark>, <mark>gridExtra</mark>, <mark>patchwork</mark>
+
+# Sample plots  
+Let's create four different plots and assign them to objects named <b>p1</b>, <b>p2</b>, <b>p3</b> and <b>p4</b>. You can use any other names.  
+
+```{r}
+library(ggplot2)
+
+#Data
+mtcars->df
+
+# Box plot
+p1 <- ggplot(df, aes(x = "", y = mpg)) +
+  geom_boxplot()
+
+# Density plot
+p2 <- ggplot() +
+  stat_function(fun = dnorm, geom = "density",
+                xlim = c(-3, 3), fill = "white") 
+
+# Line chart
+p3 <- ggplot(df, aes(x = mpg, y = disp)) +
+  geom_line(color = "gray20")
+
+# Scatter plot
+p4 <- ggplot(df, aes(x = hp, y = wt)) +
+  geom_point(color = "gray20")
+
+# View the plots
+p1
+p2
+p3
+p4
+```
+
+
+# gridExtra  
+
+The <mark>gridExtra</mark> package provides the <mark>grid.arrange</mark> function to combine several plots on a single figure.  
+
+```{r}
+# install.packages("gridExtra")
+library(ggplot2)
+library(gridExtra)
+
+# Combine the plots with gridExtra
+grid.arrange(p2, p3, p1, p4) 
+```
+
+You can also specify the number of rows with <b>nrow</b>, the number of columns with <b>ncol</b>, and the sizes with <b>widths</b> and <b>heights</b> and also we can add labels at the top, bottom, left and right of the figures.  
+
+```{r}
+library(ggplot2)
+library(gridExtra)
+
+# Combine the plots
+grid.arrange(p4, p3, p2, p1,
+             top = "Top label", bottom = "Bottom label", 
+             left = "Left label", right = "Right label",
+             widths = c(1, 2), heights = c(2, 3)) 
+```
+
+We can create a layout matrix indicating the positions for each plot and use the <mark>layout_matrix</mark> function in order to specify the desired layout.
+
+```{r}
+library(ggplot2)
+library(gridExtra)
+
+# layout
+layout <- matrix(c(1, 1,
+                   2, 3,
+                   4, 4), ncol = 2, byrow = TRUE)
+
+grid.arrange(p2, p3, p1, p4,
+             layout_matrix = layout) 
+```
+
+
+# patchwork  
+## Combining ggplot2 plots  
+patchwork is designed to combine ggplot2 plots into the same figure easily with using the + operator to combine the charts.  
+
+```{r}
+# install.packages("patchwork")
+library(ggplot2)
+library(patchwork)
+
+# Combine the plots
+p1 + p2 
+```
+
+## Controlling the layout  
+If you want to customize the number of rows or columns of the figure you can use the <mark>plot_layout</mark> function. Also you can also specify the widths and heights of the plots with widths and heights arguments.  
+
+```{r}
+library(ggplot2)
+library(patchwork)
+
+# Combine the plots
+p1 + p2 + p3 + p4 +
+  plot_layout(ncol = 3) 
+```
+
+The most interesting functionality of the plot_layout function is that you can create a custom layout design as shown in the example below, where 1, 2, 3 and 4 represents the locations for p1,p2, p3 and p4, respectively, and # represents an empty space. Recall that you can use numbers but also letters to represent the plot locations.  
+
+```{r}
+library(ggplot2)
+library(patchwork)
+
+# Combine the plots with a custom layout
+p1 + p2 + p3 + p4 +
+  plot_layout(design ="111
+                       2#3
+                       443") 
+```
+
+### The <mark>wrap_plots</mark> function  
+
+Sometimes you can’t use the + operator programatically, so if you don’t know the number of plots beforehand you can use the <mark>wrap_plots</mark> function and pass a list of plots to it. This function also allows specifying the number of rows and columns, the sizes and the custom layouts.  
+
+```{r}
+library(ggplot2)
+library(patchwork)
+
+# Combine the plots
+wrap_plots(p1, p2, p3, p4, 
+           ncol = 2, nrow = 2,
+           widths = c(1, 0.5), heights = c(0.5, 1)) 
+```
+
+
+### Adding spacers  
+
+When creating a custom layout you can use # to add spaces, as shown in one of the previous examples, but if you are using + there is also a function named <mark>plot_spacer</mark> to add spaces or gaps between plots.  
+
+```{r}
+library(ggplot2)
+library(patchwork)
+
+# Plots with spaces
+p1 + plot_spacer() + plot_spacer() + p3 
+```
+
+## Operators  
+The patchwork package also provides two operators to place plots beside each other or to stack them.  
+
+### Arranging ggplot2 plots in rows (beside each other)  
+
+The | operator places plots in a row. This operator is similar to + when you have two plots but | will place all plots in a single row while + will try to create a square layout if possible.  
+
+```{r}
+library(ggplot2)
+library(patchwork)
+
+# Combine the plots in rows
+p1 | p2
+```
+
+
+### Arranging ggplot2 plots in columns (stacked)  
+
+The / operator stacks the ggplot2 plots into columns without the need of using the <mark>plot_layout</mark> function and specifying ncol = 1.  
+
+```{r}
+library(ggplot2)
+library(patchwork)
+
+# Combine the plots as column
+p1 / p2
+```
+
+
+You can create complex layouts. The | and / operators can be use to create complex layouts combining plots. In the following example we are creating a layout with two plots at the top and one wider at the bottom.  
+
+```{r}
+library(ggplot2)
+library(patchwork)
+
+# Two plots on top and one at the bottom
+(p1 | p2) / p3 
+```
+
+
+The following example is similar to the previous, but with one plot at the left and two at the right.  
+
+```{r}
+library(ggplot2)
+library(patchwork)
+
+# One plot at the left and two at the right
+p1 | (p2 / p3) 
+```
+
+
+## Titles and labels  
+### Title for all the plots  
+
+You can add a title, subtitle and captions to all plots with the <mark>plot_annotation</mark> function.
+
+```{r}
+library(ggplot2)
+library(patchwork)
+
+# Title for the combined plots
+p1 + ((p2 | p3) / p4) + 
+plot_annotation(title = "Title",
+                subtitle = "Subtitle",
+                caption = "Caption") 
+```
+
+The plot_annotation function can also be used to label each plot individually with the <mark>tags_level</mark> argument. Possible options are "1" for numbers, "a" for lowercase letters, "A" for uppercase letters, "i" for lowercase Roman numerals, "I" for uppercase Roman numerals or a vector with your own tags.  
+
+```{r}
+library(ggplot2)
+library(patchwork)
+
+# Labels for each plot
+p1 + p2 + plot_annotation(tag_levels = "A") 
+```
+
+
+The labels can be customized with the <mark>tag_prefix</mark>, <mark>tag_suffix</mark> and <mark>tag_sep</mark> arguments.
+
+```{r}
+library(ggplot2)
+library(patchwork)
+
+# Labels for each plot
+p1 + p2 + plot_annotation(tag_levels = "A", tag_prefix = "Plot ") 
+```
+
+
+## Adding more layers  
+The figures created with patchwork behave the same way as a ggplot2 object, so you can add new layers as with normal plots, but the layer will be applied to the last added plot.  
+
+```{r}
+library(ggplot2)
+library(patchwork)
+
+# Add a new layer
+p2 + p1 +
+  geom_jitter(color = "blue")
+
+# Equivalent to:
+p <- p2 + p1
+p + geom_jitter(color = "blue") 
+```
+
+If you want to customize other than the last plot added you can add the new layer to it or save the patchwork, access the desired element and customize it, as shown in the following example.  
+
+```{r}
+library(ggplot2)
+library(patchwork)
+
+# Add a new layer to the first plot
+p2 + theme_bw() + p1
+
+# Equivalent to:
+p <- p2 + p1
+p[[1]] <- p[[1]] + theme_bw()
+p
+```
+
+
+### Modifying all plots at the same time  
+
+patchwork also provides the & operator to modify all the plots at the same time to set the same theme for all plots at the same time.
+
+```{r}
+library(ggplot2)
+library(patchwork)
+
+# Change the theme for all plots
+p1 + p2 + p3 + p4 & theme_classic() 
+```
+
+
+## Adding tables and text  
+
+When adding base R plots and ggplot2 plots patchwork won’t be able to align the plots, so you will need to customize the margins for one of the plots and try to fine tune the values until you reach a good alignment.  
+
+Making use of the <mark>tableGrob</mark> function from the <mark>gridExtra</mark> package you can add a table to a layout created with patchwork.  
+
+```{r}
+# install.packages("gridExtra")
+library(ggplot2)
+library(patchwork)
+library(gridExtra)
+
+tab <- t(round(quantile(df$mpg), 2))
+
+# ggplot2 with table
+p1 / tableGrob(tab) 
+```
+
+You can also use the <mark>textGrob</mark> function from <mark>gridExtra</mark> to add a text to the layout, but note that if you want the text to be the first element you will need to use the <mark>wrap_elements</mark> function.  
+
+```{r}
+library(ggplot2)
+library(patchwork)
+library(grid)
+
+# ggplot2 with text
+p1 + textGrob("Text at the right")
+
+# To put the text first use:
+wrap_elements(textGrob("Text at the left")) + p1 
+```
+
+# cowplot  
+The <mark>cowplot</mark> package combinign plots using the <mark>plot_grid</mark> function.
+
+```{r}
+# install.packages("cowplot")
+library(ggplot2)
+library(cowplot)
+
+plot_grid(p1, p2, p3, p4) 
+```
+
+## Aligning the plots  
+The <b>plot_grid function also customize the number of rows and columns of plots with the nrow and ncol arguments.  
+
+```{r}
+library(ggplot2)
+library(cowplot)
+
+plot_grid(p1, p2, p3, ncol = 1) 
+```
+
+## Adding labels to each plot  
+
+If you want to label each plot individually you can make use the labels argument of the function, where you can specify a vector of labels or use the "A" or "a" keywords for automatic labels in uppercase or lowercase, respectively. The function also provides several arguments to customize the style of the texts.  
+
+
+```{r}
+library(ggplot2)
+library(cowplot)
+
+plot_grid(p1, p2, p4,
+          labels = c("A", "b", 1),
+          label_fontfamily = "serif",
+          label_fontface = "bold",
+          label_colour = "dodgerblue2") 
+``` 
+ 
+ 
+## Mixing plots with cowplot  
+
+With <mark>cowplot</mark> you can also create more complex layouts combining <mark>plot_grid</mark> functions, as shown in the example below, where we are creating a layout with two plots at the bottom and one at the top.  
+
+
+```{r}
+library(ggplot2)
+library(cowplot)
+
+# Grid layout with cowplot
+plot_grid(p3, plot_grid(p1, p2), ncol = 1) 
+```
+
