@@ -325,7 +325,7 @@ The <mark>cowplot</mark> package combinign plots using the <mark>plot_grid</mark
 library(ggplot2)
 library(cowplot)
 
-plot_grid(p1, p2, p3, p4) 
+plot_grid(p1, p2, p3, p4)
 ```
 
 ## Aligning the plots  
