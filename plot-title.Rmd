@@ -9,7 +9,7 @@ output: html_document
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
-When using ggplot2 we can set a title, subtitle, caption, and tag. There are two ways to add title, subtitle; (i) using ggtitle, (ii) using labs function.
+When using ggplot2 we can set a title, subtitle, caption, and tag of the plot. There are two ways to add title, subtitle; (i) using ggtitle, (ii) using labs function.
 
 # Title  
 ## Option 1. Using ggtitle  
@@ -20,7 +20,8 @@ Adding a title in ggplot2 with ggtitle
 # install.packages(ggplot2)
 library(ggplot2)
 
-ggplot(economics, aes(date, unemploy)) +
+data<-iris
+ggplot(data, aes(date, unemploy)) +
   geom_area(fill = rgb(0, 0.5, 1, alpha = 0.5)) + 
   ggtitle("Title of the plot") 
 ```
