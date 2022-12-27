@@ -116,7 +116,7 @@ p+theme_ipsum()  +
  
 # ggdark package
 
-ggdark provides the dark mode themes of the in-built ggplot2 themes. In addition, the package can convert any theme into a dark theme making use of the dark_mode function.
+<mark>ggdark</mark> provides the dark mode themes of the in-built ggplot2 themes. In addition, the package can convert any theme into a dark theme making use of the dark_mode function.
 
 ```
 dark_theme_gray()         dark_theme_linedraw()          dark_theme_light()          dark_theme_dark()         dark_theme_minimal()           dark_theme_classic()        dark_theme_void()         dark_mode()
