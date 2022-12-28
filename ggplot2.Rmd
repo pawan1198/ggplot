@@ -9,21 +9,301 @@ output: html_document
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
-ggplot2 is an open-source of data visualization and graphical representation package for the R programming language. This package is created by [Hadley Wickham](https://hadley.nz/).
+[ggplot2](https://ggplot2.tidyverse.org/) is an open-source of data visualization and graphical representation package for the R programming language. This package is created by [Hadley Wickham](https://hadley.nz/).
 
 # Installation
-We can install ggplot2 just using this command
+We can install ggplot2 just by using this command
 
 ```
 install.packages("ggplot2")
 ```
-```ggplot2``` is also included in the ```tidyverse``` package.
+Note: ```ggplot2``` is also included in the ```tidyverse``` package.
 
 Loading the ggplot2 package
 ```{r}
 library(ggplot2)
 ```
+# Let's start plotting with ggplot2
+There are three basic parts of ggplot   
+i) First we to define the data from which we want to plot our graph
 
-The basic Syntex for ggplot2 is
+ii) mapping, here we can define our aesthetics like x-axis, y-axis, color, linetpye, shape, etc.
+```aes(x, y, color)```  
 
-ggplot2(data, aes(x, y))
+iii) geom function, geom function define the type of graph that we want to plot, like scatter plot, line plot, bar plot, box plot, etc.
+``` geom_line()```, ```geom_point()```  
+
+
+```ggplot(data, aes(x, y)) + geom_function()```
+
+Let's start to plot a simple graph
+
+```{r}
+library(ggplot2)
+mtcars->df
+
+# Line chart
+ggplot(df, aes(x = mpg, y = disp)) +
+  geom_line() ->p1
+p1
+
+# Scatter plot
+ggplot(df, aes(x = hp, y = wt)) +
+  geom_point() ->p2
+p2
+
+```
+
+ggplot2 provide many geom function as shown below:  
+
+`geom_point()` Scatter Plot  
+
+`geom_line()`  Line plot
+
+`geom_bar()`   Bar charts
+
+`geom_blank()` Draw a blank plot
+
+`geom_boxplot()`  Box plot   
+
+`geom_density()`  Density plot
+
+`geom_dotplot()` Dot plot
+
+`geom_histogram()` Histograms
+
+`geom_map()`     Map plot
+
+`geom_polygon()`  Polygons plot
+
+`geom_ribbon()` or `geom_area()`  Ribbons and area plots
+
+`geom_segment()` or `geom_curve()`  Line segments and curves
+
+`geom_smooth()` or `stat_smooth()`  Conditional means
+
+`geom_label()` or `geom_text()`  Text plot
+
+`geom_violin()`  Violin plot
+
+
+# Facet 
+
+
+```{r}
+library(ggplot2)
+iris->dataset
+
+ggplot(dataset, aes(x = Sepal.Length, y = Sepal.Width)) +
+  geom_point() ->p
+
+p+ facet_wrap(~Species)->p
+p
+
+```
+
+# Theme
+The ggplot2 package have different themes. By default it uses the theme_grey (```theme_gray()```), so we don’t need to specify it. Themes provided by ggplot are below
+
+
+```theme_gray()``` – default ggplot2 theme with a grey background and white gridlines   
+```theme_bw()``` – dark and light (black and white) ggplot2 theme    
+```theme_linedraw()``` – uses black lines on white backgrounds only    
+```theme_light()``` – similar to linedraw() but with grey lines    
+```theme_dark()``` – lines on a dark background    
+```theme_minimal()``` – no background annotations    
+```theme_classic()``` – theme with no grid lines  
+```theme_void()``` – empty theme with no elements    
+
+We can also modify the plot base size by using <mark>base_size</mark> argument in the theme functions. 
+
+```{r}
+library(ggplot2)
+
+iris->dataset
+
+# Scatter Plot
+ggplot(dataset, aes(x = Sepal.Length, y = Sepal.Width)) +
+  geom_point() ->p
+
+p+ facet_wrap(~Species)->p
+
+## theme_bw()
+p+theme_bw(base_size=20)->p1
+p1
+
+## theme_dark()
+p+theme_dark()->p2
+p2
+```
+
+# Lab funtion
+Whit using of ```labs()``` function we can set a title, subtitle, caption, and axis title of the plot.
+
+```{r}
+library(ggplot2)
+
+iris->dataset
+
+# Scatter Plot
+ggplot(dataset, aes(x = Sepal.Length, y = Sepal.Width)) +
+  geom_point() ->p
+
+p+ facet_wrap(~Species)->p
+
+## theme_bw()
+p+theme_bw(base_size=20)->p
+
+## Lab Function
+p+labs(title = "Title of the plot",
+       subtitle = "Subtitle of the plot",
+       caption = "Caption of the plot",
+       x = "x-axis",
+       y = "y-axis")->p
+p
+```
+
+# Modify plot with theme function
+We can modify our plot with the use of ```theme()`` function. Here we can define position of the title, subtile, caption, panel background, legend position, and many more things. You can define your own theme, size, color, shape of the plot as you want. Below given some use theme arguments which are also my favart.
+
+```
+theme(
+  axis.title,        ## for both axis
+  axis.title.x,      ## for x axis
+  axis.title.y,      ## for y axis
+  axis.text,         ## for both axis
+  axis.text.x,       ## for x axis
+  axis.text.y,       ## for y axis
+  axis.ticks,        ## for both axis
+  axis.ticks.x,      ## for x axis
+  axis.ticks.y,      ## for y axis
+  axis.line,         ## for both axis
+  axis.line.x,       ## for x axis
+  axis.line.y,       ## for y axis
+  legend.background,
+  legend.margin,
+  legend.text,
+  legend.title,
+  legend.position,
+  legend.direction,
+  legend.box,
+  panel.background,
+  panel.border,
+  panel.grid,
+  panel.grid.major,
+  panel.grid.minor,
+  plot.background,
+  plot.title,
+  plot.subtitle,
+  plot.caption,
+  plot.tag,
+  plot.margin,
+  strip.background,
+  strip.background.x,
+  strip.background.y,
+  strip.text,
+  strip.text.x,
+  strip.text.y)
+```
+
+With the using of these arguments we are able to modify plot, these arguments   
+```element_line()``` use for line  
+```element_rect()``` use for color  
+```element_text()``` use for text  
+```element_blank()``` use for blank 
+
+
+For example 
+```
+theme(plot.title = element_text(hjust = 1),
+      plot.subtitle = element_text(size = 0.5),
+      panel.background = element_rect(fill = "yellow"),
+      axis.text = element_text(size = 2))
+```        
+        
+
+```{r}
+library(ggplot2)
+
+iris->dataset
+
+# Scatter Plot
+ggplot(dataset, aes(x = Sepal.Length, y = Sepal.Width, color = Species)) +
+  geom_point() ->p
+
+p+ facet_wrap(~Species)->p
+
+## theme of the plot
+p+theme_bw()->p
+
+## Lab Function
+p+labs(title = "Title of the plot",
+       subtitle = "Subtitle of the plot",
+       caption = "Caption of the plot")->p
+
+## theme function
+p+theme(legend.position = "bottom",
+        plot.title = element_text(family = "serif",              # Font family
+                                  face = "bold",                 # Font face
+                                  size = 15,                     # Font size
+                                  hjust = 1,                     # Horizontal adjustment
+                                  vjust = 1),                   # Vertical adjustment
+        plot.subtitle = element_text(hjust = 1),
+        plot.caption = element_text(hjust = 0.1),
+        panel.background = element_rect(fill = "yellow"),
+        axis.text = element_text(size = 2),
+        strip.background = element_rect(fill = "pink"),
+        strip.text = element_text(size = 9),
+        plot.background = element_rect(fill = "green"),
+        panel.border = element_rect(linetype = "dashed"),
+        panel.grid.major = element_line(colour = "black"))->p 
+p
+```
+
+# Combine multiple plot 
+
+The ggplot2 package doesn’t providing function to arrange multiples plots in a single figure, but there are some packages, that allow combine multiples plots into a single figure with custom layouts, width, height, such as <mark>cowplot</mark>, <mark>gridExtra</mark>, <mark>patchwork</mark>.
+(https://medium.com/@pawanjangra1198/combining-plots-in-ggplot2-9699acaa2942#6632-36f5b0859cff)
+
+
+```{r}
+library(ggplot2)
+
+mtcars->df
+
+# Box plot
+p1 <- ggplot(df, aes(x = "", y = mpg)) +
+  geom_boxplot()
+
+# Density plot
+p2 <- ggplot() +
+  stat_function(fun = dnorm, geom = "density",
+                xlim = c(-3, 3), fill = "white") 
+
+# Line chart
+p3 <- ggplot(df, aes(x = mpg, y = disp)) +
+  geom_line(color = "gray20")
+
+# Scatter plot
+p4 <- ggplot(df, aes(x = hp, y = wt)) +
+  geom_point(color = "gray20")
+
+# View the plots
+p1
+p2
+p3
+p4
+```
+
+
+The <mark>gridExtra</mark> package provides the <mark>grid.arrange</mark> function to combine several plots on a single figure.  
+
+```{r}
+# install.packages("gridExtra")
+library(ggplot2)
+library(gridExtra)
+
+# Combine the plots with gridExtra
+grid.arrange(p2, p3, p1, p4) 
+```
+

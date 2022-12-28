@@ -5,12 +5,6 @@ date: "2022-12-08"
 output: html_document
 ---
 
-Change the default ggplot theme by using the list of the standard themes available in ggplot2 R package. Our selection of best ggplot themes for professional publications or presentations, include: ```theme_classic()```, ```theme_minimal()``` and ```theme_bw()```. Another famous theme is the dark theme: ```theme_dark()```.
-Use other helpful examples of ggplot2 themes available in the ggthemes R package. These include ```theme_tufte()```, ```theme_economist()``` and ```theme_hc()```. You’ll also see how to create a tufte minimalist boxplot.
-Modify, at once, all the theme text elements by specifying the ggplot base_size argument in the theme functions. Example: ```p + theme_minimal(base_size = 18)```.
-Change the theme for the entire session using theme_set(). For example, is you type ```theme_set(theme_classic(base_size = 16))``` in the R console, then the classic theme will be automatically applied to every plot you draw. The ```theme_set()``` function completely override the current active theme.
-
-
 # Themes in ggplot2
 
 The ggplot2 package have different themes. By default it uses the theme_grey (```theme_gray()```), so we don’t need to specify it.
@@ -26,6 +20,7 @@ We can adjusted themes by adding an in-build theme from ggplot2.
 ```theme_classic()``` – theme with no grid lines  
 ```theme_void()``` – empty theme with no elements    
 
+We can also modify the plot base size by using <mark>base_size</mark> argument in the theme functions. 
 
 ```{r}
 library(ggplot2)
@@ -37,14 +32,14 @@ ggplot(dt, aes(x = mpg, fill = cyls)) +
   geom_density(alpha = 0.7)->p
 
 ## theme_bw()
-p+theme_bw() +
-  theme(legend.position = "top")->p1 
+p+theme_bw(base_size=20) +
+  theme(legend.position = "top")->p1
+p1
 
 ## theme_dark()
 p+theme_dark() +
   theme(legend.position = "top")->p2 
 
-p1
 p2
 ```
 
@@ -89,7 +84,7 @@ p2
 
 # hrbrthemes package
 
-<mark>hrbrthemes</mark> provides “typography-centric themes and theme components for ggplot2”. The available themes are listed below, but you can also check the available scales, palettes, fonts and utilities.
+<mark>hrbrthemes</mark> provides typography-centric themes and theme components for ggplot2. The available themes are listed below,
 
 ```
 theme_ipsum()              theme_ipsum_es()             theme_ipsum_rc()
@@ -110,13 +105,14 @@ ggplot(dt, aes(x = mpg, fill = cyls)) +
   ggtitle("Plot title")->p
 
 p+theme_ipsum()  +
-  theme(legend.position = "top")
+  theme(legend.position = "top")->p
+p
 
 ```
  
 # ggdark package
 
-<mark>ggdark</mark> provides the dark mode themes of the in-built ggplot2 themes. In addition, the package can convert any theme into a dark theme making use of the dark_mode function.
+<mark>ggdark</mark> provides the dark mode themes of the ggplot2 themes. This package can convert any theme into a dark theme. The available themes are listed below.  
 
 ```
 dark_theme_gray()         dark_theme_linedraw()          dark_theme_light()          dark_theme_dark()         dark_theme_minimal()           dark_theme_classic()        dark_theme_void()         dark_mode()
