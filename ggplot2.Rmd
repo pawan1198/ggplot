@@ -9,7 +9,7 @@ output: html_document
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
-[ggplot2](https://ggplot2.tidyverse.org/) is an open-source of data visualization and graphical representation package for the R programming language. This package is created by [Hadley Wickham](https://hadley.nz/).
+ggplot2 is an open-source of data visualization and graphical representation package for the R programming language. This package is created by [Hadley Wickham](https://hadley.nz/).
 
 # Installation
 We can install ggplot2 just by using this command
@@ -25,7 +25,7 @@ library(ggplot2)
 ```
 # Let's start plotting with ggplot2
 There are three basic parts of ggplot   
-i) First we to define the data from which we want to plot our graph
+i) First we to define the data from which we want to plot our graph  
 
 ii) mapping, here we can define our aesthetics like x-axis, y-axis, color, linetpye, shape, etc.
 ```aes(x, y, color)```  
@@ -40,18 +40,19 @@ Let's start to plot a simple graph
 
 ```{r}
 library(ggplot2)
-mtcars->df
 
-# Line chart
-ggplot(df, aes(x = mpg, y = disp)) +
-  geom_line() ->p1
+iris->dataset
+
+## Scatter plot
+ggplot(dataset, aes(x = Sepal.Length, y = Sepal.Width)) +
+  geom_point() ->p1
+
 p1
+## Bar plot
+ggplot(dataset, aes(x = Sepal.Length, y = Sepal.Width, fill = Species)) +
+  geom_bar(stat = "identity", position = "stack") ->p2
 
-# Scatter plot
-ggplot(df, aes(x = hp, y = wt)) +
-  geom_point() ->p2
 p2
-
 ```
 
 ggplot2 provide many geom function as shown below:  
@@ -80,7 +81,7 @@ ggplot2 provide many geom function as shown below:
 
 `geom_segment()` or `geom_curve()`  Line segments and curves
 
-`geom_smooth()` or `stat_smooth()`  Conditional means
+`geom_smooth()` or `stat_smooth()` Plot Conditional means
 
 `geom_label()` or `geom_text()`  Text plot
 
@@ -164,7 +165,7 @@ p
 ```
 
 # Modify plot with theme function
-We can modify our plot with the use of ```theme()`` function. Here we can define position of the title, subtile, caption, panel background, legend position, and many more things. You can define your own theme, size, color, shape of the plot as you want. Below given some use theme arguments which are also my favart.
+We can modify our plot with the use of ```theme()`` function. Here we can define position of the title, subtile, caption, panel background, legend position, and many more things. You can define your own theme, size, color, shape of the plot as you want. Below given some use theme arguments which are also my favorite
 
 ```
 theme(
@@ -269,30 +270,21 @@ The ggplot2 package doesn’t providing function to arrange multiples plots in a
 ```{r}
 library(ggplot2)
 
-mtcars->df
+iris->dataset
 
-# Box plot
-p1 <- ggplot(df, aes(x = "", y = mpg)) +
-  geom_boxplot()
+# Scatter Plot
+ggplot(dataset, aes(x = Sepal.Length, y = Sepal.Width)) +
+  geom_point() ->p
 
-# Density plot
-p2 <- ggplot() +
-  stat_function(fun = dnorm, geom = "density",
-                xlim = c(-3, 3), fill = "white") 
+p+ facet_wrap(~Species)->p
 
-# Line chart
-p3 <- ggplot(df, aes(x = mpg, y = disp)) +
-  geom_line(color = "gray20")
-
-# Scatter plot
-p4 <- ggplot(df, aes(x = hp, y = wt)) +
-  geom_point(color = "gray20")
-
-# View the plots
+## theme_bw()
+p+theme_bw(base_size=20)->p1
 p1
+
+## theme_dark()
+p+theme_dark()->p2
 p2
-p3
-p4
 ```
 
 
@@ -304,6 +296,29 @@ library(ggplot2)
 library(gridExtra)
 
 # Combine the plots with gridExtra
-grid.arrange(p2, p3, p1, p4) 
+grid.arrange(p1, p2) 
 ```
 
+
+# Save plot
+We can save the plot by using `ggsave()` function and in this we can define the height, width of the plot.
+
+```{r}
+library(ggplot2)
+
+iris->dataset
+
+# Scatter Plot
+ggplot(dataset, aes(x = Sepal.Length, y = Sepal.Width)) +
+  geom_point() ->p
+
+p+ facet_wrap(~Species)->p
+
+## theme_bw()
+p+theme_bw(base_size=20)->p
+
+## save the plot
+ggsave("~/ggplot/plot.png", width = 3200, height = 2800, unit = "px")
+
+
+```
