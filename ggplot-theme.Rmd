@@ -25,11 +25,12 @@ We can also modify the plot base size by using <mark>base_size</mark> argument i
 ```{r}
 library(ggplot2)
 
-mtcars->dt
-cyls <- as.factor(dt$cyl)
+iris->dataset
 
-ggplot(dt, aes(x = mpg, fill = cyls)) +
-  geom_density(alpha = 0.7)->p
+## Bar plot
+ggplot(dataset, aes(x = Sepal.Length, y = Sepal.Width, fill = Species)) +
+  geom_bar(stat = "identity", position = "stack") +
+  facet_wrap(~Species)->p
 
 ## theme_bw()
 p+theme_bw(base_size=20) +
@@ -61,11 +62,12 @@ library(ggplot2)
 ## install.packages("ggthemes")
 library(ggthemes)
 
-mtcars->dt
-cyls <- as.factor(dt$cyl)
+iris->dataset
 
-ggplot(dt, aes(x = mpg, fill = cyls)) +
-  geom_density(alpha = 0.7)->p
+## Bar plot
+ggplot(dataset, aes(x = Sepal.Length, y = Sepal.Width, fill = Species)) +
+  geom_bar(stat = "identity", position = "stack") +
+  facet_wrap(~Species)->p
 
 ## theme_base()
 p+theme_base() +
@@ -97,12 +99,12 @@ library(ggplot2)
 ## install.apckages("hrbrthemes")
 library(hrbrthemes)
 
-mtcars->dt
-cyls <- as.factor(dt$cyl)
+iris->dataset
 
-ggplot(dt, aes(x = mpg, fill = cyls)) +
-  geom_density(alpha = 0.7) + 
-  ggtitle("Plot title")->p
+## Bar plot
+ggplot(dataset, aes(x = Sepal.Length, y = Sepal.Width, fill = Species)) +
+  geom_bar(stat = "identity", position = "stack") +
+  facet_wrap(~Species)->p
 
 p+theme_ipsum()  +
   theme(legend.position = "top")->p
@@ -136,6 +138,53 @@ p+dark_theme_linedraw() +
   theme(legend.position = "top")->p2 
 p2
 
+```
+
+
+# mdthemes
+
+<mark>mdthemes</mark> contains all the themes provided by ggplot2, ggthemes, hrbrthemes, and other themes packages. Like as below
+
+```
+md_theme_gray()
+
+md_theme_grey()
+
+md_theme_bw()
+
+md_theme_linedraw()
+
+md_theme_light()
+
+md_theme_dark()
+
+md_theme_minimal()
+
+md_theme_classic()
+```
+
+```{r}
+library(ggplot2)
+# install.packages("mdthemes")
+library(mdthemes)
+mtcars->dt
+cyls <- as.factor(dt$cyl)
+
+ggplot(dt, aes(x = mpg, fill = cyls)) +
+  geom_density(alpha = 0.7)->p
+p+labs(title = "**Plot title**",
+       subtitle = "*Plot subtitle*")->p
+
+## md_theme_bw()
+p+md_theme_bw() +
+  theme(legend.position = "top")->p1
+p1
+
+## md_theme_linedraw()
+p+md_theme_linedraw() +
+  theme(legend.position = "top")->p2 
+
+p2
 ```
 
 
