@@ -146,8 +146,6 @@ p2
 <mark>mdthemes</mark> contains all the themes provided by ggplot2, ggthemes, hrbrthemes, and other themes packages. Like as below
 
 ```
-md_theme_gray()
-
 md_theme_grey()
 
 md_theme_bw()
@@ -175,84 +173,84 @@ ggplot(dt, aes(x = mpg, fill = cyls)) +
 p+labs(title = "**Plot title**",
        subtitle = "*Plot subtitle*")->p
 
-## md_theme_bw()
-p+md_theme_bw() +
+## theme_bw()
+p+theme_bw() +
   theme(legend.position = "top")->p1
 p1
 
 ## md_theme_linedraw()
-p+md_theme_linedraw() +
+p+md_theme_bw() +
   theme(legend.position = "top")->p2 
 
 p2
 ```
 
 
-<!-- # ggthemr package -->
+# ggthemr package
 
-<!-- Note that you will need to call <mark>ggthemr_reset()</mark> to reset to the default ggplot2 theme. -->
+Note that you will need to call <mark>ggthemr_reset()</mark> to reset to the default ggplot2 theme.
 
-<!-- The ggthemr package works different than the other packages. Instead of using the theme function and set a theme you can set a theme globally making use of the <mark>ggthemr</mark> function and passing the theme as string as argument. -->
+The ggthemr package works different than the other packages. Instead of using the theme function and set a theme you can set a theme globally making use of the <mark>ggthemr</mark> function and passing the theme as string as argument.
 
-<!-- ``` -->
-<!-- ggthemr("flat")           ggthemr("flat dark")          ggthemr("camouflage") -->
-<!-- ggthemr("carrot")         ggthemr("chalk")              ggthemr("copper") -->
-<!-- ggthemr("dust")           ggthemr("earth")              ggthemr("fresh") -->
-<!-- ggthemr("grape")          ggthemr("grass")              ggthemr("greyscale") -->
-<!-- ggthemr("light")          ggthemr("lilac")              ggthemr("pale") -->
-<!-- ggthemr("sea")            ggthemr("sky")                ggthemr("solarized") -->
-<!-- ``` -->
-
-
-<!-- ```{r} -->
-<!-- library(ggplot2) -->
-<!-- ##devtools::install_github('Mikata-Project/ggthemr') -->
-<!-- library(ggthemr) -->
-
-<!-- mtcars->dt -->
-<!-- cyls <- as.factor(dt$cyl) -->
-
-<!-- ggthemr("flat") -->
-
-<!-- ggplot(dt, aes(x = mpg, fill = cyls)) + -->
-<!--   geom_density(alpha = 0.7) + -->
-<!--   theme(legend.position = "top")  -->
-<!-- ``` -->
+```
+ggthemr("flat")           ggthemr("flat dark")          ggthemr("camouflage")
+ggthemr("carrot")         ggthemr("chalk")              ggthemr("copper")
+ggthemr("dust")           ggthemr("earth")              ggthemr("fresh")
+ggthemr("grape")          ggthemr("grass")              ggthemr("greyscale")
+ggthemr("light")          ggthemr("lilac")              ggthemr("pale")
+ggthemr("sea")            ggthemr("sky")                ggthemr("solarized")
+```
 
 
+```{r}
+library(ggplot2)
+##devtools::install_github('Mikata-Project/ggthemr')
+library(ggthemr)
 
-<!-- # ggtech package -->
-<!-- The <mark>ggtech</mark> package provides themes inspired by tech companies, such as Airbnb, Google, Twitter or Facebook. -->
+mtcars->dt
+cyls <- as.factor(dt$cyl)
 
-<!-- ``` -->
-<!-- theme_tech(theme="airbnb")               theme_tech(theme="etsy") -->
-<!-- theme_tech(theme="facebook")             theme_tech(theme="google") -->
-<!-- theme_tech(theme="tiwtter")              theme_airbnb_fancy() -->
-<!-- ``` -->
+ggthemr("flat")
 
-<!-- ```{r} -->
-<!-- library(ggplot2) -->
-<!-- ##devtools::install_github("ricardo-bion/ggtech",  -->
-<!-- ##                          dependencies=TRUE) -->
-<!-- library(ggtech) -->
+ggplot(dt, aes(x = mpg, fill = cyls)) +
+  geom_density(alpha = 0.7) +
+  theme(legend.position = "top")
+```
 
-<!-- mtcars->dt -->
-<!-- cyls <- as.factor(dt$cyl) -->
 
-<!-- ggplot(dt, aes(x = mpg, fill = cyls)) + -->
-<!--   geom_density(alpha = 0.7) + -->
-<!--   ggtitle("Title of the plot") +  -->
-<!--   theme_tech(theme = "airbnb") + -->
-<!--   scale_fill_tech(theme = "airbnb") + -->
-<!--   theme(legend.position = "top")  -->
 
-<!-- ggplot(dt, aes(x = mpg, fill = cyls)) + -->
-<!--   geom_density(alpha = 0.7) + -->
-<!--   ggtitle("Title of the plot") +  -->
-<!--   theme_tech(theme = "facebook") + -->
-<!--   scale_fill_tech(theme = "facebook") + -->
-<!--   theme(legend.position = "top")  -->
-<!-- ``` -->
+# ggtech package
+The <mark>ggtech</mark> package provides themes inspired by tech companies, such as Airbnb, Google, Twitter or Facebook.
+
+```
+theme_tech(theme="airbnb")               theme_tech(theme="etsy")
+theme_tech(theme="facebook")             theme_tech(theme="google")
+theme_tech(theme="tiwtter")              theme_airbnb_fancy()
+```
+
+```{r}
+library(ggplot2)
+##devtools::install_github("ricardo-bion/ggtech",
+##                          dependencies=TRUE)
+library(ggtech)
+
+mtcars->dt
+cyls <- as.factor(dt$cyl)
+
+ggplot(dt, aes(x = mpg, fill = cyls)) +
+  geom_density(alpha = 0.7) +
+  ggtitle("Title of the plot") +
+  theme_tech(theme = "airbnb") +
+  scale_fill_tech(theme = "airbnb") +
+  theme(legend.position = "top")
+
+ggplot(dt, aes(x = mpg, fill = cyls)) +
+  geom_density(alpha = 0.7) +
+  ggtitle("Title of the plot") +
+  theme_tech(theme = "facebook") +
+  scale_fill_tech(theme = "facebook") +
+  theme(legend.position = "top")
+```
 
 <!-- # Set an active theme -->
 <!-- The theme_set function can be used to set a theme globally. In the following example we are setting the in-built theme_dark to all the generated plots. Then, you can you back to the default theme as follows. -->
