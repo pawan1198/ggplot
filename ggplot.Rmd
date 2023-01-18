@@ -1,20 +1,19 @@
 ---
-title: "GGPLOT2"
+title: "ggplot2 : title, subtitle, and caption"
 output:
   html_document:
     df_print: paged
 ---
 
-# Title, subtitle, caption and tag in ggplot2  
-When using ggplot2 you can set a title, a subtitle, a caption and a tag. There are two ways to add titles: using ggtitle or labs function. The former is only for titles and subtitles and the latter also allows adding tags and captions.
+When using ggplot2 you can set a title, a subtitle, a caption in the plot. There are two ways to add title, subtitle (i) using ggtitle, (ii) using labs function.
+
+
+# ggtitle
 
 ## Title  
-### Option 1. Using ggtitle  
-
-Adding a title in ggplot2 with ggtitle
+Let's adding a title of the plot in ggplot2 with ggtitle
 
 ```{r}
-# install.packages(ggplot2)
 library(ggplot2)
 
 ggplot(economics, aes(date, unemploy)) +

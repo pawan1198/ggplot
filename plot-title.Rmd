@@ -11,20 +11,23 @@ knitr::opts_chunk$set(echo = TRUE)
 
 When using ggplot2 we can set a title, subtitle, caption, and tag of the plot. There are two ways to add title, subtitle; (i) using ggtitle, (ii) using labs function.
 
-# Title  
-## Option 1. Using ggtitle  
+# ggtitle  
 
-Adding a title in ggplot2 with ggtitle
+Let's adding title, subtitle of the plot in ggplot2 using of ggtitle
 
 ```{r}
-# install.packages(ggplot2)
 library(ggplot2)
 
 data<-iris
-ggplot(data, aes(date, unemploy)) +
-  geom_area(fill = rgb(0, 0.5, 1, alpha = 0.5)) + 
-  ggtitle("Title of the plot") 
+
+ggplot(data, aes(x = Sepal.Width, y = Petal.Width, fill = Species)) +
+  geom_bar(stat = "identity") + 
+  facet_wrap(~Species) +
+  ggtitle("Title of the plot",
+          subtitle = "Subtitle of the plot")->p
+p
 ```
+
 
 ## Option 2. Using labs
 
@@ -33,10 +36,14 @@ You can also use the labs function to add the title.
 ```{r}
 # install.packages(ggplot2)
 library(ggplot2)
+data<-iris
 
-ggplot(economics, aes(date, unemploy)) +
-  geom_area(fill = rgb(0, 0.5, 1, alpha = 0.5)) + 
-  labs(title = "Title of the plot") 
+ggplot(data, aes(x = Sepal.Width, y = Petal.Width, fill = Species)) +
+  geom_bar(stat = "identity") + 
+  facet_wrap(~Species) + 
+  labs(title = "Title of the plot",
+       subtitle = "Subtitle of the plot")->p
+p
 ```
 
 ## Title position
@@ -67,8 +74,7 @@ library(ggplot2)
 
 ggplot(economics, aes(date, unemploy)) +
   geom_area(fill = rgb(0, 0.5, 1, alpha = 0.5)) +  
-  ggtitle("Title of the plot",
-          subtitle = "Subtitle of the plot") 
+   
 ```
 
 
