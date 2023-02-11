@@ -9,99 +9,176 @@ output: html_document
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
-ggplot2 is an open-source of data visualization and graphical representation package for the R programming language. This package is created by [Hadley Wickham](https://hadley.nz/).
+ggplot2 is a powerful and widely-used open-source of data visualization library for the R programming language. It is based on the grammar of graphics, a concept developed by Hardly Wickham in his book "The Grammar of Graphics". It is a general framework for creating statistical graphics. The grammar of graphics provides a flexible and systematic approach to creating complex plots, making it easy to create and customize a wide variety of visualizations.
 
-# Installation
-We can install ggplot2 just by using this command
+One of the key features of ggplot2 is its ability to create layered plots. Each layer in a ggplot2 plot represents a different aspect of the data, such as points, lines, or bars. Layers can be added or removed from a plot to change its appearance and convey different information.
 
-```
-install.packages("ggplot2")
-```
-Note: ```ggplot2``` is also included in the ```tidyverse``` package.
+For example, consider a simple scatter plot of height and weight data for a group of individuals. To create this plot using ggplot2, you would first use the "ggplot()" function to create a new plot object, and then use the "aes()" function to define the x and y variables. Next, you would use the "geom_point()" function to add a layer of points to the plot.
 
-Loading the ggplot2 package
-```{r}
-library(ggplot2)
-```
-# Let's start plotting with ggplot2
-There are three basic parts of ggplot   
-i) First we to define the data from which we want to plot our graph  
+We can install ggplot2 just by using the command
 
-ii) mapping, here we can define our aesthetics like x-axis, y-axis, color, linetpye, shape, etc.
-```aes(x, y, color)```  
+`install.packages("ggplot2")`
 
-iii) geom function, geom function define the type of graph that we want to plot, like scatter plot, line plot, bar plot, box plot, etc.
-``` geom_line()```, ```geom_point()```  
+The basic syntax for creating a plot with ggplot2 is:
 
+`ggplot(data, aes(x, y)) + geom_*()`
 
-```ggplot(data, aes(x, y)) + geom_function()```
+Where:
 
-Let's start to plot a simple graph
+ggplot(): The main function used to create a new plot object. It takes a data frame as the first argument and an aesthetic mapping as the second argument.
 
-```{r}
-library(ggplot2)
+data: It is a data frame containing the data to be plotted, "x" and "y" are the variables to be plotted on the x and y axes, respectively
 
-iris->dataset
+aes(): Defines the mapping between variables in the data and visual elements of the plot. It takes one or more variables as arguments, and maps them to the x and y axes, as well as other aesthetics such as color, size, and shape.
 
-## Scatter plot
-ggplot(dataset, aes(x = Sepal.Length, y = Sepal.Width)) +
-  geom_point() ->p1
+geom_*(): geom_* or geom function is the geometric object used to create the plot. geom funtion is a family of functions used to add different types of layers to a plot. These include geom_point() for scatter plots, geom_line() for line plots, geom_bar() for bar charts, and many others.
 
-p1
-## Bar plot
-ggplot(dataset, aes(x = Sepal.Length, y = Sepal.Width, fill = Species)) +
-  geom_bar(stat = "identity", position = "stack") ->p2
+There are many different types of geometric objects that can be used in ggplot2, including:
 
-p2
-```
+geom_point(): creates a scatter plot
+geom_line(): creates a line plot
+geom_bar(): creates a bar chart
+geom_histogram(): creates a histogram
+geom_boxplot(): creates a boxplot
+geom_density(): creates a density plot
+`geom_blank()` creates a blank plot
 
-ggplot2 provide many geom function as shown below:  
+`geom_boxplot()`:  creates a Box plot   
 
-`geom_point()` Scatter Plot  
+`geom_density()` creates a  Density plot
 
-`geom_line()`  Line plot
+`geom_dotplot()` creates a Dot plot
 
-`geom_bar()`   Bar charts
+`geom_map()`   creates a   Map plot
 
-`geom_blank()` Draw a blank plot
+`geom_polygon()` creates a Polygons plot
 
-`geom_boxplot()`  Box plot   
+`geom_ribbon()` or `geom_area()` creates a Ribbons and area plot
 
-`geom_density()`  Density plot
+`geom_segment()` or `geom_curve()`  creates a  Line segments and curves plot
 
-`geom_dotplot()` Dot plot
+`geom_smooth()` or `stat_smooth()` creates a Conditional means plot
 
-`geom_histogram()` Histograms
+`geom_label()` or `geom_text()`  creates a Text plot
 
-`geom_map()`     Map plot
-
-`geom_polygon()`  Polygons plot
-
-`geom_ribbon()` or `geom_area()`  Ribbons and area plots
-
-`geom_segment()` or `geom_curve()`  Line segments and curves
-
-`geom_smooth()` or `stat_smooth()` Plot Conditional means
-
-`geom_label()` or `geom_text()`  Text plot
-
-`geom_violin()`  Violin plot
+`geom_violin()` creates a  Violin plot
 
 
-# Facet 
+Each geometric object can be customized with additional arguments, such as the color and size of the points or lines, the fill color of the bars, etc.
 
+For example, the following code creates a scatter plot of the "mtcars" data set, with the "mpg" (Miles per Gallon) variable on the x-axis and the "wt" (weight) variable on the y-axis:
 
 ```{r}
 library(ggplot2)
-iris->dataset
 
-ggplot(dataset, aes(x = Sepal.Length, y = Sepal.Width)) +
-  geom_point() ->p
+data(mtcars)
 
-p+ facet_wrap(~Species)->p
-p
-
+ggplot(mtcars, aes(x = mpg, y = wt)) +
+  geom_point()
 ```
+
+The above code will create a scatter plot of  vs .
+
+Additionally, you can customize the appearance of the plot by adding various other layers and elements. For example, you can add a linear regression line to the plot using the "geom_smooth()" function, and change the color and size of the points using the "size" and "color" aesthetics.
+
+```{r}
+ggplot(mtcars, aes(x = wt, y = mpg)) +
+  geom_point(size = 2, color = "blue") +
+  geom_smooth(method = "lm", se = FALSE)
+```
+
+In this example, the linear regression line is added to the plot using the "geom_smooth()" function, and the points are made smaller and colored blue.
+
+ggplot2 also allows for faceting, which can be used to create multiple plots based on one or more variables in the data.
+
+```{r}
+ggplot(mtcars, aes(x = mpg, y = wt)) +
+  geom_point(color = "blue", size = 3) +
+  facet_wrap(~ gear)
+```
+
+Another important aspect of ggplot2 is the ability to easily add various types of scales to a plot. Scales control the mapping between the data and the visual elements of the plot, such as the axis labels and tick marks. ggplot2 provides a variety of scales, including linear, logarithmic, and date scales.
+
+For example, to create a bar chart of the number of cylinders for each model of car in the mtcars dataset, we can use the "geom_bar()" function and the "scale_x_discrete()" function to change the x-axis scale from continuous to discrete.
+
+```{r}
+ggplot(mtcars, aes(x = factor(cyl))) +
+  geom_bar() +
+  scale_x_discrete(name = "Number of Cylinders")
+```
+
+This code will create a bar chart with the x-axis labeled "Number of Cylinders" and the y-axis labeled "Count". The bars will be separated by the number of cylinders and the count of the cars with that number of cylinder.
+
+
+ggplot2 also provides a wide range of options for customizing the appearance of the plot, such as the axis labels, title, legend, etc.
+
+ggplot2 also provides a variety of options for customizing the appearance of the plot, such as the "theme()" function, which can be used to change the font, color, and other elements of the plot.
+
+ggplot2 has a wide variety of functions that can be used to create different types of plots and customize their appearance. Some of the main functions include:
+
+
+scale_*(): A family of functions used to add and customize scales to a plot. These include scale_x_*() and scale_y_*() functions for the x and y axes, respectively, as well as scale_color_*(), scale_size_*(), and others for other aesthetics.
+
+facet_*(): A family of functions used to create faceted plots. These include facet_wrap() and facet_grid(), which divide the plot into multiple smaller plots based on one or more variables.
+
+theme(): Allows for customization of the overall appearance of the plot, including the background color and gridlines, font size, axis labels, and more.
+
+labs(): Allows for customization of the plot labels, including the title, axis labels, and legend.
+
+coord_*(): A family of functions used to change the coordinate system of the plot. For example, coord_flip() will flip the x and y axes, coord_polar() will change the plot to a polar coordinate system.
+
+annotate(): Allows you to add text, shapes, and lines to the plot to highlight specific observations or provide additional information.
+
+ggtitle() : Allows you to add a title to the plot.
+
+xlab() and ylab() : Allows you to add labels to the x and y axis of the plot.
+
+scale_*_*() : A family of functions used to customize the scales of the plot, like scale_color_gradient() and scale_x_log10()
+
+stat_*() : A family of functions used to add summary statistics to the plot, like stat_smooth() and stat_summary()
+
+These are some of the most commonly used functions in ggplot2, but there are many more that can be used to create and customize a wide variety of plots. The best way to learn how to use ggplot2 is to experiment with the different functions and see how they work.
+
+The theme function allows you to customize many aspects of the overall appearance of the plot such as background color, gridlines, font size, axis labels, and more. For example, to remove the background gridlines and change the axis labels to a smaller font size, you can use the following code:
+
+scss
+Copy code
+ggplot(data, aes(x, y)) + 
+  geom_point() +
+  theme(
+    panel.grid.major = element_blank(),
+   
+
+
+The theme() function in ggplot2 allows you to customize many aspects of the overall appearance of the plot, such as the background color, gridlines, font size, axis labels, and more. It takes a series of element_*() functions as arguments, each of which corresponds to a different aspect of the plot.
+
+For example, to remove the background gridlines and change the axis labels to a smaller font size, you can use the following code:
+
+scss
+Copy code
+ggplot(data, aes(x, y)) + 
+  geom_point() +
+  theme(
+    panel.grid.major = element_blank(),
+    axis.text.x = element_text(size = 8),
+    axis.text.y = element_text(size = 8)
+  )
+The element_blank() function is used to remove the gridlines, and the element_text() function is used to change the font size of the axis labels.
+
+Other common element_*() functions include:
+
+element_line(): Allows you to customize the appearance of lines, such as the axis lines and gridlines.
+
+element_rect(): Allows you to customize the appearance of rectangles, such as the background of the plot.
+
+element_text(): Allows you to customize the appearance of text, such as the axis labels and legend titles.
+
+element_blank(): Allows you to remove elements from the plot.
+
+You can also use theme_set() to set a pre-defined theme. The most common ones are theme_gray(), theme_bw(), theme_light(), theme_dark() and
+
+
+
 
 # Theme
 The ggplot2 package have different themes. By default it uses the theme_grey (```theme_gray()```), so we don’t need to specify it. Themes provided by ggplot are below
