@@ -54,9 +54,9 @@ The title position can be set respect to the whole plot instead of the panel wit
 # install.packages(ggplot2)
 library(ggplot2)
 
-ggplot(economics, aes(date, unemploy)) +
+ggplot(data, aes(x = Sepal.Width, y = Petal.Width)) +
   geom_area(fill = rgb(0, 0.5, 1, alpha = 0.5)) + 
-  labs(title = "Title on the plot margin") + 
+  labs(title = "Title on the plot") + 
   theme(plot.title.position = "plot") 
 ```
 
@@ -72,9 +72,10 @@ Add a subtitle in ggplot2
 # install.packages(ggplot2)
 library(ggplot2)
 
-ggplot(economics, aes(date, unemploy)) +
-  geom_area(fill = rgb(0, 0.5, 1, alpha = 0.5)) +  
-   
+ggplot(data, aes(x = Sepal.Width, y = Petal.Width)) +
+  geom_area(fill = rgb(0, 0.5, 1, alpha = 0.5)) +
+  labs(subtitle = "Subtitle on the plot")
+  
 ```
 
 
