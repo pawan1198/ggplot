@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Combining Plots — RViz</title>
+<link rel="stylesheet" href="shared.css">
+</head>
+<body>
+
+<nav class="sidebar">
+  <div class="sidebar-top">
+    <a href="index.html" class="sidebar-logo">R<span>viz</span></a>
+    <div class="sidebar-page">Combining Plots</div>
+  </div>
+  <div class="sidebar-nav">
+    <div class="nav-group">
+      <div class="nav-section">Getting Started</div>
+      <a href="index.html" class="nav-item">Home</a>
+      <a href="r-guide.html" class="nav-item">R Guide & Basics</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-section">ggplot2 Core</div>
+      <a href="ggplot2-intro.html" class="nav-item">Introduction & Grammar</a>
+      <a href="geoms.html" class="nav-item">Geom Functions</a>
+      <a href="plot-titles.html" class="nav-item">Titles & Labels</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-section">Customization</div>
+      <a href="themes.html" class="nav-item">Themes & Styling</a>
+      <a href="barplots.html" class="nav-item">Bar Charts</a>
+      <a href="combining.html" class="nav-item active">Combining Plots</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-section">Reference</div>
+      <a href="reference.html" class="nav-item">Quick Reference</a>
+    </div>
+  </div>
+  <div class="sidebar-bottom">
+    <a href="index.html" class="back-home">← Back to Home</a>
+  </div>
+</nav>
+
+<main class="main-content">
+  <div class="page-header">
+    <div class="page-eyebrow">Module 06 — Layout</div>
+    <h1 class="page-title">Combining <em>Multiple Plots</em></h1>
+    <p class="page-desc">ggplot2 doesn't include built-in multi-plot layout, but three excellent packages fill this gap: <strong>patchwork</strong>, <strong>gridExtra</strong>, and <strong>cowplot</strong>.</p>
+  </div>
+
+  <!-- SAMPLE PLOTS SETUP -->
+  <div class="content-section">
+    <h2 class="section-title">Create Sample Plots First</h2>
+    <p class="body-text">Let's create four plots (p1–p4) that we'll combine throughout this module.</p>
+
+    <div class="code-block">
+      <div class="code-header">
+        <span class="code-lang"><span class="code-lang-badge">R</span> Create p1, p2, p3, p4</span>
+        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+      </div>
+      <pre><span class="fn">library</span>(ggplot2)
+
+mtcars -> df
+
+<span class="cm"># p1: Box plot</span>
+p1 <- <span class="fn">ggplot</span>(df, <span class="fn">aes</span>(<span class="ar">x</span> = <span class="str">""</span>, <span class="ar">y</span> = mpg)) +
+  <span class="fn">geom_boxplot</span>()
+
+<span class="cm"># p2: Normal density curve</span>
+p2 <- <span class="fn">ggplot</span>() +
+  <span class="fn">stat_function</span>(<span class="ar">fun</span> = dnorm, <span class="ar">geom</span> = <span class="str">"density"</span>,
+                <span class="ar">xlim</span> = <span class="fn">c</span>(-<span class="num">3</span>, <span class="num">3</span>), <span class="ar">fill</span> = <span class="str">"white"</span>)
+
+<span class="cm"># p3: Line chart</span>
+p3 <- <span class="fn">ggplot</span>(df, <span class="fn">aes</span>(<span class="ar">x</span> = mpg, <span class="ar">y</span> = disp)) +
+  <span class="fn">geom_line</span>(<span class="ar">color</span> = <span class="str">"gray20"</span>)
+
+<span class="cm"># p4: Scatter plot</span>
+p4 <- <span class="fn">ggplot</span>(df, <span class="fn">aes</span>(<span class="ar">x</span> = hp, <span class="ar">y</span> = wt)) +
+  <span class="fn">geom_point</span>(<span class="ar">color</span> = <span class="str">"gray20"</span>)</pre>
+    </div>
+  </div>
+
+  <!-- PATCHWORK -->
+  <div class="content-section" id="patchwork">
+    <h2 class="section-title">patchwork — Recommended</h2>
+    <p class="body-text">patchwork is the most intuitive package for combining ggplot2 plots. It uses arithmetic operators to specify layout.</p>
+
+    <div class="callout tip">
+      <span class="callout-icon">⭐</span>
+      <div class="callout-body"><strong>Recommendation:</strong> patchwork is the most modern and readable approach. If you're starting fresh, use patchwork.</div>
+    </div>
+
+    <h3 class="subsection-title">Basic operators</h3>
+    <div class="code-block">
+      <div class="code-header">
+        <span class="code-lang"><span class="code-lang-badge">R</span> patchwork operators</span>
+        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+      </div>
+      <pre><span class="fn">install.packages</span>(<span class="str">"patchwork"</span>)
+<span class="fn">library</span>(patchwork)
+
+p1 + p2              <span class="cm"># Side by side (2 columns)</span>
+p1 | p2              <span class="cm"># Same as + (columns)</span>
+p1 / p2              <span class="cm"># Stack (rows)</span>
+p1 + p2 + p3 + p4    <span class="cm"># 4 plots in a 2×2 grid (auto)</span>
+(p1 | p2) / p3       <span class="cm"># Two on top, one on bottom</span></pre>
+    </div>
+
+    <h3 class="subsection-title">Controlling layout with plot_layout()</h3>
+    <div class="code-block">
+      <div class="code-header">
+        <span class="code-lang"><span class="code-lang-badge">R</span> plot_layout() — sizes and columns</span>
+        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+      </div>
+      <pre><span class="cm"># Control number of columns</span>
+p1 + p2 + p3 + p4 +
+  <span class="fn">plot_layout</span>(<span class="ar">ncol</span> = <span class="num">3</span>)
+
+<span class="cm"># Relative widths and heights</span>
+p1 + p2 + p3 + p4 +
+  <span class="fn">plot_layout</span>(<span class="ar">widths</span> = <span class="fn">c</span>(<span class="num">2</span>, <span class="num">1</span>), <span class="ar">heights</span> = <span class="fn">c</span>(<span class="num">1</span>, <span class="num">2</span>))
+
+<span class="cm"># Custom design using letter codes</span>
+<span class="cm"># 1=p1, 2=p2, 3=p3, 4=p4, #=empty space</span>
+p1 + p2 + p3 + p4 +
+  <span class="fn">plot_layout</span>(<span class="ar">design</span> = <span class="str">"111
+                         2#3
+                         443"</span>)</pre>
+    </div>
+
+    <h3 class="subsection-title">wrap_plots() — for variable numbers of plots</h3>
+    <div class="code-block">
+      <div class="code-header">
+        <span class="code-lang"><span class="code-lang-badge">R</span> wrap_plots()</span>
+        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+      </div>
+      <pre><span class="cm"># Useful when you don't know the number of plots at coding time</span>
+<span class="fn">wrap_plots</span>(p1, p2, p3, p4,
+           <span class="ar">ncol</span>    = <span class="num">2</span>,
+           <span class="ar">nrow</span>    = <span class="num">2</span>,
+           <span class="ar">widths</span>  = <span class="fn">c</span>(<span class="num">1</span>, <span class="num">0.5</span>),
+           <span class="ar">heights</span> = <span class="fn">c</span>(<span class="num">0.5</span>, <span class="num">1</span>))
+
+<span class="cm"># From a list of plots (e.g. from lapply)</span>
+plot_list <- <span class="fn">list</span>(p1, p2, p3, p4)
+<span class="fn">wrap_plots</span>(plot_list, <span class="ar">ncol</span> = <span class="num">2</span>)</pre>
+    </div>
+
+    <h3 class="subsection-title">Adding spacers</h3>
+    <div class="code-block">
+      <div class="code-header">
+        <span class="code-lang"><span class="code-lang-badge">R</span> plot_spacer()</span>
+        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+      </div>
+      <pre><span class="cm"># Add blank spaces between plots</span>
+p1 + <span class="fn">plot_spacer</span>() + p2      <span class="cm"># p1 | blank | p2</span>
+
+<span class="cm"># Multi-row with spacers</span>
+(p1 + <span class="fn">plot_spacer</span>() + p2) /
+(p3 + p4 + <span class="fn">plot_spacer</span>())</pre>
+    </div>
+
+    <h3 class="subsection-title">Adding title & annotations</h3>
+    <div class="code-block">
+      <div class="code-header">
+        <span class="code-lang"><span class="code-lang-badge">R</span> plot_annotation()</span>
+        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+      </div>
+      <pre><span class="cm"># Add overall title and subtitle</span>
+(p1 + p2) / (p3 + p4) +
+  <span class="fn">plot_annotation</span>(
+    <span class="ar">title</span>    = <span class="str">"Motor Trend Car Road Tests"</span>,
+    <span class="ar">subtitle</span> = <span class="str">"Comparison of different plot types"</span>,
+    <span class="ar">caption</span>  = <span class="str">"Data: mtcars dataset"</span>
+  )
+
+<span class="cm"># Add automatic panel labels (A, B, C, D...)</span>
+(p1 + p2) / (p3 + p4) +
+  <span class="fn">plot_annotation</span>(<span class="ar">tag_levels</span> = <span class="str">"A"</span>)   <span class="cm"># A, B, C, D</span>
+
+<span class="cm"># Or numeric labels</span>
+(p1 + p2) / (p3 + p4) +
+  <span class="fn">plot_annotation</span>(<span class="ar">tag_levels</span> = <span class="str">"1"</span>)   <span class="cm"># 1, 2, 3, 4</span>
+
+<span class="cm"># Apply same theme to all plots at once</span>
+(p1 + p2 + p3 + p4) &
+  <span class="fn">theme_minimal</span>()   <span class="cm"># & applies to all panels</span></pre>
+    </div>
+  </div>
+
+  <!-- GRIDEXTRA -->
+  <div class="content-section" id="gridextra">
+    <h2 class="section-title">gridExtra</h2>
+    <p class="body-text">gridExtra's <code class="inline">grid.arrange()</code> function is a classic approach to combining plots. It supports custom labels and layout matrices.</p>
+
+    <div class="code-block">
+      <div class="code-header">
+        <span class="code-lang"><span class="code-lang-badge">R</span> grid.arrange() examples</span>
+        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+      </div>
+      <pre><span class="fn">install.packages</span>(<span class="str">"gridExtra"</span>)
+<span class="fn">library</span>(gridExtra)
+
+<span class="cm"># Basic: all 4 plots in automatic layout</span>
+<span class="fn">grid.arrange</span>(p2, p3, p1, p4)
+
+<span class="cm"># Control rows, columns, sizes</span>
+<span class="fn">grid.arrange</span>(p4, p3, p2, p1,
+             <span class="ar">top</span>     = <span class="str">"Top label"</span>,
+             <span class="ar">bottom</span>  = <span class="str">"Bottom label"</span>,
+             <span class="ar">left</span>    = <span class="str">"Left label"</span>,
+             <span class="ar">right</span>   = <span class="str">"Right label"</span>,
+             <span class="ar">widths</span>  = <span class="fn">c</span>(<span class="num">1</span>, <span class="num">2</span>),
+             <span class="ar">heights</span> = <span class="fn">c</span>(<span class="num">2</span>, <span class="num">3</span>))
+
+<span class="cm"># Custom layout matrix</span>
+<span class="cm"># Matrix values are plot numbers (1=p2, 2=p3, 3=p1, 4=p4)</span>
+layout <- <span class="fn">matrix</span>(<span class="fn">c</span>(<span class="num">1</span>, <span class="num">1</span>,
+                    <span class="num">2</span>, <span class="num">3</span>,
+                    <span class="num">4</span>, <span class="num">4</span>), <span class="ar">ncol</span> = <span class="num">2</span>, <span class="ar">byrow</span> = <span class="kw">TRUE</span>)
+
+<span class="fn">grid.arrange</span>(p2, p3, p1, p4,
+             <span class="ar">layout_matrix</span> = layout)
+
+<span class="cm"># Add a table alongside plots</span>
+<span class="fn">library</span>(gridExtra)
+my_table <- <span class="fn">tableGrob</span>(<span class="fn">head</span>(mtcars[, <span class="num">1</span>:<span class="num">4</span>]))
+<span class="fn">grid.arrange</span>(p1, my_table, <span class="ar">ncol</span> = <span class="num">2</span>)</pre>
+    </div>
+  </div>
+
+  <!-- COWPLOT -->
+  <div class="content-section" id="cowplot">
+    <h2 class="section-title">cowplot</h2>
+    <p class="body-text">cowplot was developed for publication-quality figures, especially in biology. Its <code class="inline">plot_grid()</code> provides fine-grained control over alignment.</p>
+
+    <div class="code-block">
+      <div class="code-header">
+        <span class="code-lang"><span class="code-lang-badge">R</span> cowplot::plot_grid()</span>
+        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+      </div>
+      <pre><span class="fn">install.packages</span>(<span class="str">"cowplot"</span>)
+<span class="fn">library</span>(cowplot)
+
+<span class="cm"># Basic usage</span>
+<span class="fn">plot_grid</span>(p1, p2, p3, p4)
+
+<span class="cm"># With labels and layout control</span>
+<span class="fn">plot_grid</span>(p1, p2, p3, p4,
+          <span class="ar">labels</span>  = <span class="fn">c</span>(<span class="str">"A"</span>, <span class="str">"B"</span>, <span class="str">"C"</span>, <span class="str">"D"</span>),
+          <span class="ar">ncol</span>    = <span class="num">2</span>,
+          <span class="ar">nrow</span>    = <span class="num">2</span>,
+          <span class="ar">rel_widths</span>  = <span class="fn">c</span>(<span class="num">1</span>, <span class="num">0.5</span>),
+          <span class="ar">rel_heights</span> = <span class="fn">c</span>(<span class="num">1</span>, <span class="num">0.5</span>))
+
+<span class="cm"># Align axes across plots</span>
+<span class="fn">plot_grid</span>(p3, p4,
+          <span class="ar">align</span>  = <span class="str">"hv"</span>,   <span class="cm"># h=horizontal, v=vertical</span>
+          <span class="ar">axis</span>   = <span class="str">"tblr"</span>) <span class="cm"># align all 4 sides</span>
+
+<span class="cm"># Nested layouts</span>
+top_row <- <span class="fn">plot_grid</span>(p1, p2, <span class="ar">ncol</span> = <span class="num">2</span>)
+<span class="fn">plot_grid</span>(top_row, p3, <span class="ar">ncol</span> = <span class="num">1</span>)</pre>
+    </div>
+  </div>
+
+  <!-- COMPARISON TABLE -->
+  <div class="content-section">
+    <h2 class="section-title">Package Comparison</h2>
+    <table class="data-table">
+      <tr><th>Feature</th><th>patchwork</th><th>gridExtra</th><th>cowplot</th></tr>
+      <tr><td>Syntax</td><td>Operator-based (<code class="inline">+</code>, <code class="inline">|</code>, <code class="inline">/</code>)</td><td>Function call</td><td>Function call</td></tr>
+      <tr><td>Ease of use</td><td>⭐⭐⭐ Very intuitive</td><td>⭐⭐ Moderate</td><td>⭐⭐ Moderate</td></tr>
+      <tr><td>Custom layouts</td><td>design= string</td><td>layout_matrix</td><td>rel_widths/heights</td></tr>
+      <tr><td>Overall annotations</td><td>plot_annotation()</td><td>top/bottom/left/right</td><td>ggdraw() + draw_label()</td></tr>
+      <tr><td>Auto panel labels</td><td>tag_levels=</td><td>Manual</td><td>labels=</td></tr>
+      <tr><td>Tables in layout</td><td>Limited</td><td>tableGrob()</td><td>Limited</td></tr>
+      <tr><td>Axis alignment</td><td>Automatic</td><td>Manual</td><td>align= parameter</td></tr>
+      <tr><td>Best for</td><td>General use, readability</td><td>Complex grids + tables</td><td>Publication figures</td></tr>
+    </table>
+  </div>
+
+  <div style="display:flex;gap:16px;margin-top:48px;padding-top:32px;border-top:1px solid var(--border)">
+    <a href="barplots.html" style="color:var(--muted);text-decoration:none;font-size:14px">← Bar Charts</a>
+    <a href="reference.html" style="color:var(--accent);text-decoration:none;font-size:14px;font-weight:600;margin-left:auto">Next: Quick Reference →</a>
+  </div>
+</main>
+
+<script>
+function copyCode(btn) {
+  const text = btn.closest('.code-block').querySelector('pre').innerText;
+  navigator.clipboard.writeText(text).then(() => {
+    btn.textContent = 'Copied!'; btn.classList.add('copied');
+    setTimeout(() => { btn.textContent = 'Copy'; btn.classList.remove('copied'); }, 2000);
+  });
+}
+</script>
+</body>
+</html>

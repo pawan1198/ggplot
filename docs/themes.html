@@ -1,0 +1,432 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Themes & Styling — RViz</title>
+<link rel="stylesheet" href="shared.css">
+<style>
+.theme-preview-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:12px;margin:20px 0}
+.t-card{border:1.5px solid var(--border);border-radius:10px;overflow:hidden;cursor:pointer;transition:all .2s}
+.t-card:hover{border-color:var(--ink);transform:translateY(-2px);box-shadow:0 6px 20px rgba(0,0,0,.08)}
+.t-card.selected{border-color:var(--accent);border-width:2px}
+.t-preview{height:90px;display:flex;align-items:flex-end;padding:8px;gap:4px;position:relative}
+.t-bar{border-radius:2px 2px 0 0;transition:height .3s}
+.t-info{padding:10px 12px;border-top:1px solid var(--border)}
+.t-name{font-family:'JetBrains Mono',monospace;font-size:12px;font-weight:500;color:var(--ink);margin-bottom:2px}
+.t-pkg{font-size:11px;color:var(--muted)}
+.pkg-badge{display:inline-block;padding:2px 8px;border-radius:99px;font-size:10px;font-weight:600}
+.pkg-builtin{background:rgba(45,107,228,.1);color:var(--blue)}
+.pkg-ggthemes{background:rgba(18,163,106,.1);color:var(--green)}
+.pkg-hrb{background:rgba(124,77,255,.1);color:var(--purple)}
+.pkg-other{background:rgba(212,160,23,.1);color:var(--gold)}
+.selected-code{
+  background:var(--ink);border-radius:12px;
+  margin:16px 0;overflow:hidden;
+  transition:all .3s;
+}
+</style>
+</head>
+<body>
+
+<nav class="sidebar">
+  <div class="sidebar-top">
+    <a href="index.html" class="sidebar-logo">R<span>viz</span></a>
+    <div class="sidebar-page">Themes & Styling</div>
+  </div>
+  <div class="sidebar-nav">
+    <div class="nav-group">
+      <div class="nav-section">Getting Started</div>
+      <a href="index.html" class="nav-item">Home</a>
+      <a href="r-guide.html" class="nav-item">R Guide & Basics</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-section">ggplot2 Core</div>
+      <a href="ggplot2-intro.html" class="nav-item">Introduction & Grammar</a>
+      <a href="geoms.html" class="nav-item">Geom Functions</a>
+      <a href="plot-titles.html" class="nav-item">Titles & Labels</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-section">Customization</div>
+      <a href="themes.html" class="nav-item active">Themes & Styling</a>
+      <a href="barplots.html" class="nav-item">Bar Charts</a>
+      <a href="combining.html" class="nav-item">Combining Plots</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-section">Reference</div>
+      <a href="reference.html" class="nav-item">Quick Reference</a>
+    </div>
+  </div>
+  <div class="sidebar-bottom">
+    <a href="index.html" class="back-home">← Back to Home</a>
+  </div>
+</nav>
+
+<main class="main-content">
+  <div class="page-header">
+    <div class="page-eyebrow">Module 04 — Appearance</div>
+    <h1 class="page-title">Themes &amp; <em>Styling</em></h1>
+    <p class="page-desc">Control the entire non-data appearance of your plots. ggplot2 ships with 8 built-in themes, and extension packages provide dozens more — plus you can customize anything with <code class="inline">theme()</code>.</p>
+  </div>
+
+  <!-- BUILT-IN THEMES -->
+  <div class="content-section" id="builtin">
+    <h2 class="section-title">Built-in Themes</h2>
+    <p class="body-text">ggplot2 comes with 8 themes out of the box. The default is <code class="inline">theme_grey()</code>. Click any theme card to see its code.</p>
+
+    <div class="theme-preview-grid" id="themeGrid">
+      <!-- Rendered by JS -->
+    </div>
+
+    <div class="selected-code" id="themeCode" style="display:none">
+      <div class="code-header">
+        <span class="code-lang"><span class="code-lang-badge">R</span> <span id="themeCodeLabel">theme code</span></span>
+        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+      </div>
+      <pre id="themeCodePre"></pre>
+    </div>
+  </div>
+
+  <!-- GGTHEMES -->
+  <div class="content-section" id="ggthemes">
+    <h2 class="section-title">ggthemes Package</h2>
+    <p class="body-text">The <code class="inline">ggthemes</code> package contains highly popular themes, many mimicking styles from well-known publications. Some come with matching color scales.</p>
+
+    <div class="code-block">
+      <div class="code-header">
+        <span class="code-lang"><span class="code-lang-badge">R</span> Install & use ggthemes</span>
+        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+      </div>
+      <pre><span class="fn">install.packages</span>(<span class="str">"ggthemes"</span>)
+<span class="fn">library</span>(ggplot2)
+<span class="fn">library</span>(ggthemes)
+
+cyls <- <span class="fn">as.factor</span>(mtcars$cyl)
+
+<span class="fn">ggplot</span>(mtcars, <span class="fn">aes</span>(<span class="ar">x</span> = mpg, <span class="ar">fill</span> = cyls)) +
+  <span class="fn">geom_density</span>(<span class="ar">alpha</span> = <span class="num">0.7</span>) +
+  <span class="fn">theme_economist</span>() +                 <span class="cm"># The Economist style</span>
+  <span class="fn">scale_fill_economist</span>() +             <span class="cm"># Matching color palette</span>
+  <span class="fn">theme</span>(<span class="ar">legend.position</span> = <span class="str">"top"</span>)</pre>
+    </div>
+
+    <table class="data-table">
+      <tr><th>Theme Function</th><th>Inspired By</th><th>Matching Scale</th></tr>
+      <tr><td><code class="inline">theme_economist()</code></td><td>The Economist magazine</td><td><code class="inline">scale_color_economist()</code></td></tr>
+      <tr><td><code class="inline">theme_fivethirtyeight()</code></td><td>FiveThirtyEight blog</td><td><code class="inline">scale_color_fivethirtyeight()</code></td></tr>
+      <tr><td><code class="inline">theme_wsj()</code></td><td>Wall Street Journal</td><td><code class="inline">scale_color_wsj()</code></td></tr>
+      <tr><td><code class="inline">theme_few()</code></td><td>Stephen Few's principles</td><td><code class="inline">scale_color_few()</code></td></tr>
+      <tr><td><code class="inline">theme_solarized()</code></td><td>Solarized color scheme</td><td><code class="inline">scale_color_solarized()</code></td></tr>
+      <tr><td><code class="inline">theme_stata()</code></td><td>Stata statistical software</td><td><code class="inline">scale_color_stata()</code></td></tr>
+      <tr><td><code class="inline">theme_excel_new()</code></td><td>Modern Excel</td><td><code class="inline">scale_color_excel_new()</code></td></tr>
+      <tr><td><code class="inline">theme_gdocs()</code></td><td>Google Docs charts</td><td><code class="inline">scale_color_gdocs()</code></td></tr>
+      <tr><td><code class="inline">theme_base()</code></td><td>R base graphics</td><td>—</td></tr>
+      <tr><td><code class="inline">theme_tufte()</code></td><td>Edward Tufte's minimalism</td><td>—</td></tr>
+      <tr><td><code class="inline">theme_clean()</code></td><td>Clean minimal style</td><td>—</td></tr>
+      <tr><td><code class="inline">theme_hc()</code></td><td>Highcharts JS</td><td><code class="inline">scale_color_hc()</code></td></tr>
+    </table>
+  </div>
+
+  <!-- HRBRTHEMES -->
+  <div class="content-section" id="hrbrthemes">
+    <h2 class="section-title">hrbrthemes Package</h2>
+    <p class="body-text">hrbrthemes provides "typography-centric themes" — minimal, clean, with beautiful font choices. Created by Bob Rudis.</p>
+
+    <div class="code-block">
+      <div class="code-header">
+        <span class="code-lang"><span class="code-lang-badge">R</span> hrbrthemes usage</span>
+        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+      </div>
+      <pre><span class="fn">install.packages</span>(<span class="str">"hrbrthemes"</span>)
+<span class="fn">library</span>(ggplot2)
+<span class="fn">library</span>(hrbrthemes)
+
+cyls <- <span class="fn">as.factor</span>(mtcars$cyl)
+
+<span class="fn">ggplot</span>(mtcars, <span class="fn">aes</span>(<span class="ar">x</span> = mpg, <span class="ar">fill</span> = cyls)) +
+  <span class="fn">geom_density</span>(<span class="ar">alpha</span> = <span class="num">0.7</span>) +
+  <span class="fn">ggtitle</span>(<span class="str">"Plot title"</span>) +
+  <span class="fn">theme_ipsum</span>() +              <span class="cm"># Arial Narrow font</span>
+  <span class="fn">scale_fill_ipsum</span>() +          <span class="cm"># Matching color palette</span>
+  <span class="fn">theme</span>(<span class="ar">legend.position</span> = <span class="str">"top"</span>)</pre>
+    </div>
+
+    <table class="data-table">
+      <tr><th>Theme</th><th>Font</th><th>Scale</th></tr>
+      <tr><td><code class="inline">theme_ipsum()</code></td><td>Arial Narrow</td><td><code class="inline">scale_fill_ipsum()</code></td></tr>
+      <tr><td><code class="inline">theme_ipsum_rc()</code></td><td>Roboto Condensed</td><td>—</td></tr>
+      <tr><td><code class="inline">theme_ipsum_pub()</code></td><td>Roboto</td><td>—</td></tr>
+      <tr><td><code class="inline">theme_ft_rc()</code></td><td>Roboto Condensed (FT-inspired)</td><td>—</td></tr>
+      <tr><td><code class="inline">theme_modern_rc()</code></td><td>Roboto Condensed dark</td><td>—</td></tr>
+    </table>
+  </div>
+
+  <!-- GGTHEMR -->
+  <div class="content-section" id="ggthemr">
+    <h2 class="section-title">ggthemr Package</h2>
+    <p class="body-text">ggthemr works differently from other packages — you set a global theme that applies to ALL subsequent plots using the <code class="inline">ggthemr()</code> function, rather than adding a layer.</p>
+
+    <div class="callout warn">
+      <span class="callout-icon">⚠️</span>
+      <div class="callout-body"><strong>Remember:</strong> Call <code class="inline">ggthemr_reset()</code> to return to the default ggplot2 theme after using ggthemr.</div>
+    </div>
+
+    <div class="code-block">
+      <div class="code-header">
+        <span class="code-lang"><span class="code-lang-badge">R</span> ggthemr usage</span>
+        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+      </div>
+      <pre><span class="cm"># Install from GitHub</span>
+<span class="cm">##devtools::install_github('Mikata-Project/ggthemr')</span>
+<span class="fn">library</span>(ggthemr)
+<span class="fn">library</span>(ggplot2)
+
+cyls <- <span class="fn">as.factor</span>(mtcars$cyl)
+
+<span class="cm"># Set a global theme (affects ALL subsequent plots)</span>
+<span class="fn">ggthemr</span>(<span class="str">"flat"</span>)
+
+<span class="fn">ggplot</span>(mtcars, <span class="fn">aes</span>(<span class="ar">x</span> = mpg, <span class="ar">fill</span> = cyls)) +
+  <span class="fn">geom_density</span>(<span class="ar">alpha</span> = <span class="num">0.7</span>) +
+  <span class="fn">theme</span>(<span class="ar">legend.position</span> = <span class="str">"top"</span>)
+
+<span class="cm"># Reset to default when done</span>
+<span class="fn">ggthemr_reset</span>()</pre>
+    </div>
+
+    <h3 class="subsection-title">Available ggthemr palettes</h3>
+    <div class="cards-grid">
+      <div class="card"><h4>"flat"</h4><p>Flat design colors</p></div>
+      <div class="card"><h4>"flat dark"</h4><p>Dark flat design</p></div>
+      <div class="card"><h4>"camouflage"</h4><p>Muted greens & browns</p></div>
+      <div class="card"><h4>"chalk"</h4><p>Pastel chalkboard style</p></div>
+      <div class="card"><h4>"copper"</h4><p>Warm copper tones</p></div>
+      <div class="card"><h4>"dust"</h4><p>Earthy dusty tones</p></div>
+      <div class="card"><h4>"earth"</h4><p>Natural earth colors</p></div>
+      <div class="card"><h4>"fresh"</h4><p>Bright fresh colors</p></div>
+      <div class="card"><h4>"grape"</h4><p>Purple grape palette</p></div>
+      <div class="card"><h4>"grass"</h4><p>Green nature palette</p></div>
+      <div class="card"><h4>"greyscale"</h4><p>Black & white</p></div>
+      <div class="card"><h4>"light"</h4><p>Light pastel colors</p></div>
+    </div>
+  </div>
+
+  <!-- GGTECH -->
+  <div class="content-section" id="ggtech">
+    <h2 class="section-title">ggtech Package</h2>
+    <p class="body-text">ggtech provides themes inspired by major tech companies: Airbnb, Google, Twitter, Facebook, and more.</p>
+
+    <div class="code-block">
+      <div class="code-header">
+        <span class="code-lang"><span class="code-lang-badge">R</span> ggtech usage</span>
+        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+      </div>
+      <pre><span class="cm"># Install from GitHub</span>
+<span class="cm">##devtools::install_github("ricardo-bion/ggtech", dependencies=TRUE)</span>
+<span class="fn">library</span>(ggtech)
+<span class="fn">library</span>(ggplot2)
+
+cyls <- <span class="fn">as.factor</span>(mtcars$cyl)
+
+<span class="fn">ggplot</span>(mtcars, <span class="fn">aes</span>(<span class="ar">x</span> = mpg, <span class="ar">fill</span> = cyls)) +
+  <span class="fn">geom_density</span>(<span class="ar">alpha</span> = <span class="num">0.7</span>) +
+  <span class="fn">ggtitle</span>(<span class="str">"Title of the plot"</span>) +
+  <span class="fn">theme_tech</span>(<span class="ar">theme</span> = <span class="str">"airbnb"</span>) +      <span class="cm"># airbnb | google | twitter | facebook</span>
+  <span class="fn">scale_fill_tech</span>(<span class="ar">theme</span> = <span class="str">"airbnb"</span>) +  <span class="cm"># Matching color scale</span>
+  <span class="fn">theme</span>(<span class="ar">legend.position</span> = <span class="str">"top"</span>)</pre>
+    </div>
+  </div>
+
+  <!-- GGDARK -->
+  <div class="content-section" id="ggdark">
+    <h2 class="section-title">ggdark Package</h2>
+    <p class="body-text">ggdark provides dark versions of all 8 built-in ggplot2 themes. It can also convert <em>any</em> theme to dark mode using <code class="inline">dark_mode()</code>.</p>
+
+    <div class="code-block">
+      <div class="code-header">
+        <span class="code-lang"><span class="code-lang-badge">R</span> ggdark usage</span>
+        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+      </div>
+      <pre><span class="fn">install.packages</span>(<span class="str">"ggdark"</span>)
+<span class="fn">library</span>(ggdark)
+<span class="fn">library</span>(ggplot2)
+
+cyls <- <span class="fn">as.factor</span>(mtcars$cyl)
+
+<span class="cm"># Dark version of theme_gray (the default)</span>
+<span class="fn">ggplot</span>(mtcars, <span class="fn">aes</span>(<span class="ar">x</span> = mpg, <span class="ar">fill</span> = cyls)) +
+  <span class="fn">geom_density</span>(<span class="ar">alpha</span> = <span class="num">0.7</span>) +
+  <span class="fn">dark_theme_gray</span>() +
+  <span class="fn">theme</span>(<span class="ar">legend.position</span> = <span class="str">"top"</span>)
+
+<span class="cm"># All dark_theme_* equivalents:</span>
+<span class="cm"># dark_theme_gray()     dark_theme_bw()       dark_theme_dark()</span>
+<span class="cm"># dark_theme_classic()  dark_theme_minimal()  dark_theme_light()</span>
+<span class="cm"># dark_theme_linedraw() dark_theme_void()</span>
+
+<span class="cm"># Convert ANY theme to dark mode</span>
+<span class="fn">ggplot</span>(mtcars, <span class="fn">aes</span>(<span class="ar">x</span> = mpg, <span class="ar">fill</span> = cyls)) +
+  <span class="fn">geom_density</span>(<span class="ar">alpha</span> = <span class="num">0.7</span>) +
+  <span class="fn">dark_mode</span>(<span class="fn">theme_economist</span>())</pre>
+    </div>
+  </div>
+
+  <!-- GLOBAL THEME -->
+  <div class="content-section" id="global">
+    <h2 class="section-title">Setting a Global Theme</h2>
+    <p class="body-text">Use <code class="inline">theme_set()</code> to apply a theme to all plots in your session. Save the old theme first so you can restore it.</p>
+
+    <div class="code-block">
+      <div class="code-header">
+        <span class="code-lang"><span class="code-lang-badge">R</span> theme_set()</span>
+        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+      </div>
+      <pre><span class="fn">library</span>(ggplot2)
+
+<span class="cm"># Save current theme and set a new global theme</span>
+old <- <span class="fn">theme_set</span>(<span class="fn">theme_dark</span>())
+
+<span class="cm"># All plots now use theme_dark automatically</span>
+cyls <- <span class="fn">as.factor</span>(mtcars$cyl)
+<span class="fn">ggplot</span>(mtcars, <span class="fn">aes</span>(<span class="ar">x</span> = mpg, <span class="ar">fill</span> = cyls)) +
+  <span class="fn">geom_density</span>(<span class="ar">alpha</span> = <span class="num">0.7</span>) +
+  <span class="fn">theme</span>(<span class="ar">legend.position</span> = <span class="str">"top"</span>)
+
+<span class="cm"># Reset to the previous theme</span>
+<span class="fn">theme_set</span>(old)</pre>
+    </div>
+  </div>
+
+  <!-- CUSTOM THEME -->
+  <div class="content-section" id="custom">
+    <h2 class="section-title">Custom Theme with theme()</h2>
+    <p class="body-text">The <code class="inline">theme()</code> function lets you override any visual element. Combine it with any base theme.</p>
+
+    <div class="code-block">
+      <div class="code-header">
+        <span class="code-lang"><span class="code-lang-badge">R</span> Full theme() customization</span>
+        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+      </div>
+      <pre><span class="fn">ggplot</span>(mtcars, <span class="fn">aes</span>(<span class="ar">x</span> = mpg, <span class="ar">y</span> = wt, <span class="ar">color</span> = <span class="fn">factor</span>(cyl))) +
+  <span class="fn">geom_point</span>(<span class="ar">size</span> = <span class="num">3</span>) +
+  <span class="fn">labs</span>(<span class="ar">title</span> = <span class="str">"Custom Styled Plot"</span>) +
+  <span class="fn">theme_minimal</span>() +
+  <span class="fn">theme</span>(
+    <span class="cm"># Plot area background</span>
+    <span class="ar">panel.background</span>  = <span class="fn">element_rect</span>(<span class="ar">fill</span> = <span class="str">"#f0f4f8"</span>),
+    <span class="ar">plot.background</span>   = <span class="fn">element_rect</span>(<span class="ar">fill</span> = <span class="str">"white"</span>),
+
+    <span class="cm"># Grid lines</span>
+    <span class="ar">panel.grid.major</span>  = <span class="fn">element_line</span>(<span class="ar">color</span> = <span class="str">"#dce3ec"</span>, <span class="ar">size</span> = <span class="num">0.4</span>),
+    <span class="ar">panel.grid.minor</span>  = <span class="fn">element_blank</span>(),
+
+    <span class="cm"># Title & text</span>
+    <span class="ar">plot.title</span>        = <span class="fn">element_text</span>(<span class="ar">face</span>=<span class="str">"bold"</span>, <span class="ar">size</span>=<span class="num">16</span>, <span class="ar">color</span>=<span class="str">"#1a1b20"</span>),
+    <span class="ar">axis.title</span>        = <span class="fn">element_text</span>(<span class="ar">size</span>=<span class="num">11</span>, <span class="ar">color</span>=<span class="str">"#6b6760"</span>),
+    <span class="ar">axis.text</span>         = <span class="fn">element_text</span>(<span class="ar">size</span>=<span class="num">10</span>),
+
+    <span class="cm"># Legend</span>
+    <span class="ar">legend.position</span>   = <span class="str">"top"</span>,
+    <span class="ar">legend.title</span>      = <span class="fn">element_text</span>(<span class="ar">face</span>=<span class="str">"bold"</span>),
+
+    <span class="cm"># Margins (T, R, B, L)</span>
+    <span class="ar">plot.margin</span>       = <span class="fn">margin</span>(<span class="num">20</span>, <span class="num">20</span>, <span class="num">20</span>, <span class="num">20</span>)
+  )</pre>
+    </div>
+
+    <h3 class="subsection-title">Key theme() elements</h3>
+    <table class="data-table">
+      <tr><th>Element</th><th>Controls</th><th>Function to use</th></tr>
+      <tr><td><code class="inline">plot.background</code></td><td>Outer plot area</td><td><code class="inline">element_rect(fill=, color=)</code></td></tr>
+      <tr><td><code class="inline">panel.background</code></td><td>Inner plot panel</td><td><code class="inline">element_rect(fill=, color=)</code></td></tr>
+      <tr><td><code class="inline">panel.grid.major</code></td><td>Major grid lines</td><td><code class="inline">element_line()</code> or <code class="inline">element_blank()</code></td></tr>
+      <tr><td><code class="inline">panel.grid.minor</code></td><td>Minor grid lines</td><td><code class="inline">element_line()</code> or <code class="inline">element_blank()</code></td></tr>
+      <tr><td><code class="inline">plot.title</code></td><td>Title text style</td><td><code class="inline">element_text(face=, size=, color=)</code></td></tr>
+      <tr><td><code class="inline">axis.title</code></td><td>Axis label text</td><td><code class="inline">element_text()</code></td></tr>
+      <tr><td><code class="inline">axis.text</code></td><td>Axis tick labels</td><td><code class="inline">element_text()</code> or <code class="inline">element_blank()</code></td></tr>
+      <tr><td><code class="inline">legend.position</code></td><td>Legend location</td><td>"top", "bottom", "left", "right", "none", c(x,y)</td></tr>
+      <tr><td><code class="inline">plot.margin</code></td><td>Plot margin</td><td><code class="inline">margin(t, r, b, l)</code></td></tr>
+      <tr><td><code class="inline">strip.background</code></td><td>Facet panel headers</td><td><code class="inline">element_rect()</code></td></tr>
+    </table>
+  </div>
+
+  <div style="display:flex;gap:16px;margin-top:48px;padding-top:32px;border-top:1px solid var(--border)">
+    <a href="plot-titles.html" style="color:var(--muted);text-decoration:none;font-size:14px">← Titles & Labels</a>
+    <a href="barplots.html" style="color:var(--accent);text-decoration:none;font-size:14px;font-weight:600;margin-left:auto">Next: Bar Charts →</a>
+  </div>
+</main>
+
+<script>
+const themes = [
+  { name: "theme_grey()", pkg: "builtin", pkgLabel: "Built-in", bg: "#ebebeb", panelbg: "#ebebeb", gridColor: "#ffffff", barColors: ["#f8766d","#00ba38","#619cff"] },
+  { name: "theme_bw()", pkg: "builtin", pkgLabel: "Built-in", bg: "#ffffff", panelbg: "#fff", gridColor: "#e0e0e0", barColors: ["#333","#888","#ccc"] },
+  { name: "theme_minimal()", pkg: "builtin", pkgLabel: "Built-in", bg: "#ffffff", panelbg: "#fff", gridColor: "#e8e8e8", barColors: ["#2d6be4","#12a36a","#e84855"] },
+  { name: "theme_classic()", pkg: "builtin", pkgLabel: "Built-in", bg: "#ffffff", panelbg: "#fff", gridColor: "transparent", barColors: ["#333","#666","#999"] },
+  { name: "theme_dark()", pkg: "builtin", pkgLabel: "Built-in", bg: "#595959", panelbg: "#595959", gridColor: "#666", barColors: ["#f8766d","#00ba38","#619cff"] },
+  { name: "theme_light()", pkg: "builtin", pkgLabel: "Built-in", bg: "#ffffff", panelbg: "#e0e0e0", gridColor: "#fff", barColors: ["#f8766d","#00ba38","#619cff"] },
+  { name: "theme_linedraw()", pkg: "builtin", pkgLabel: "Built-in", bg: "#ffffff", panelbg: "#fff", gridColor: "#aaa", barColors: ["#f8766d","#00ba38","#619cff"] },
+  { name: "theme_void()", pkg: "builtin", pkgLabel: "Built-in", bg: "#ffffff", panelbg: "#fff", gridColor: "transparent", barColors: ["#f8766d","#00ba38","#619cff"] },
+  { name: "theme_economist()", pkg: "ggthemes", pkgLabel: "ggthemes", bg: "#d5e4eb", panelbg: "#d5e4eb", gridColor: "#fff", barColors: ["#6794a7","#014d64","#76c0c1"] },
+  { name: "theme_fivethirtyeight()", pkg: "ggthemes", pkgLabel: "ggthemes", bg: "#f0f0f0", panelbg: "#f0f0f0", gridColor: "#fff", barColors: ["#3b9ead","#a7c7e7","#f8766d"] },
+  { name: "theme_wsj()", pkg: "ggthemes", pkgLabel: "ggthemes", bg: "#f7f3e7", panelbg: "#f7f3e7", gridColor: "#ccc", barColors: ["#b22200","#535353","#d0c7b5"] },
+  { name: "theme_ipsum()", pkg: "hrb", pkgLabel: "hrbrthemes", bg: "#ffffff", panelbg: "#fff", gridColor: "#e8e8e8", barColors: ["#d18975","#8fd175","#3f88c5"] },
+];
+
+const codeSamples = {
+  "theme_grey()": `library(ggplot2)\ncyls <- as.factor(mtcars$cyl)\nggplot(mtcars, aes(x = mpg, fill = cyls)) +\n  geom_density(alpha = 0.7) +\n  theme_grey() +   # Default theme\n  theme(legend.position = "top")`,
+  "theme_bw()": `library(ggplot2)\ncyls <- as.factor(mtcars$cyl)\nggplot(mtcars, aes(x = mpg, fill = cyls)) +\n  geom_density(alpha = 0.7) +\n  theme_bw() +     # Black & white — clean borders\n  theme(legend.position = "top")`,
+  "theme_minimal()": `library(ggplot2)\ncyls <- as.factor(mtcars$cyl)\nggplot(mtcars, aes(x = mpg, fill = cyls)) +\n  geom_density(alpha = 0.7) +\n  theme_minimal() + # No background, minimal grid\n  theme(legend.position = "top")`,
+  "theme_classic()": `library(ggplot2)\ncyls <- as.factor(mtcars$cyl)\nggplot(mtcars, aes(x = mpg, fill = cyls)) +\n  geom_density(alpha = 0.7) +\n  theme_classic() + # White bg, axis lines only\n  theme(legend.position = "top")`,
+  "theme_dark()": `library(ggplot2)\ncyls <- as.factor(mtcars$cyl)\nggplot(mtcars, aes(x = mpg, fill = cyls)) +\n  geom_density(alpha = 0.7) +\n  theme_dark() +   # Dark panel background\n  theme(legend.position = "top")`,
+  "theme_light()": `library(ggplot2)\ncyls <- as.factor(mtcars$cyl)\nggplot(mtcars, aes(x = mpg, fill = cyls)) +\n  geom_density(alpha = 0.7) +\n  theme_light() +  # Light gray panel borders\n  theme(legend.position = "top")`,
+  "theme_linedraw()": `library(ggplot2)\ncyls <- as.factor(mtcars$cyl)\nggplot(mtcars, aes(x = mpg, fill = cyls)) +\n  geom_density(alpha = 0.7) +\n  theme_linedraw() + # Black outlines, white bg\n  theme(legend.position = "top")`,
+  "theme_void()": `library(ggplot2)\ncyls <- as.factor(mtcars$cyl)\nggplot(mtcars, aes(x = mpg, fill = cyls)) +\n  geom_density(alpha = 0.7) +\n  theme_void() +   # No axes, no grid — blank canvas\n  theme(legend.position = "top")`,
+  "theme_economist()": `library(ggplot2)\nlibrary(ggthemes)\ncyls <- as.factor(mtcars$cyl)\nggplot(mtcars, aes(x = mpg, fill = cyls)) +\n  geom_density(alpha = 0.7) +\n  theme_economist() +\n  scale_fill_economist() +\n  theme(legend.position = "top")`,
+  "theme_fivethirtyeight()": `library(ggplot2)\nlibrary(ggthemes)\ncyls <- as.factor(mtcars$cyl)\nggplot(mtcars, aes(x = mpg, fill = cyls)) +\n  geom_density(alpha = 0.7) +\n  theme_fivethirtyeight() +\n  scale_fill_fivethirtyeight() +\n  theme(legend.position = "top")`,
+  "theme_wsj()": `library(ggplot2)\nlibrary(ggthemes)\ncyls <- as.factor(mtcars$cyl)\nggplot(mtcars, aes(x = mpg, fill = cyls)) +\n  geom_density(alpha = 0.7) +\n  theme_wsj() +\n  scale_fill_wsj() +\n  theme(legend.position = "top")`,
+  "theme_ipsum()": `library(ggplot2)\nlibrary(hrbrthemes)\ncyls <- as.factor(mtcars$cyl)\nggplot(mtcars, aes(x = mpg, fill = cyls)) +\n  geom_density(alpha = 0.7) +\n  ggtitle("Plot title") +\n  theme_ipsum() +\n  scale_fill_ipsum() +\n  theme(legend.position = "top")`
+};
+
+function buildThemeCards() {
+  const grid = document.getElementById('themeGrid');
+  const heights = [40, 55, 70, 45, 60, 50, 65, 55];
+  themes.forEach((t, i) => {
+    const pkgClass = 'pkg-'+t.pkg;
+    const card = document.createElement('div');
+    card.className = 't-card';
+    card.innerHTML = `
+      <div class="t-preview" style="background:${t.panelbg};border-bottom:1px solid ${t.gridColor==='transparent'?'#ccc':t.gridColor}">
+        ${t.barColors.map((c,j)=>`<div class="t-bar" style="background:${c};height:${heights[(i+j)%heights.length]}%;width:28%;opacity:0.85"></div>`).join('')}
+      </div>
+      <div class="t-info">
+        <div class="t-name">${t.name}</div>
+        <span class="pkg-badge ${pkgClass}">${t.pkgLabel}</span>
+      </div>`;
+    card.onclick = () => selectTheme(card, t.name);
+    grid.appendChild(card);
+  });
+}
+
+function selectTheme(card, name) {
+  document.querySelectorAll('.t-card').forEach(c=>c.classList.remove('selected'));
+  card.classList.add('selected');
+  const code = document.getElementById('themeCode');
+  const pre = document.getElementById('themeCodePre');
+  const label = document.getElementById('themeCodeLabel');
+  code.style.display = 'block';
+  label.textContent = name + ' — code';
+  pre.textContent = codeSamples[name] || '# Code not available';
+}
+
+function copyCode(btn) {
+  const text = btn.closest('.code-block, .selected-code').querySelector('pre').innerText;
+  navigator.clipboard.writeText(text).then(() => {
+    btn.textContent = 'Copied!'; btn.classList.add('copied');
+    setTimeout(() => { btn.textContent = 'Copy'; btn.classList.remove('copied'); }, 2000);
+  });
+}
+
+buildThemeCards();
+</script>
+</body>
+</html>

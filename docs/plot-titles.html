@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Titles & Labels — RViz</title>
+<link rel="stylesheet" href="shared.css">
+</head>
+<body>
+
+<nav class="sidebar">
+  <div class="sidebar-top">
+    <a href="index.html" class="sidebar-logo">R<span>viz</span></a>
+    <div class="sidebar-page">Titles & Labels</div>
+  </div>
+  <div class="sidebar-nav">
+    <div class="nav-group">
+      <div class="nav-section">Getting Started</div>
+      <a href="index.html" class="nav-item">Home</a>
+      <a href="r-guide.html" class="nav-item">R Guide & Basics</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-section">ggplot2 Core</div>
+      <a href="ggplot2-intro.html" class="nav-item">Introduction & Grammar</a>
+      <a href="geoms.html" class="nav-item">Geom Functions</a>
+      <a href="plot-titles.html" class="nav-item active">Titles & Labels</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-section">Customization</div>
+      <a href="themes.html" class="nav-item">Themes & Styling</a>
+      <a href="barplots.html" class="nav-item">Bar Charts</a>
+      <a href="combining.html" class="nav-item">Combining Plots</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-section">Reference</div>
+      <a href="reference.html" class="nav-item">Quick Reference</a>
+    </div>
+  </div>
+  <div class="sidebar-bottom">
+    <a href="index.html" class="back-home">← Back to Home</a>
+  </div>
+</nav>
+
+<main class="main-content">
+  <div class="page-header">
+    <div class="page-eyebrow">Module 03 — Labels</div>
+    <h1 class="page-title">Titles, Labels &amp; <em>Annotations</em></h1>
+    <p class="page-desc">Every ggplot2 plot can have a title, subtitle, caption, and tag. There are two main ways to add them — via <code class="inline">ggtitle()</code> or <code class="inline">labs()</code>.</p>
+  </div>
+
+  <!-- TITLE & SUBTITLE -->
+  <div class="content-section">
+    <h2 class="section-title">Title & Subtitle</h2>
+
+    <div class="tabs">
+      <div class="tab-bar">
+        <button class="tab-btn active" onclick="switchTab(this,'title-ggtitle')">ggtitle()</button>
+        <button class="tab-btn" onclick="switchTab(this,'title-labs')">labs()</button>
+      </div>
+
+      <div id="title-ggtitle" class="tab-panel active">
+        <p class="body-text"><code class="inline">ggtitle()</code> is a convenience function dedicated to adding a title and subtitle.</p>
+        <div class="code-block">
+          <div class="code-header">
+            <span class="code-lang"><span class="code-lang-badge">R</span> ggtitle()</span>
+            <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+          </div>
+          <pre><span class="fn">library</span>(ggplot2)
+data <- iris
+
+<span class="fn">ggplot</span>(data, <span class="fn">aes</span>(<span class="ar">x</span> = Sepal.Width, <span class="ar">y</span> = Petal.Width, <span class="ar">fill</span> = Species)) +
+  <span class="fn">geom_bar</span>(<span class="ar">stat</span> = <span class="str">"identity"</span>) +
+  <span class="fn">facet_wrap</span>(~Species) +
+  <span class="fn">ggtitle</span>(<span class="str">"Title of the plot"</span>,
+          <span class="ar">subtitle</span> = <span class="str">"Subtitle of the plot"</span>)</pre>
+        </div>
+      </div>
+
+      <div id="title-labs" class="tab-panel">
+        <p class="body-text"><code class="inline">labs()</code> is more versatile — it sets titles, axis labels, legend labels, and more all in one call.</p>
+        <div class="code-block">
+          <div class="code-header">
+            <span class="code-lang"><span class="code-lang-badge">R</span> labs() — all labels in one call</span>
+            <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+          </div>
+          <pre><span class="fn">library</span>(ggplot2)
+data <- iris
+
+<span class="fn">ggplot</span>(data, <span class="fn">aes</span>(<span class="ar">x</span> = Sepal.Width, <span class="ar">y</span> = Petal.Width, <span class="ar">fill</span> = Species)) +
+  <span class="fn">geom_bar</span>(<span class="ar">stat</span> = <span class="str">"identity"</span>) +
+  <span class="fn">facet_wrap</span>(~Species) +
+  <span class="fn">labs</span>(
+    <span class="ar">title</span>    = <span class="str">"Title of the plot"</span>,
+    <span class="ar">subtitle</span> = <span class="str">"Subtitle of the plot"</span>,
+    <span class="ar">x</span>        = <span class="str">"Sepal Width"</span>,
+    <span class="ar">y</span>        = <span class="str">"Petal Width"</span>,
+    <span class="ar">fill</span>     = <span class="str">"Iris Species"</span>
+  )</pre>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- TITLE POSITION -->
+  <div class="content-section">
+    <h2 class="section-title">Title Position</h2>
+    <p class="body-text">By default, the title is aligned to the <strong>panel</strong> (the plot area). Set <code class="inline">plot.title.position = "plot"</code> to align to the full plot including axis labels.</p>
+
+    <div class="code-block">
+      <div class="code-header">
+        <span class="code-lang"><span class="code-lang-badge">R</span> Title position control</span>
+        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+      </div>
+      <pre><span class="cm"># Default: aligned to the panel (data area)</span>
+<span class="fn">ggplot</span>(data, <span class="fn">aes</span>(<span class="ar">x</span> = Sepal.Width, <span class="ar">y</span> = Petal.Width)) +
+  <span class="fn">geom_area</span>(<span class="ar">fill</span> = <span class="fn">rgb</span>(<span class="num">0</span>, <span class="num">0.5</span>, <span class="num">1</span>, <span class="ar">alpha</span> = <span class="num">0.5</span>)) +
+  <span class="fn">labs</span>(<span class="ar">title</span> = <span class="str">"Aligned to panel (default)"</span>)
+
+<span class="cm"># Aligned to the full plot (left edge of margin)</span>
+<span class="fn">ggplot</span>(data, <span class="fn">aes</span>(<span class="ar">x</span> = Sepal.Width, <span class="ar">y</span> = Petal.Width)) +
+  <span class="fn">geom_area</span>(<span class="ar">fill</span> = <span class="fn">rgb</span>(<span class="num">0</span>, <span class="num">0.5</span>, <span class="num">1</span>, <span class="ar">alpha</span> = <span class="num">0.5</span>)) +
+  <span class="fn">labs</span>(<span class="ar">title</span> = <span class="str">"Aligned to full plot"</span>) +
+  <span class="fn">theme</span>(<span class="ar">plot.title.position</span> = <span class="str">"plot"</span>)   <span class="cm"># "panel" | "plot"</span></pre>
+    </div>
+  </div>
+
+  <!-- SUBTITLE -->
+  <div class="content-section">
+    <h2 class="section-title">Subtitle</h2>
+    <p class="body-text">A subtitle appears below the title in a slightly smaller font. Add it the same way as the title.</p>
+
+    <div class="code-block">
+      <div class="code-header">
+        <span class="code-lang"><span class="code-lang-badge">R</span> Subtitle examples</span>
+        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+      </div>
+      <pre><span class="cm"># Option 1: ggtitle with subtitle argument</span>
+<span class="fn">ggplot</span>(data, <span class="fn">aes</span>(<span class="ar">x</span> = Sepal.Width, <span class="ar">y</span> = Petal.Width)) +
+  <span class="fn">geom_area</span>(<span class="ar">fill</span> = <span class="fn">rgb</span>(<span class="num">0</span>, <span class="num">0.5</span>, <span class="num">1</span>, <span class="ar">alpha</span> = <span class="num">0.5</span>)) +
+  <span class="fn">ggtitle</span>(<span class="str">"Main Title"</span>, <span class="ar">subtitle</span> = <span class="str">"Subtitle below"</span>)
+
+<span class="cm"># Option 2: labs() with subtitle argument</span>
+<span class="fn">ggplot</span>(economics, <span class="fn">aes</span>(date, unemploy)) +
+  <span class="fn">geom_area</span>(<span class="ar">fill</span> = <span class="fn">rgb</span>(<span class="num">0</span>, <span class="num">0.5</span>, <span class="num">1</span>, <span class="ar">alpha</span> = <span class="num">0.5</span>)) +
+  <span class="fn">labs</span>(
+    <span class="ar">title</span>    = <span class="str">"US Unemployment Over Time"</span>,
+    <span class="ar">subtitle</span> = <span class="str">"Monthly data from 1967 to 2015"</span>
+  )</pre>
+    </div>
+  </div>
+
+  <!-- CAPTION -->
+  <div class="content-section">
+    <h2 class="section-title">Caption</h2>
+    <p class="body-text">A caption appears at the bottom-right of the plot. Great for adding data source citations.</p>
+
+    <div class="code-block">
+      <div class="code-header">
+        <span class="code-lang"><span class="code-lang-badge">R</span> Adding a caption</span>
+        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+      </div>
+      <pre><span class="fn">ggplot</span>(economics, <span class="fn">aes</span>(date, unemploy)) +
+  <span class="fn">geom_area</span>(<span class="ar">fill</span> = <span class="fn">rgb</span>(<span class="num">0</span>, <span class="num">0.5</span>, <span class="num">1</span>, <span class="ar">alpha</span> = <span class="num">0.5</span>)) +
+  <span class="fn">labs</span>(
+    <span class="ar">title</span>   = <span class="str">"US Unemployment"</span>,
+    <span class="ar">caption</span> = <span class="str">"Source: Bureau of Labor Statistics"</span>
+  )
+
+<span class="cm"># Position caption to left instead of right (default)</span>
+<span class="fn">ggplot</span>(economics, <span class="fn">aes</span>(date, unemploy)) +
+  <span class="fn">geom_area</span>(<span class="ar">fill</span> = <span class="fn">rgb</span>(<span class="num">0</span>, <span class="num">0.5</span>, <span class="num">1</span>, <span class="ar">alpha</span> = <span class="num">0.5</span>)) +
+  <span class="fn">labs</span>(<span class="ar">caption</span> = <span class="str">"Source: ggplot2 economics dataset"</span>) +
+  <span class="fn">theme</span>(<span class="ar">plot.caption.position</span> = <span class="str">"plot"</span>,
+        <span class="ar">plot.caption</span> = <span class="fn">element_text</span>(<span class="ar">hjust</span> = <span class="num">0</span>))  <span class="cm"># 0=left, 1=right</span></pre>
+    </div>
+  </div>
+
+  <!-- TAG -->
+  <div class="content-section">
+    <h2 class="section-title">Tag</h2>
+    <p class="body-text">A tag is placed at the top-left of the plot. Useful for labeling panels (A, B, C) in a multi-panel figure.</p>
+
+    <div class="code-block">
+      <div class="code-header">
+        <span class="code-lang"><span class="code-lang-badge">R</span> Adding a tag</span>
+        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+      </div>
+      <pre><span class="fn">ggplot</span>(economics, <span class="fn">aes</span>(date, unemploy)) +
+  <span class="fn">geom_area</span>(<span class="ar">fill</span> = <span class="fn">rgb</span>(<span class="num">0</span>, <span class="num">0.5</span>, <span class="num">1</span>, <span class="ar">alpha</span> = <span class="num">0.5</span>)) +
+  <span class="fn">labs</span>(<span class="ar">tag</span> = <span class="str">"A"</span>)  <span class="cm"># Top-left corner label</span></pre>
+    </div>
+  </div>
+
+  <!-- STYLING LABELS -->
+  <div class="content-section">
+    <h2 class="section-title">Styling Labels with theme()</h2>
+    <p class="body-text">Use <code class="inline">theme()</code> to control the font, size, color, and alignment of every label element.</p>
+
+    <div class="code-block">
+      <div class="code-header">
+        <span class="code-lang"><span class="code-lang-badge">R</span> Full label styling</span>
+        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+      </div>
+      <pre><span class="fn">ggplot</span>(mtcars, <span class="fn">aes</span>(<span class="ar">x</span> = wt, <span class="ar">y</span> = mpg)) +
+  <span class="fn">geom_point</span>(<span class="ar">color</span> = <span class="str">"steelblue"</span>, <span class="ar">size</span> = <span class="num">3</span>) +
+  <span class="fn">labs</span>(
+    <span class="ar">title</span>    = <span class="str">"Vehicle Weight vs Fuel Economy"</span>,
+    <span class="ar">subtitle</span> = <span class="str">"Each dot is one car model from 1974"</span>,
+    <span class="ar">caption</span>  = <span class="str">"Source: Motor Trend US magazine"</span>,
+    <span class="ar">x</span>        = <span class="str">"Weight (1,000 lbs)"</span>,
+    <span class="ar">y</span>        = <span class="str">"Miles per Gallon"</span>
+  ) +
+  <span class="fn">theme_minimal</span>() +
+  <span class="fn">theme</span>(
+    <span class="ar">plot.title</span>    = <span class="fn">element_text</span>(<span class="ar">face</span> = <span class="str">"bold"</span>, <span class="ar">size</span> = <span class="num">18</span>, <span class="ar">color</span> = <span class="str">"#1a1b20"</span>),
+    <span class="ar">plot.subtitle</span> = <span class="fn">element_text</span>(<span class="ar">size</span> = <span class="num">13</span>, <span class="ar">color</span> = <span class="str">"#6b6760"</span>, <span class="ar">margin</span> = <span class="fn">margin</span>(<span class="ar">b</span>=<span class="num">12</span>)),
+    <span class="ar">plot.caption</span>  = <span class="fn">element_text</span>(<span class="ar">size</span> = <span class="num">10</span>, <span class="ar">color</span> = <span class="str">"#aaa"</span>, <span class="ar">hjust</span> = <span class="num">1</span>),
+    <span class="ar">axis.title</span>    = <span class="fn">element_text</span>(<span class="ar">size</span> = <span class="num">12</span>, <span class="ar">face</span> = <span class="str">"italic"</span>),
+    <span class="ar">axis.text</span>     = <span class="fn">element_text</span>(<span class="ar">size</span> = <span class="num">11</span>)
+  )</pre>
+    </div>
+
+    <h3 class="subsection-title">element_text() reference</h3>
+    <table class="data-table">
+      <tr><th>Argument</th><th>Values</th><th>Description</th></tr>
+      <tr><td><code class="inline">face</code></td><td>"plain", "bold", "italic", "bold.italic"</td><td>Font weight/style</td></tr>
+      <tr><td><code class="inline">size</code></td><td>Number in points</td><td>Font size</td></tr>
+      <tr><td><code class="inline">color</code></td><td>Color name or hex</td><td>Text color</td></tr>
+      <tr><td><code class="inline">hjust</code></td><td>0 (left), 0.5 (center), 1 (right)</td><td>Horizontal alignment</td></tr>
+      <tr><td><code class="inline">vjust</code></td><td>0–1</td><td>Vertical alignment</td></tr>
+      <tr><td><code class="inline">angle</code></td><td>Degrees (e.g., 45, 90)</td><td>Rotation</td></tr>
+      <tr><td><code class="inline">family</code></td><td>Font family name</td><td>Typeface</td></tr>
+      <tr><td><code class="inline">margin</code></td><td>margin(t,r,b,l)</td><td>Spacing around text</td></tr>
+    </table>
+  </div>
+
+  <!-- AXIS LABELS -->
+  <div class="content-section">
+    <h2 class="section-title">Removing & Rotating Axis Text</h2>
+    <div class="code-block">
+      <div class="code-header">
+        <span class="code-lang"><span class="code-lang-badge">R</span> Axis text manipulation</span>
+        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+      </div>
+      <pre><span class="fn">ggplot</span>(mtcars, <span class="fn">aes</span>(<span class="ar">x</span> = <span class="fn">row.names</span>(mtcars), <span class="ar">y</span> = mpg)) +
+  <span class="fn">geom_bar</span>(<span class="ar">stat</span> = <span class="str">"identity"</span>, <span class="ar">fill</span> = <span class="str">"steelblue"</span>) +
+  <span class="fn">theme</span>(
+    <span class="cm"># Rotate x-axis labels 45 degrees</span>
+    <span class="ar">axis.text.x</span>  = <span class="fn">element_text</span>(<span class="ar">angle</span> = <span class="num">45</span>, <span class="ar">hjust</span> = <span class="num">1</span>),
+
+    <span class="cm"># Remove y-axis label text</span>
+    <span class="ar">axis.text.y</span>  = <span class="fn">element_blank</span>(),
+    <span class="ar">axis.ticks.y</span> = <span class="fn">element_blank</span>(),
+
+    <span class="cm"># Remove axis titles</span>
+    <span class="ar">axis.title.x</span> = <span class="fn">element_blank</span>()
+  )</pre>
+    </div>
+  </div>
+
+  <div style="display:flex;gap:16px;margin-top:48px;padding-top:32px;border-top:1px solid var(--border)">
+    <a href="geoms.html" style="color:var(--muted);text-decoration:none;font-size:14px">← Geom Functions</a>
+    <a href="themes.html" style="color:var(--accent);text-decoration:none;font-size:14px;font-weight:600;margin-left:auto">Next: Themes →</a>
+  </div>
+</main>
+
+<script>
+function switchTab(btn, id) {
+  const bar = btn.closest('.tab-bar');
+  bar.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  let el = bar.nextElementSibling;
+  while(el && el.classList.contains('tab-panel')) {
+    el.classList.remove('active'); el = el.nextElementSibling;
+  }
+  document.getElementById(id).classList.add('active');
+}
+function copyCode(btn) {
+  const text = btn.closest('.code-block').querySelector('pre').innerText;
+  navigator.clipboard.writeText(text).then(() => {
+    btn.textContent = 'Copied!'; btn.classList.add('copied');
+    setTimeout(() => { btn.textContent = 'Copy'; btn.classList.remove('copied'); }, 2000);
+  });
+}
+</script>
+</body>
+</html>

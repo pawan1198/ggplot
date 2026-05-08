@@ -1,0 +1,391 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Bar Charts — RViz</title>
+<link rel="stylesheet" href="shared.css">
+<style>
+.example-header{
+  display:flex;align-items:center;gap:16px;
+  padding:20px 24px;
+  background:var(--warm);
+  border:1px solid var(--border);
+  border-radius:10px 10px 0 0;
+  margin-top:32px;
+}
+.example-header + .code-block{border-radius:0 0 10px 10px;margin-top:0}
+.example-num{
+  width:36px;height:36px;border-radius:50%;
+  background:var(--ink);color:#fff;
+  display:flex;align-items:center;justify-content:center;
+  font-family:'Syne',sans-serif;font-weight:700;font-size:15px;
+  flex-shrink:0;
+}
+.example-title{font-family:'Syne',sans-serif;font-size:17px;font-weight:700;color:var(--ink)}
+.example-desc{font-size:13px;color:var(--muted);margin-top:2px}
+.bar-viz{
+  background:var(--warm);
+  border:1px solid var(--border);
+  border-radius:10px;
+  padding:24px;
+  margin:16px 0;
+  display:flex;align-items:flex-end;
+  gap:12px;height:140px;
+}
+.bar-viz .bar{border-radius:4px 4px 0 0;transition:height .3s;display:flex;align-items:flex-start;justify-content:center;padding-top:6px}
+.bar-label{font-size:11px;font-family:'JetBrains Mono',monospace;color:rgba(0,0,0,.5)}
+</style>
+</head>
+<body>
+
+<nav class="sidebar">
+  <div class="sidebar-top">
+    <a href="index.html" class="sidebar-logo">R<span>viz</span></a>
+    <div class="sidebar-page">Bar Charts</div>
+  </div>
+  <div class="sidebar-nav">
+    <div class="nav-group">
+      <div class="nav-section">Getting Started</div>
+      <a href="index.html" class="nav-item">Home</a>
+      <a href="r-guide.html" class="nav-item">R Guide & Basics</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-section">ggplot2 Core</div>
+      <a href="ggplot2-intro.html" class="nav-item">Introduction & Grammar</a>
+      <a href="geoms.html" class="nav-item">Geom Functions</a>
+      <a href="plot-titles.html" class="nav-item">Titles & Labels</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-section">Customization</div>
+      <a href="themes.html" class="nav-item">Themes & Styling</a>
+      <a href="barplots.html" class="nav-item active">Bar Charts</a>
+      <a href="combining.html" class="nav-item">Combining Plots</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-section">Reference</div>
+      <a href="reference.html" class="nav-item">Quick Reference</a>
+    </div>
+  </div>
+  <div class="sidebar-bottom">
+    <a href="index.html" class="back-home">← Back to Home</a>
+  </div>
+</nav>
+
+<main class="main-content">
+  <div class="page-header">
+    <div class="page-eyebrow">Module 05 — Chart Types</div>
+    <h1 class="page-title">Bar Charts — <em>5 Examples</em></h1>
+    <p class="page-desc">A complete guide to drawing barplots in R: from basic Base R charts to advanced grouped and stacked ggplot2 visualizations.</p>
+  </div>
+
+  <!-- DATA SETUP -->
+  <div class="content-section">
+    <h2 class="section-title">Example Data Setup</h2>
+    <p class="body-text">All examples in this module use two data frames. Create them at the start of your R session.</p>
+
+    <div class="code-block">
+      <div class="code-header">
+        <span class="code-lang"><span class="code-lang-badge">R</span> Create example data</span>
+        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+      </div>
+      <pre><span class="cm"># df1 — Simple data with 4 groups (values + group)</span>
+df1 <- <span class="fn">data.frame</span>(
+  <span class="ar">values</span> = <span class="fn">c</span>(<span class="num">5</span>, <span class="num">2</span>, <span class="num">7</span>, <span class="num">2</span>),
+  <span class="ar">group</span>  = <span class="fn">LETTERS</span>[<span class="num">1</span>:<span class="num">4</span>]     <span class="cm"># "A", "B", "C", "D"</span>
+)
+df1
+<span class="cm">##   values group</span>
+<span class="cm">## 1      5     A</span>
+<span class="cm">## 2      2     B</span>
+<span class="cm">## 3      7     C</span>
+<span class="cm">## 4      2     D</span>
+
+<span class="cm"># df2 — Data with main groups AND subgroups</span>
+df2 <- <span class="fn">data.frame</span>(
+  <span class="ar">values</span>    = <span class="fn">c</span>(<span class="num">3</span>, <span class="num">2</span>, <span class="num">6</span>, <span class="num">3</span>, <span class="num">4</span>, <span class="num">3</span>, <span class="num">8</span>, <span class="num">2</span>),
+  <span class="ar">maingroup</span> = <span class="fn">rep</span>(<span class="fn">LETTERS</span>[<span class="num">1</span>:<span class="num">4</span>], <span class="ar">each</span> = <span class="num">2</span>),
+  <span class="ar">subgroup</span>  = <span class="fn">letters</span>[<span class="num">1</span>:<span class="num">2</span>]  <span class="cm"># "a", "b" repeated</span>
+)</pre>
+    </div>
+  </div>
+
+  <!-- EXAMPLE 1: BASE R -->
+  <div class="content-section">
+    <h2 class="section-title">Example 1 — Base R Barplot</h2>
+    <p class="body-text">R's built-in <code class="inline">barplot()</code> function requires no packages. It's quick for exploratory work but has fewer customization options than ggplot2.</p>
+
+    <div class="tabs">
+      <div class="tab-bar">
+        <button class="tab-btn active" onclick="switchTab(this,'base-vertical')">Vertical</button>
+        <button class="tab-btn" onclick="switchTab(this,'base-horiz')">Horizontal</button>
+        <button class="tab-btn" onclick="switchTab(this,'base-colors')">With Colors</button>
+        <button class="tab-btn" onclick="switchTab(this,'base-legend')">With Legend</button>
+      </div>
+
+      <div id="base-vertical" class="tab-panel active">
+        <div class="code-block">
+          <div class="code-header">
+            <span class="code-lang"><span class="code-lang-badge">R</span> Default vertical barplot</span>
+            <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+          </div>
+          <pre><span class="cm"># Default barplot — vertical gray bars</span>
+<span class="fn">barplot</span>(values ~ group, df1)</pre>
+        </div>
+      </div>
+
+      <div id="base-horiz" class="tab-panel">
+        <div class="code-block">
+          <div class="code-header">
+            <span class="code-lang"><span class="code-lang-badge">R</span> Horizontal barplot</span>
+            <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+          </div>
+          <pre><span class="cm"># Use horiz = TRUE for horizontal bars</span>
+<span class="fn">barplot</span>(values ~ group,
+        df1,
+        <span class="ar">horiz</span> = <span class="kw">TRUE</span>)</pre>
+        </div>
+      </div>
+
+      <div id="base-colors" class="tab-panel">
+        <div class="code-block">
+          <div class="code-header">
+            <span class="code-lang"><span class="code-lang-badge">R</span> Barplot with colors</span>
+            <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+          </div>
+          <pre><span class="cm"># col takes a vector of colors (1 per bar)</span>
+<span class="fn">barplot</span>(values ~ group,
+        df1,
+        <span class="ar">col</span> = <span class="num">1</span>:<span class="num">4</span>)    <span class="cm"># Colors 1–4 = black, red, green, blue</span>
+
+<span class="cm"># Named colors also work</span>
+<span class="fn">barplot</span>(values ~ group,
+        df1,
+        <span class="ar">col</span> = <span class="fn">c</span>(<span class="str">"tomato"</span>, <span class="str">"steelblue"</span>, <span class="str">"darkgreen"</span>, <span class="str">"gold"</span>))</pre>
+        </div>
+      </div>
+
+      <div id="base-legend" class="tab-panel">
+        <div class="code-block">
+          <div class="code-header">
+            <span class="code-lang"><span class="code-lang-badge">R</span> Adding a legend</span>
+            <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+          </div>
+          <pre><span class="fn">barplot</span>(values ~ group, df1, <span class="ar">col</span> = <span class="num">1</span>:<span class="num">4</span>)
+
+<span class="cm"># Add legend separately</span>
+<span class="fn">legend</span>(<span class="str">"topright"</span>,
+       df1$group,
+       <span class="ar">fill</span> = <span class="num">1</span>:<span class="num">4</span>)</pre>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- EXAMPLE 2: BASIC GGPLOT2 -->
+  <div class="content-section">
+    <h2 class="section-title">Example 2 — Basic ggplot2 Bar Chart</h2>
+    <p class="body-text">ggplot2 uses <code class="inline">geom_bar()</code> for bar charts. With pre-summarized data, use <code class="inline">stat = "identity"</code> to use the values as-is.</p>
+
+    <div class="tabs">
+      <div class="tab-bar">
+        <button class="tab-btn active" onclick="switchTab(this,'gg-basic')">Basic</button>
+        <button class="tab-btn" onclick="switchTab(this,'gg-horiz')">Horizontal</button>
+        <button class="tab-btn" onclick="switchTab(this,'gg-colors')">With Colors</button>
+      </div>
+
+      <div id="gg-basic" class="tab-panel active">
+        <div class="code-block">
+          <div class="code-header">
+            <span class="code-lang"><span class="code-lang-badge">R</span> Default ggplot2 bar chart</span>
+            <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+          </div>
+          <pre><span class="fn">library</span>(ggplot2)
+
+<span class="cm"># stat="identity" uses y values directly</span>
+<span class="fn">ggplot</span>(df1, <span class="fn">aes</span>(<span class="ar">x</span> = group, <span class="ar">y</span> = values)) +
+  <span class="fn">geom_bar</span>(<span class="ar">stat</span> = <span class="str">"identity"</span>)</pre>
+        </div>
+        <div class="callout tip">
+          <span class="callout-icon">💡</span>
+          <div class="callout-body"><strong>stat options:</strong> Use <code class="inline">stat = "identity"</code> when y already contains the bar heights. Use <code class="inline">stat = "count"</code> (the default) to count rows automatically.</div>
+        </div>
+      </div>
+
+      <div id="gg-horiz" class="tab-panel">
+        <div class="code-block">
+          <div class="code-header">
+            <span class="code-lang"><span class="code-lang-badge">R</span> Horizontal with coord_flip()</span>
+            <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+          </div>
+          <pre><span class="fn">ggplot</span>(df1, <span class="fn">aes</span>(<span class="ar">x</span> = group, <span class="ar">y</span> = values)) +
+  <span class="fn">geom_bar</span>(<span class="ar">stat</span> = <span class="str">"identity"</span>) +
+  <span class="fn">coord_flip</span>()    <span class="cm"># Flip x and y axes</span>
+
+<span class="cm"># Modern alternative: swap x and y directly</span>
+<span class="fn">ggplot</span>(df1, <span class="fn">aes</span>(<span class="ar">x</span> = values, <span class="ar">y</span> = group)) +
+  <span class="fn">geom_bar</span>(<span class="ar">stat</span> = <span class="str">"identity"</span>)
+
+<span class="cm"># Sort bars by value</span>
+<span class="fn">ggplot</span>(df1, <span class="fn">aes</span>(<span class="ar">x</span> = values, <span class="ar">y</span> = <span class="fn">reorder</span>(group, values))) +
+  <span class="fn">geom_bar</span>(<span class="ar">stat</span> = <span class="str">"identity"</span>) +
+  <span class="fn">labs</span>(<span class="ar">y</span> = <span class="str">"Group"</span>)</pre>
+        </div>
+      </div>
+
+      <div id="gg-colors" class="tab-panel">
+        <div class="code-block">
+          <div class="code-header">
+            <span class="code-lang"><span class="code-lang-badge">R</span> Colored bars with legend</span>
+            <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+          </div>
+          <pre><span class="cm"># Map fill to group — auto-creates legend</span>
+<span class="fn">ggplot</span>(df1, <span class="fn">aes</span>(<span class="ar">x</span> = group, <span class="ar">y</span> = values, <span class="ar">fill</span> = group)) +
+  <span class="fn">geom_bar</span>(<span class="ar">stat</span> = <span class="str">"identity"</span>)
+
+<span class="cm"># Custom colors</span>
+<span class="fn">ggplot</span>(df1, <span class="fn">aes</span>(<span class="ar">x</span> = group, <span class="ar">y</span> = values, <span class="ar">fill</span> = group)) +
+  <span class="fn">geom_bar</span>(<span class="ar">stat</span> = <span class="str">"identity"</span>) +
+  <span class="fn">scale_fill_manual</span>(<span class="ar">values</span> = <span class="fn">c</span>(<span class="str">"#e84855"</span>,<span class="str">"#2d6be4"</span>,<span class="str">"#12a36a"</span>,<span class="str">"#d4a017"</span>)) +
+  <span class="fn">theme_minimal</span>()
+
+<span class="cm"># Add value labels on top</span>
+<span class="fn">ggplot</span>(df1, <span class="fn">aes</span>(<span class="ar">x</span> = group, <span class="ar">y</span> = values, <span class="ar">fill</span> = group)) +
+  <span class="fn">geom_bar</span>(<span class="ar">stat</span> = <span class="str">"identity"</span>) +
+  <span class="fn">geom_text</span>(<span class="fn">aes</span>(<span class="ar">label</span> = values), <span class="ar">vjust</span> = -<span class="num">0.5</span>, <span class="ar">size</span> = <span class="num">4</span>) +
+  <span class="fn">theme_minimal</span>()</pre>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- EXAMPLE 3: STACKED -->
+  <div class="content-section">
+    <h2 class="section-title">Example 3 — Stacked Bar Chart</h2>
+    <p class="body-text">Stacked bars show how subgroups contribute to a total. Map <code class="inline">fill</code> to the subgroup variable.</p>
+
+    <div class="code-block">
+      <div class="code-header">
+        <span class="code-lang"><span class="code-lang-badge">R</span> Stacked barplot (ggplot2)</span>
+        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+      </div>
+      <pre><span class="fn">ggplot</span>(df2, <span class="fn">aes</span>(<span class="ar">x</span> = maingroup,
+             <span class="ar">y</span> = values,
+             <span class="ar">fill</span> = subgroup)) +
+  <span class="fn">geom_bar</span>(<span class="ar">stat</span> = <span class="str">"identity"</span>)
+<span class="cm"># Default: stacked. subgroups stacked within each maingroup bar</span></pre>
+    </div>
+  </div>
+
+  <!-- EXAMPLE 4: 100% STACKED -->
+  <div class="content-section">
+    <h2 class="section-title">Example 4 — 100% Stacked (Proportional)</h2>
+    <p class="body-text">Scale all bars to the same height to emphasize proportions between subgroups rather than totals.</p>
+
+    <div class="tabs">
+      <div class="tab-bar">
+        <button class="tab-btn active" onclick="switchTab(this,'prop-1')">Scaled to 1.0</button>
+        <button class="tab-btn" onclick="switchTab(this,'prop-100')">Scaled to 100%</button>
+      </div>
+
+      <div id="prop-1" class="tab-panel active">
+        <div class="code-block">
+          <div class="code-header">
+            <span class="code-lang"><span class="code-lang-badge">R</span> Scale to 1.0</span>
+            <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+          </div>
+          <pre><span class="fn">ggplot</span>(df2, <span class="fn">aes</span>(<span class="ar">x</span> = maingroup, <span class="ar">y</span> = values, <span class="ar">fill</span> = subgroup)) +
+  <span class="fn">geom_bar</span>(<span class="ar">stat</span> = <span class="str">"identity"</span>,
+           <span class="ar">position</span> = <span class="str">"fill"</span>)   <span class="cm"># position="fill" scales to 1.0</span></pre>
+        </div>
+      </div>
+
+      <div id="prop-100" class="tab-panel">
+        <div class="code-block">
+          <div class="code-header">
+            <span class="code-lang"><span class="code-lang-badge">R</span> Scale to 100% with percent labels</span>
+            <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+          </div>
+          <pre><span class="fn">ggplot</span>(df2, <span class="fn">aes</span>(<span class="ar">x</span> = maingroup, <span class="ar">y</span> = values, <span class="ar">fill</span> = subgroup)) +
+  <span class="fn">geom_bar</span>(<span class="ar">stat</span> = <span class="str">"identity"</span>, <span class="ar">position</span> = <span class="str">"fill"</span>) +
+  <span class="fn">scale_y_continuous</span>(<span class="ar">labels</span> = scales::<span class="fn">percent_format</span>())
+<span class="cm"># Y-axis shows 0%, 25%, 50%, 75%, 100%</span></pre>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- EXAMPLE 5: GROUPED -->
+  <div class="content-section">
+    <h2 class="section-title">Example 5 — Grouped Bar Chart</h2>
+    <p class="body-text">Grouped bars place subgroups side-by-side within each main group. Use <code class="inline">position = "dodge"</code>.</p>
+
+    <div class="code-block">
+      <div class="code-header">
+        <span class="code-lang"><span class="code-lang-badge">R</span> Grouped (dodged) barplot</span>
+        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+      </div>
+      <pre><span class="fn">ggplot</span>(df2, <span class="fn">aes</span>(<span class="ar">x</span> = maingroup, <span class="ar">y</span> = values, <span class="ar">fill</span> = subgroup)) +
+  <span class="fn">geom_bar</span>(<span class="ar">stat</span> = <span class="str">"identity"</span>,
+           <span class="ar">position</span> = <span class="str">"dodge"</span>)   <span class="cm"># "dodge" = side by side</span>
+
+<span class="cm"># Control spacing between dodged bars</span>
+<span class="fn">ggplot</span>(df2, <span class="fn">aes</span>(<span class="ar">x</span> = maingroup, <span class="ar">y</span> = values, <span class="ar">fill</span> = subgroup)) +
+  <span class="fn">geom_bar</span>(<span class="ar">stat</span> = <span class="str">"identity"</span>,
+           <span class="ar">position</span> = <span class="fn">position_dodge</span>(<span class="ar">width</span> = <span class="num">0.8</span>),
+           <span class="ar">width</span> = <span class="num">0.7</span>)
+
+<span class="cm"># Full styled example</span>
+<span class="fn">ggplot</span>(df2, <span class="fn">aes</span>(<span class="ar">x</span> = maingroup, <span class="ar">y</span> = values, <span class="ar">fill</span> = subgroup)) +
+  <span class="fn">geom_bar</span>(<span class="ar">stat</span> = <span class="str">"identity"</span>, <span class="ar">position</span> = <span class="str">"dodge"</span>, <span class="ar">width</span> = <span class="num">0.7</span>) +
+  <span class="fn">geom_text</span>(<span class="fn">aes</span>(<span class="ar">label</span> = values),
+            <span class="ar">position</span> = <span class="fn">position_dodge</span>(<span class="ar">width</span> = <span class="num">0.7</span>),
+            <span class="ar">vjust</span> = -<span class="num">0.5</span>, <span class="ar">size</span> = <span class="num">3.5</span>) +
+  <span class="fn">scale_fill_manual</span>(<span class="ar">values</span> = <span class="fn">c</span>(<span class="str">"#f87060"</span>, <span class="str">"#0cc0df"</span>)) +
+  <span class="fn">labs</span>(<span class="ar">title</span> = <span class="str">"Grouped Bar Chart"</span>,
+       <span class="ar">x</span>     = <span class="str">"Main Group"</span>,
+       <span class="ar">y</span>     = <span class="str">"Values"</span>,
+       <span class="ar">fill</span>  = <span class="str">"Subgroup"</span>) +
+  <span class="fn">theme_minimal</span>()</pre>
+    </div>
+  </div>
+
+  <!-- POSITION COMPARISON -->
+  <div class="content-section">
+    <h2 class="section-title">position Argument — Quick Comparison</h2>
+    <table class="data-table">
+      <tr><th>position =</th><th>Effect</th><th>When to use</th></tr>
+      <tr><td><code class="inline">"stack"</code></td><td>Stacks subgroups on top (default)</td><td>Show totals + composition</td></tr>
+      <tr><td><code class="inline">"fill"</code></td><td>Stacks to same height (1.0 or 100%)</td><td>Compare proportions, not totals</td></tr>
+      <tr><td><code class="inline">"dodge"</code></td><td>Places bars side by side</td><td>Direct comparison of subgroups</td></tr>
+      <tr><td><code class="inline">"identity"</code></td><td>Overlapping bars (no adjustment)</td><td>Transparency overlays (rare)</td></tr>
+    </table>
+  </div>
+
+  <div style="display:flex;gap:16px;margin-top:48px;padding-top:32px;border-top:1px solid var(--border)">
+    <a href="themes.html" style="color:var(--muted);text-decoration:none;font-size:14px">← Themes</a>
+    <a href="combining.html" style="color:var(--accent);text-decoration:none;font-size:14px;font-weight:600;margin-left:auto">Next: Combining Plots →</a>
+  </div>
+</main>
+
+<script>
+function switchTab(btn, id) {
+  const bar = btn.closest('.tab-bar');
+  bar.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  let el = bar.nextElementSibling;
+  while(el && el.classList.contains('tab-panel')) {
+    el.classList.remove('active'); el = el.nextElementSibling;
+  }
+  document.getElementById(id).classList.add('active');
+}
+function copyCode(btn) {
+  const text = btn.closest('.code-block').querySelector('pre').innerText;
+  navigator.clipboard.writeText(text).then(() => {
+    btn.textContent = 'Copied!'; btn.classList.add('copied');
+    setTimeout(() => { btn.textContent = 'Copy'; btn.classList.remove('copied'); }, 2000);
+  });
+}
+</script>
+</body>
+</html>

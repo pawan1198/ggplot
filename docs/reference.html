@@ -1,0 +1,418 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Quick Reference — RViz</title>
+<link rel="stylesheet" href="shared.css">
+<style>
+.cheat-grid-3{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.cheat-item{background:var(--warm);border:1px solid var(--border);border-radius:8px;padding:10px 14px;display:flex;gap:10px;align-items:flex-start}
+.cheat-item code.inline{font-size:12px;white-space:nowrap;flex-shrink:0}
+.cheat-item span{font-size:12px;color:var(--muted);line-height:1.5}
+@media(max-width:900px){.cheat-grid-3{grid-template-columns:1fr 1fr}}
+</style>
+</head>
+<body>
+
+<nav class="sidebar">
+  <div class="sidebar-top">
+    <a href="index.html" class="sidebar-logo">R<span>viz</span></a>
+    <div class="sidebar-page">Quick Reference</div>
+  </div>
+  <div class="sidebar-nav">
+    <div class="nav-group">
+      <div class="nav-section">Getting Started</div>
+      <a href="index.html" class="nav-item">Home</a>
+      <a href="r-guide.html" class="nav-item">R Guide & Basics</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-section">ggplot2 Core</div>
+      <a href="ggplot2-intro.html" class="nav-item">Introduction & Grammar</a>
+      <a href="geoms.html" class="nav-item">Geom Functions</a>
+      <a href="plot-titles.html" class="nav-item">Titles & Labels</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-section">Customization</div>
+      <a href="themes.html" class="nav-item">Themes & Styling</a>
+      <a href="barplots.html" class="nav-item">Bar Charts</a>
+      <a href="combining.html" class="nav-item">Combining Plots</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-section">Reference</div>
+      <a href="reference.html" class="nav-item active">Quick Reference</a>
+    </div>
+  </div>
+  <div class="sidebar-bottom">
+    <a href="index.html" class="back-home">← Back to Home</a>
+  </div>
+</nav>
+
+<main class="main-content">
+  <div class="page-header">
+    <div class="page-eyebrow">Module 07 — Reference</div>
+    <h1 class="page-title">Quick <em>Reference</em></h1>
+    <p class="page-desc">All key functions at a glance — everything from ggplot2 setup to geoms, themes, scales, and combining plots. Plus a practice quiz at the bottom.</p>
+  </div>
+
+  <!-- SETUP -->
+  <div class="content-section">
+    <h2 class="section-title">Setup & Template</h2>
+    <div class="code-block">
+      <div class="code-header">
+        <span class="code-lang"><span class="code-lang-badge">R</span> The complete ggplot2 template</span>
+        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+      </div>
+      <pre><span class="fn">install.packages</span>(<span class="str">"ggplot2"</span>)
+<span class="fn">library</span>(ggplot2)
+
+<span class="cm"># Full template</span>
+<span class="fn">ggplot</span>(data        = &lt;DATA&gt;,
+       <span class="ar">mapping</span>    = <span class="fn">aes</span>(&lt;MAPPINGS&gt;)) +
+  &lt;GEOM_FUNCTION&gt;(
+    <span class="ar">mapping</span>    = <span class="fn">aes</span>(&lt;MAPPINGS&gt;),
+    <span class="ar">stat</span>       = &lt;STAT&gt;,
+    <span class="ar">position</span>   = &lt;POSITION&gt;
+  ) +
+  &lt;COORDINATE_FUNCTION&gt; +
+  &lt;FACET_FUNCTION&gt; +
+  &lt;SCALE_FUNCTION&gt; +
+  &lt;THEME_FUNCTION&gt;</pre>
+    </div>
+
+    <div class="cheat-section">
+      <div class="cheat-title">Essential functions</div>
+      <div class="cheat-grid">
+        <div class="cheat-item"><code class="inline">ggplot(data, aes(...))</code><span>Initialize plot with data and aesthetics</span></div>
+        <div class="cheat-item"><code class="inline">aes(x, y, color, fill...)</code><span>Map data to visual properties</span></div>
+        <div class="cheat-item"><code class="inline">ggsave("file.png")</code><span>Export last plot to file</span></div>
+        <div class="cheat-item"><code class="inline">last_plot()</code><span>Retrieve the last ggplot object</span></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- GEOMS CHEAT -->
+  <div class="content-section">
+    <h2 class="section-title">Geom Functions</h2>
+    <div class="cheat-section">
+      <div class="cheat-grid-3">
+        <div class="cheat-item"><code class="inline">geom_point()</code><span>Scatter plot</span></div>
+        <div class="cheat-item"><code class="inline">geom_line()</code><span>Line chart</span></div>
+        <div class="cheat-item"><code class="inline">geom_bar()</code><span>Bar chart (counts)</span></div>
+        <div class="cheat-item"><code class="inline">geom_col()</code><span>Bar chart (identity)</span></div>
+        <div class="cheat-item"><code class="inline">geom_histogram()</code><span>Histogram</span></div>
+        <div class="cheat-item"><code class="inline">geom_density()</code><span>Density curve</span></div>
+        <div class="cheat-item"><code class="inline">geom_boxplot()</code><span>Box plot</span></div>
+        <div class="cheat-item"><code class="inline">geom_violin()</code><span>Violin plot</span></div>
+        <div class="cheat-item"><code class="inline">geom_area()</code><span>Area chart</span></div>
+        <div class="cheat-item"><code class="inline">geom_ribbon()</code><span>Shaded band (ymin/ymax)</span></div>
+        <div class="cheat-item"><code class="inline">geom_tile()</code><span>Heatmap tiles</span></div>
+        <div class="cheat-item"><code class="inline">geom_smooth()</code><span>Smoothed trend line</span></div>
+        <div class="cheat-item"><code class="inline">geom_text()</code><span>Text labels</span></div>
+        <div class="cheat-item"><code class="inline">geom_label()</code><span>Text with box</span></div>
+        <div class="cheat-item"><code class="inline">geom_jitter()</code><span>Jittered scatter</span></div>
+        <div class="cheat-item"><code class="inline">geom_hline()</code><span>Horizontal line</span></div>
+        <div class="cheat-item"><code class="inline">geom_vline()</code><span>Vertical line</span></div>
+        <div class="cheat-item"><code class="inline">geom_abline()</code><span>Diagonal reference line</span></div>
+        <div class="cheat-item"><code class="inline">geom_segment()</code><span>Line segment (x,y → xend,yend)</span></div>
+        <div class="cheat-item"><code class="inline">geom_curve()</code><span>Curved segment</span></div>
+        <div class="cheat-item"><code class="inline">geom_errorbar()</code><span>Error bars</span></div>
+        <div class="cheat-item"><code class="inline">geom_rug()</code><span>Marginal rug marks</span></div>
+        <div class="cheat-item"><code class="inline">geom_dotplot()</code><span>Dot plot (stacked dots)</span></div>
+        <div class="cheat-item"><code class="inline">geom_step()</code><span>Step line chart</span></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- LABS CHEAT -->
+  <div class="content-section">
+    <h2 class="section-title">Labels & Annotations</h2>
+    <div class="cheat-section">
+      <div class="cheat-grid">
+        <div class="cheat-item"><code class="inline">labs(title=, subtitle=, caption=, x=, y=, color=, fill=, tag=)</code><span>Set all plot labels at once</span></div>
+        <div class="cheat-item"><code class="inline">ggtitle("Title", subtitle="Sub")</code><span>Title + subtitle shortcut</span></div>
+        <div class="cheat-item"><code class="inline">xlab("X Label")</code><span>X-axis label</span></div>
+        <div class="cheat-item"><code class="inline">ylab("Y Label")</code><span>Y-axis label</span></div>
+        <div class="cheat-item"><code class="inline">annotate("text", x=, y=, label=)</code><span>Add any annotation</span></div>
+        <div class="cheat-item"><code class="inline">annotate("rect", xmin=, xmax=, ymin=, ymax=)</code><span>Shaded rectangle annotation</span></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SCALES CHEAT -->
+  <div class="content-section">
+    <h2 class="section-title">Scales</h2>
+    <div class="cheat-section">
+      <div class="cheat-grid">
+        <div class="cheat-item"><code class="inline">scale_x_continuous()</code><span>Continuous x-axis — breaks, labels, limits</span></div>
+        <div class="cheat-item"><code class="inline">scale_y_log10()</code><span>Log10 y-axis</span></div>
+        <div class="cheat-item"><code class="inline">scale_x_date()</code><span>Date x-axis with date_labels</span></div>
+        <div class="cheat-item"><code class="inline">scale_x_reverse()</code><span>Reversed x-axis</span></div>
+        <div class="cheat-item"><code class="inline">scale_color_manual(values=)</code><span>Custom colors (discrete)</span></div>
+        <div class="cheat-item"><code class="inline">scale_fill_brewer(palette=)</code><span>ColorBrewer palettes</span></div>
+        <div class="cheat-item"><code class="inline">scale_color_viridis_d()</code><span>Viridis palette (colorblind safe)</span></div>
+        <div class="cheat-item"><code class="inline">scale_color_gradient(low=, high=)</code><span>Continuous color gradient</span></div>
+        <div class="cheat-item"><code class="inline">scale_y_continuous(labels=scales::percent_format())</code><span>Percent labels on axis</span></div>
+        <div class="cheat-item"><code class="inline">scale_y_continuous(labels=scales::comma)</code><span>Comma-formatted numbers</span></div>
+        <div class="cheat-item"><code class="inline">xlim(0, 100)</code><span>Set x-axis limits (shortcut)</span></div>
+        <div class="cheat-item"><code class="inline">coord_cartesian(ylim=c(0,50))</code><span>Zoom without removing data</span></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- FACETS & COORDS -->
+  <div class="content-section">
+    <h2 class="section-title">Facets & Coordinates</h2>
+    <div class="cheat-section">
+      <div class="cheat-grid">
+        <div class="cheat-item"><code class="inline">facet_wrap(~ var)</code><span>Wrap panels by one variable</span></div>
+        <div class="cheat-item"><code class="inline">facet_wrap(~ var, nrow=2, scales="free")</code><span>Custom rows + free axes</span></div>
+        <div class="cheat-item"><code class="inline">facet_grid(rows ~ cols)</code><span>Grid by two variables</span></div>
+        <div class="cheat-item"><code class="inline">facet_grid(. ~ var)</code><span>Only column facets</span></div>
+        <div class="cheat-item"><code class="inline">coord_flip()</code><span>Swap x and y axes</span></div>
+        <div class="cheat-item"><code class="inline">coord_polar(theta="y")</code><span>Polar coordinates (pie charts)</span></div>
+        <div class="cheat-item"><code class="inline">coord_cartesian(xlim=, ylim=)</code><span>Zoom without clipping data</span></div>
+        <div class="cheat-item"><code class="inline">coord_trans(y="log10")</code><span>Transform coordinate system</span></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- THEMES CHEAT -->
+  <div class="content-section">
+    <h2 class="section-title">Themes</h2>
+    <div class="cheat-section">
+      <div class="cheat-grid-3">
+        <div class="cheat-item"><code class="inline">theme_grey()</code><span>Default</span></div>
+        <div class="cheat-item"><code class="inline">theme_bw()</code><span>Black & white</span></div>
+        <div class="cheat-item"><code class="inline">theme_minimal()</code><span>Minimal, no bg</span></div>
+        <div class="cheat-item"><code class="inline">theme_classic()</code><span>Axis lines only</span></div>
+        <div class="cheat-item"><code class="inline">theme_dark()</code><span>Dark panel</span></div>
+        <div class="cheat-item"><code class="inline">theme_light()</code><span>Light gray borders</span></div>
+        <div class="cheat-item"><code class="inline">theme_void()</code><span>No axes/grid</span></div>
+        <div class="cheat-item"><code class="inline">theme_economist()</code><span>ggthemes: Economist</span></div>
+        <div class="cheat-item"><code class="inline">theme_fivethirtyeight()</code><span>ggthemes: 538</span></div>
+        <div class="cheat-item"><code class="inline">theme_wsj()</code><span>ggthemes: WSJ</span></div>
+        <div class="cheat-item"><code class="inline">theme_ipsum()</code><span>hrbrthemes: Arial Narrow</span></div>
+        <div class="cheat-item"><code class="inline">theme_set(theme_bw())</code><span>Global theme for session</span></div>
+      </div>
+    </div>
+
+    <div class="cheat-section" style="margin-top:16px">
+      <div class="cheat-title">theme() common arguments</div>
+      <div class="cheat-grid">
+        <div class="cheat-item"><code class="inline">legend.position = "top"</code><span>"top" | "bottom" | "left" | "right" | "none" | c(x,y)</span></div>
+        <div class="cheat-item"><code class="inline">panel.grid.major = element_blank()</code><span>Remove major grid lines</span></div>
+        <div class="cheat-item"><code class="inline">plot.title = element_text(face="bold")</code><span>Style the title text</span></div>
+        <div class="cheat-item"><code class="inline">axis.text.x = element_text(angle=45, hjust=1)</code><span>Rotate x-axis labels</span></div>
+        <div class="cheat-item"><code class="inline">panel.background = element_rect(fill="#f5f5f5")</code><span>Panel background color</span></div>
+        <div class="cheat-item"><code class="inline">plot.margin = margin(20, 20, 20, 20)</code><span>Plot outer margin (T,R,B,L)</span></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- COMBINING CHEAT -->
+  <div class="content-section">
+    <h2 class="section-title">Combining Plots</h2>
+    <div class="cheat-section">
+      <div class="cheat-grid">
+        <div class="cheat-item"><code class="inline">p1 + p2</code><span>patchwork: side by side</span></div>
+        <div class="cheat-item"><code class="inline">p1 / p2</code><span>patchwork: stacked</span></div>
+        <div class="cheat-item"><code class="inline">p1 + p2 + plot_layout(ncol=1)</code><span>patchwork: control layout</span></div>
+        <div class="cheat-item"><code class="inline">p1 + plot_annotation(title="...")</code><span>patchwork: overall title</span></div>
+        <div class="cheat-item"><code class="inline">grid.arrange(p1, p2, ncol=2)</code><span>gridExtra: 2 columns</span></div>
+        <div class="cheat-item"><code class="inline">plot_grid(p1, p2, labels="AUTO")</code><span>cowplot: auto panel labels</span></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- BAR POSITION -->
+  <div class="content-section">
+    <h2 class="section-title">Bar Chart position= Values</h2>
+    <div class="cheat-section">
+      <div class="cheat-grid">
+        <div class="cheat-item"><code class="inline">position = "stack"</code><span>Default: stacked bars</span></div>
+        <div class="cheat-item"><code class="inline">position = "fill"</code><span>Proportional stacked (0–1)</span></div>
+        <div class="cheat-item"><code class="inline">position = "dodge"</code><span>Side-by-side (grouped)</span></div>
+        <div class="cheat-item"><code class="inline">position = "identity"</code><span>Overlapping bars</span></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- QUIZ -->
+  <div class="content-section" id="quiz">
+    <h2 class="section-title">🎯 Practice Quiz</h2>
+    <p class="body-text">Test your knowledge of R and ggplot2. Click an answer to check it.</p>
+
+    <div class="progress-container">
+      <div class="progress-header">
+        <span id="quiz-progress-label">0 / 10 answered</span>
+        <span id="quiz-score-label">Score: 0</span>
+      </div>
+      <div class="progress-bar">
+        <div class="progress-fill" id="quiz-bar" style="width:0%"></div>
+      </div>
+    </div>
+
+    <div id="quiz-container"></div>
+
+    <button onclick="resetQuiz()" style="margin-top:24px;background:var(--ink);color:#fff;border:none;padding:12px 28px;border-radius:8px;font-size:14px;font-weight:600;cursor:pointer;font-family:'Instrument Sans',sans-serif">Reset Quiz</button>
+  </div>
+
+  <div style="display:flex;gap:16px;margin-top:48px;padding-top:32px;border-top:1px solid var(--border)">
+    <a href="combining.html" style="color:var(--muted);text-decoration:none;font-size:14px">← Combining Plots</a>
+    <a href="index.html" style="color:var(--accent);text-decoration:none;font-size:14px;font-weight:600;margin-left:auto">Back to Home →</a>
+  </div>
+</main>
+
+<script>
+function copyCode(btn) {
+  const text = btn.closest('.code-block').querySelector('pre').innerText;
+  navigator.clipboard.writeText(text).then(() => {
+    btn.textContent = 'Copied!'; btn.classList.add('copied');
+    setTimeout(() => { btn.textContent = 'Copy'; btn.classList.remove('copied'); }, 2000);
+  });
+}
+
+const questions = [
+  {
+    q: "What does aes() stand for in ggplot2?",
+    opts: ["Aesthetic System", "Aesthetics", "Axis & Element Settings", "Automatic Encoding System"],
+    correct: 1,
+    explanation: "aes() stands for Aesthetics. It maps variables in your data to visual properties of the plot like x, y, color, and size."
+  },
+  {
+    q: "Which stat argument makes geom_bar() use your y values directly (pre-summarized data)?",
+    opts: ["stat='count'", "stat='bin'", "stat='identity'", "stat='summary'"],
+    correct: 2,
+    explanation: "stat='identity' tells ggplot2 to use the y values as-is. The default stat='count' would count rows per group instead."
+  },
+  {
+    q: "How do you set a global theme for all subsequent ggplot2 plots?",
+    opts: ["theme_global(theme_dark())", "theme_set(theme_dark())", "set_theme(theme_dark())", "ggplot_theme(dark)"],
+    correct: 1,
+    explanation: "theme_set() sets a default theme for all plots in the session. Save the old theme first: old <- theme_set(theme_dark()) so you can restore it later."
+  },
+  {
+    q: "Which position argument in geom_bar() places subgroup bars side-by-side?",
+    opts: ["position='stack'", "position='fill'", "position='jitter'", "position='dodge'"],
+    correct: 3,
+    explanation: "position='dodge' places bars side by side — this creates a grouped bar chart. 'stack' stacks them, 'fill' makes proportional stacks."
+  },
+  {
+    q: "In patchwork, which operator stacks two plots vertically (one above the other)?",
+    opts: ["p1 + p2", "p1 | p2", "p1 / p2", "p1 & p2"],
+    correct: 2,
+    explanation: "The / operator stacks plots vertically in patchwork. The + and | operators place plots side by side. The & operator applies a theme to all plots."
+  },
+  {
+    q: "Which function converts a ggplot2 scatter plot to a horizontal bar chart?",
+    opts: ["flip_coords()", "coord_flip()", "coord_polar()", "scale_x_reverse()"],
+    correct: 1,
+    explanation: "coord_flip() swaps the x and y axes — turning a vertical bar chart horizontal. You can also achieve this by mapping the categorical variable to y directly."
+  },
+  {
+    q: "What does facet_wrap(~ cyl, scales='free') do?",
+    opts: [
+      "Creates panels by cylinder count, all with the same axis scales",
+      "Creates panels by cylinder count, each with its own axis scale",
+      "Removes all scale labels from the facets",
+      "Frees the legend from the panels"
+    ],
+    correct: 1,
+    explanation: "scales='free' allows each facet panel to have its own independent axis scales. This is useful when groups have very different value ranges."
+  },
+  {
+    q: "Which ggthemes function provides a Wall Street Journal inspired look?",
+    opts: ["theme_wsj()", "theme_journal()", "theme_newspaper()", "theme_financial()"],
+    correct: 0,
+    explanation: "theme_wsj() from the ggthemes package mimics the Wall Street Journal's chart style. You can also use scale_color_wsj() for the matching color palette."
+  },
+  {
+    q: "To remove ALL grid lines from a ggplot2 plot, you use:",
+    opts: [
+      "theme(grid=FALSE)",
+      "theme(panel.grid = element_none())",
+      "theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank())",
+      "remove_grid()"
+    ],
+    correct: 2,
+    explanation: "element_blank() removes an element entirely. You need to remove both panel.grid.major and panel.grid.minor separately. There's no single 'remove all grids' shortcut."
+  },
+  {
+    q: "In R, what is the output of: class(c(1:5))?",
+    opts: ["'numeric'", "'integer'", "'vector'", "'double'"],
+    correct: 1,
+    explanation: "The : operator creates an integer sequence in R. So c(1:5) creates an integer vector, and class() returns 'integer'. Using c(1.0, 2.0) would give 'numeric'."
+  }
+];
+
+let answered = 0, score = 0;
+
+function buildQuiz() {
+  const container = document.getElementById('quiz-container');
+  container.innerHTML = '';
+  answered = 0; score = 0;
+  updateProgress();
+
+  questions.forEach((q, i) => {
+    const div = document.createElement('div');
+    div.className = 'quiz-card';
+    div.id = `q${i}`;
+    div.innerHTML = `
+      <div class="quiz-q">Q${i+1}. ${q.q}</div>
+      <div class="quiz-opts">
+        ${q.opts.map((o,j) => `<button class="quiz-opt" onclick="answerQ(${i},${j})">${o}</button>`).join('')}
+      </div>
+      <div class="quiz-feedback" id="fb${i}"></div>
+    `;
+    container.appendChild(div);
+  });
+}
+
+function answerQ(qi, oi) {
+  const card = document.getElementById(`q${qi}`);
+  if (card.dataset.answered) return;
+  card.dataset.answered = '1';
+  answered++;
+
+  const opts = card.querySelectorAll('.quiz-opt');
+  const q = questions[qi];
+  const fb = document.getElementById(`fb${qi}`);
+
+  opts.forEach(b => b.disabled = true);
+  if (oi === q.correct) {
+    opts[oi].classList.add('correct');
+    score++;
+    fb.style.background = 'rgba(18,163,106,.08)';
+    fb.style.border = '1px solid rgba(18,163,106,.2)';
+    fb.style.color = '#12a36a';
+    fb.textContent = '✓ Correct! ' + q.explanation;
+  } else {
+    opts[oi].classList.add('wrong');
+    opts[q.correct].classList.add('correct');
+    fb.style.background = 'rgba(232,72,85,.06)';
+    fb.style.border = '1px solid rgba(232,72,85,.2)';
+    fb.style.color = '#e84855';
+    fb.textContent = '✗ Not quite. ' + q.explanation;
+  }
+  fb.style.display = 'block';
+  fb.style.borderRadius = '8px';
+  fb.style.padding = '12px 16px';
+  fb.style.fontSize = '14px';
+  fb.style.lineHeight = '1.6';
+  fb.style.marginTop = '14px';
+
+  updateProgress();
+}
+
+function updateProgress() {
+  document.getElementById('quiz-progress-label').textContent = `${answered} / ${questions.length} answered`;
+  document.getElementById('quiz-score-label').textContent = `Score: ${score}`;
+  document.getElementById('quiz-bar').style.width = (answered / questions.length * 100) + '%';
+}
+
+function resetQuiz() { buildQuiz(); }
+buildQuiz();
+</script>
+</body>
+</html>

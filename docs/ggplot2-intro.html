@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ggplot2 Introduction — RViz</title>
+<link rel="stylesheet" href="shared.css">
+</head>
+<body>
+
+<nav class="sidebar">
+  <div class="sidebar-top">
+    <a href="index.html" class="sidebar-logo">R<span>viz</span></a>
+    <div class="sidebar-page">ggplot2 Introduction</div>
+  </div>
+  <div class="sidebar-nav">
+    <div class="nav-group">
+      <div class="nav-section">Getting Started</div>
+      <a href="index.html" class="nav-item">Home</a>
+      <a href="r-guide.html" class="nav-item">R Guide & Basics</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-section">ggplot2 Core</div>
+      <a href="ggplot2-intro.html" class="nav-item active">Introduction & Grammar</a>
+      <a href="geoms.html" class="nav-item">Geom Functions</a>
+      <a href="plot-titles.html" class="nav-item">Titles & Labels</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-section">Customization</div>
+      <a href="themes.html" class="nav-item">Themes & Styling</a>
+      <a href="barplots.html" class="nav-item">Bar Charts</a>
+      <a href="combining.html" class="nav-item">Combining Plots</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-section">Reference</div>
+      <a href="reference.html" class="nav-item">Quick Reference</a>
+    </div>
+  </div>
+  <div class="sidebar-bottom">
+    <a href="index.html" class="back-home">← Back to Home</a>
+  </div>
+</nav>
+
+<main class="main-content">
+  <div class="page-header">
+    <div class="page-eyebrow">Module 02 — Core Concepts</div>
+    <h1 class="page-title"><em>ggplot2</em> Introduction</h1>
+    <p class="page-desc">ggplot2 is a powerful, open-source data visualization library for R. Based on the Grammar of Graphics, it provides a systematic approach to creating any statistical graphic.</p>
+  </div>
+
+  <!-- WHAT IS GGPLOT2 -->
+  <div class="content-section">
+    <h2 class="section-title">What is ggplot2?</h2>
+    <p class="body-text">ggplot2 was developed by Hadley Wickham and is based on <em>The Grammar of Graphics</em> — a framework for describing any visualization as a combination of data, mappings, and geometric objects.</p>
+    <p class="body-text">One of ggplot2's key strengths is its <strong>layered plot construction</strong>: you start with data, add aesthetics, then layer on geometric objects, scales, facets, and themes — each building on the last.</p>
+
+    <div class="code-block">
+      <div class="code-header">
+        <span class="code-lang"><span class="code-lang-badge">R</span> Installation & basic template</span>
+        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+      </div>
+      <pre><span class="cm"># Install once</span>
+<span class="fn">install.packages</span>(<span class="str">"ggplot2"</span>)
+
+<span class="cm"># Basic syntax template</span>
+<span class="fn">ggplot</span>(data, <span class="fn">aes</span>(x, y)) + <span class="fn">geom_*()</span>
+
+<span class="cm"># Minimal working example</span>
+<span class="fn">library</span>(ggplot2)
+<span class="fn">ggplot</span>(mtcars, <span class="fn">aes</span>(<span class="ar">x</span> = mpg, <span class="ar">y</span> = wt)) +
+  <span class="fn">geom_point</span>()</pre>
+    </div>
+  </div>
+
+  <!-- GRAMMAR OF GRAPHICS -->
+  <div class="content-section" id="grammar">
+    <h2 class="section-title">The Grammar of Graphics — 7 Layers</h2>
+    <p class="body-text">Every ggplot2 visualization is composed of up to 7 layers. You build a plot by adding layers together with the <code class="inline">+</code> operator.</p>
+
+    <div class="layer-diagram">
+      <div class="layer-item">
+        <div class="layer-num" style="background:rgba(232,72,85,.15);color:var(--accent)">1</div>
+        <div class="layer-name" style="color:var(--accent)">Data</div>
+        <div class="layer-desc">The raw data frame that contains the variables you want to visualize. <code class="inline">ggplot(data = mtcars, ...)</code></div>
+      </div>
+      <div class="layer-item">
+        <div class="layer-num" style="background:rgba(45,107,228,.15);color:var(--blue)">2</div>
+        <div class="layer-name" style="color:var(--blue)">Aesthetics</div>
+        <div class="layer-desc">Map variables to visual properties: x, y, color, fill, size, shape, alpha, linetype. <code class="inline">aes(x = wt, y = mpg)</code></div>
+      </div>
+      <div class="layer-item">
+        <div class="layer-num" style="background:rgba(18,163,106,.15);color:var(--green)">3</div>
+        <div class="layer-name" style="color:var(--green)">Geometries</div>
+        <div class="layer-desc">The geometric shape used to represent data: points, lines, bars, boxes, areas. <code class="inline">geom_point()</code>, <code class="inline">geom_line()</code></div>
+      </div>
+      <div class="layer-item">
+        <div class="layer-num" style="background:rgba(212,160,23,.15);color:var(--gold)">4</div>
+        <div class="layer-name" style="color:var(--gold)">Facets</div>
+        <div class="layer-desc">Split data into subplots based on a categorical variable. <code class="inline">facet_wrap(~ cyl)</code></div>
+      </div>
+      <div class="layer-item">
+        <div class="layer-num" style="background:rgba(124,77,255,.15);color:var(--purple)">5</div>
+        <div class="layer-name" style="color:var(--purple)">Statistics</div>
+        <div class="layer-desc">Statistical transformations like smoothing, binning, or counting. <code class="inline">stat_smooth()</code>, <code class="inline">stat_count()</code></div>
+      </div>
+      <div class="layer-item">
+        <div class="layer-num" style="background:rgba(232,72,85,.08);color:var(--muted)">6</div>
+        <div class="layer-name">Coordinates</div>
+        <div class="layer-desc">The coordinate system: Cartesian, polar, flipped. <code class="inline">coord_flip()</code>, <code class="inline">coord_polar()</code></div>
+      </div>
+      <div class="layer-item">
+        <div class="layer-num" style="background:rgba(232,72,85,.08);color:var(--muted)">7</div>
+        <div class="layer-name">Themes</div>
+        <div class="layer-desc">Non-data appearance: fonts, background, grid lines, legend position. <code class="inline">theme_minimal()</code></div>
+      </div>
+    </div>
+
+    <h3 class="subsection-title">Building a plot step by step</h3>
+    <div class="code-block">
+      <div class="code-header">
+        <span class="code-lang"><span class="code-lang-badge">R</span> Layered construction</span>
+        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+      </div>
+      <pre><span class="fn">library</span>(ggplot2)
+
+<span class="cm"># Step 1: Data + aesthetics</span>
+<span class="fn">ggplot</span>(mtcars, <span class="fn">aes</span>(<span class="ar">x</span> = wt, <span class="ar">y</span> = mpg))
+
+<span class="cm"># Step 2: Add a geometry</span>
+<span class="fn">ggplot</span>(mtcars, <span class="fn">aes</span>(<span class="ar">x</span> = wt, <span class="ar">y</span> = mpg)) +
+  <span class="fn">geom_point</span>()
+
+<span class="cm"># Step 3: Map a third variable to color</span>
+<span class="fn">ggplot</span>(mtcars, <span class="fn">aes</span>(<span class="ar">x</span> = wt, <span class="ar">y</span> = mpg, <span class="ar">color</span> = <span class="fn">factor</span>(cyl))) +
+  <span class="fn">geom_point</span>(<span class="ar">size</span> = <span class="num">3</span>)
+
+<span class="cm"># Step 4: Add a smooth line layer</span>
+<span class="fn">ggplot</span>(mtcars, <span class="fn">aes</span>(<span class="ar">x</span> = wt, <span class="ar">y</span> = mpg, <span class="ar">color</span> = <span class="fn">factor</span>(cyl))) +
+  <span class="fn">geom_point</span>(<span class="ar">size</span> = <span class="num">3</span>) +
+  <span class="fn">geom_smooth</span>(<span class="ar">method</span> = <span class="str">"lm"</span>, <span class="ar">se</span> = <span class="kw">FALSE</span>)
+
+<span class="cm"># Step 5: Add labels</span>
+<span class="fn">ggplot</span>(mtcars, <span class="fn">aes</span>(<span class="ar">x</span> = wt, <span class="ar">y</span> = mpg, <span class="ar">color</span> = <span class="fn">factor</span>(cyl))) +
+  <span class="fn">geom_point</span>(<span class="ar">size</span> = <span class="num">3</span>) +
+  <span class="fn">geom_smooth</span>(<span class="ar">method</span> = <span class="str">"lm"</span>, <span class="ar">se</span> = <span class="kw">FALSE</span>) +
+  <span class="fn">labs</span>(<span class="ar">title</span> = <span class="str">"Weight vs MPG"</span>, <span class="ar">color</span> = <span class="str">"Cylinders"</span>)
+
+<span class="cm"># Step 6: Apply a theme</span>
+<span class="fn">ggplot</span>(mtcars, <span class="fn">aes</span>(<span class="ar">x</span> = wt, <span class="ar">y</span> = mpg, <span class="ar">color</span> = <span class="fn">factor</span>(cyl))) +
+  <span class="fn">geom_point</span>(<span class="ar">size</span> = <span class="num">3</span>) +
+  <span class="fn">geom_smooth</span>(<span class="ar">method</span> = <span class="str">"lm"</span>, <span class="ar">se</span> = <span class="kw">FALSE</span>) +
+  <span class="fn">labs</span>(<span class="ar">title</span> = <span class="str">"Weight vs MPG"</span>, <span class="ar">color</span> = <span class="str">"Cylinders"</span>) +
+  <span class="fn">theme_minimal</span>(<span class="ar">base_size</span> = <span class="num">13</span>)</pre>
+    </div>
+  </div>
+
+  <!-- AESTHETICS -->
+  <div class="content-section" id="aes">
+    <h2 class="section-title">Aesthetics (aes)</h2>
+    <p class="body-text">The <code class="inline">aes()</code> function maps variables in your data to visual properties of the plot. There are two kinds: <strong>mapped aesthetics</strong> (inside <code class="inline">aes()</code>) and <strong>fixed properties</strong> (outside <code class="inline">aes()</code>).</p>
+
+    <table class="data-table">
+      <tr><th>Aesthetic</th><th>Maps to</th><th>Example</th></tr>
+      <tr><td><code class="inline">x</code></td><td>Horizontal position</td><td><code class="inline">aes(x = weight)</code></td></tr>
+      <tr><td><code class="inline">y</code></td><td>Vertical position</td><td><code class="inline">aes(y = height)</code></td></tr>
+      <tr><td><code class="inline">color</code></td><td>Outline / stroke color</td><td><code class="inline">aes(color = species)</code></td></tr>
+      <tr><td><code class="inline">fill</code></td><td>Fill color (bars, areas)</td><td><code class="inline">aes(fill = group)</code></td></tr>
+      <tr><td><code class="inline">size</code></td><td>Point size / line width</td><td><code class="inline">aes(size = population)</code></td></tr>
+      <tr><td><code class="inline">shape</code></td><td>Point shape (circle, square…)</td><td><code class="inline">aes(shape = type)</code></td></tr>
+      <tr><td><code class="inline">alpha</code></td><td>Transparency (0=invisible, 1=solid)</td><td><code class="inline">aes(alpha = confidence)</code></td></tr>
+      <tr><td><code class="inline">linetype</code></td><td>Solid, dashed, dotted…</td><td><code class="inline">aes(linetype = group)</code></td></tr>
+      <tr><td><code class="inline">label</code></td><td>Text labels</td><td><code class="inline">aes(label = name)</code></td></tr>
+      <tr><td><code class="inline">group</code></td><td>Grouping without visual mapping</td><td><code class="inline">aes(group = id)</code></td></tr>
+    </table>
+
+    <h3 class="subsection-title">Mapped vs Fixed aesthetics</h3>
+    <div class="code-block">
+      <div class="code-header">
+        <span class="code-lang"><span class="code-lang-badge">R</span> Inside vs outside aes()</span>
+        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+      </div>
+      <pre><span class="cm"># MAPPED — color changes based on data</span>
+<span class="fn">ggplot</span>(mtcars, <span class="fn">aes</span>(<span class="ar">x</span> = mpg, <span class="ar">y</span> = wt, <span class="ar">color</span> = <span class="fn">factor</span>(cyl))) +
+  <span class="fn">geom_point</span>()
+
+<span class="cm"># FIXED — all points are blue, size 4</span>
+<span class="fn">ggplot</span>(mtcars, <span class="fn">aes</span>(<span class="ar">x</span> = mpg, <span class="ar">y</span> = wt)) +
+  <span class="fn">geom_point</span>(<span class="ar">color</span> = <span class="str">"blue"</span>, <span class="ar">size</span> = <span class="num">4</span>, <span class="ar">alpha</span> = <span class="num">0.7</span>)
+
+<span class="cm"># BOTH — shape mapped to data, color fixed</span>
+<span class="fn">ggplot</span>(mtcars, <span class="fn">aes</span>(<span class="ar">x</span> = mpg, <span class="ar">y</span> = wt, <span class="ar">shape</span> = <span class="fn">factor</span>(cyl))) +
+  <span class="fn">geom_point</span>(<span class="ar">color</span> = <span class="str">"steelblue"</span>, <span class="ar">size</span> = <span class="num">3</span>)</pre>
+    </div>
+  </div>
+
+  <!-- FACETING -->
+  <div class="content-section">
+    <h2 class="section-title">Faceting</h2>
+    <p class="body-text">Faceting splits your data into multiple subplots, each showing a subset of the data. This is extremely useful for comparing patterns across groups.</p>
+
+    <div class="tabs">
+      <div class="tab-bar">
+        <button class="tab-btn active" onclick="switchTab(this,'facet-wrap')">facet_wrap()</button>
+        <button class="tab-btn" onclick="switchTab(this,'facet-grid')">facet_grid()</button>
+      </div>
+      <div id="facet-wrap" class="tab-panel active">
+        <p class="body-text">Use <code class="inline">facet_wrap()</code> when faceting on a single variable. It wraps panels into a 2D grid automatically.</p>
+        <div class="code-block">
+          <div class="code-header">
+            <span class="code-lang"><span class="code-lang-badge">R</span> facet_wrap examples</span>
+            <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+          </div>
+          <pre><span class="cm"># Basic facet_wrap</span>
+<span class="fn">ggplot</span>(mtcars, <span class="fn">aes</span>(<span class="ar">x</span> = mpg, <span class="ar">y</span> = wt)) +
+  <span class="fn">geom_point</span>(<span class="ar">color</span> = <span class="str">"steelblue"</span>, <span class="ar">size</span> = <span class="num">3</span>) +
+  <span class="fn">facet_wrap</span>(~ gear)          <span class="cm"># One panel per gear</span>
+
+<span class="cm"># Control layout</span>
+<span class="fn">ggplot</span>(mtcars, <span class="fn">aes</span>(<span class="ar">x</span> = mpg, <span class="ar">y</span> = wt)) +
+  <span class="fn">geom_point</span>() +
+  <span class="fn">facet_wrap</span>(~ cyl, <span class="ar">nrow</span> = <span class="num">1</span>)  <span class="cm"># Force single row</span>
+
+<span class="cm"># Free scales per panel</span>
+<span class="fn">ggplot</span>(mtcars, <span class="fn">aes</span>(<span class="ar">x</span> = mpg, <span class="ar">y</span> = wt)) +
+  <span class="fn">geom_point</span>() +
+  <span class="fn">facet_wrap</span>(~ cyl, <span class="ar">scales</span> = <span class="str">"free"</span>)
+
+<span class="cm"># Iris example from the source files</span>
+<span class="fn">ggplot</span>(iris, <span class="fn">aes</span>(<span class="ar">x</span> = Sepal.Width, <span class="ar">y</span> = Petal.Width, <span class="ar">fill</span> = Species)) +
+  <span class="fn">geom_bar</span>(<span class="ar">stat</span> = <span class="str">"identity"</span>) +
+  <span class="fn">facet_wrap</span>(~Species) +
+  <span class="fn">labs</span>(<span class="ar">title</span> = <span class="str">"Petal Width by Species"</span>)</pre>
+        </div>
+      </div>
+      <div id="facet-grid" class="tab-panel">
+        <p class="body-text">Use <code class="inline">facet_grid()</code> when you want a strict grid of rows AND columns based on two variables.</p>
+        <div class="code-block">
+          <div class="code-header">
+            <span class="code-lang"><span class="code-lang-badge">R</span> facet_grid examples</span>
+            <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+          </div>
+          <pre><span class="cm"># rows ~ columns formula syntax</span>
+<span class="fn">ggplot</span>(mtcars, <span class="fn">aes</span>(<span class="ar">x</span> = mpg, <span class="ar">y</span> = wt)) +
+  <span class="fn">geom_point</span>() +
+  <span class="fn">facet_grid</span>(am ~ cyl)  <span class="cm"># am = rows, cyl = columns</span>
+
+<span class="cm"># Only column facets</span>
+<span class="fn">ggplot</span>(mtcars, <span class="fn">aes</span>(<span class="ar">x</span> = mpg, <span class="ar">y</span> = wt)) +
+  <span class="fn">geom_point</span>() +
+  <span class="fn">facet_grid</span>(. ~ cyl)   <span class="cm"># . means no faceting in that direction</span>
+
+<span class="cm"># Free scales in one dimension</span>
+<span class="fn">ggplot</span>(mtcars, <span class="fn">aes</span>(<span class="ar">x</span> = mpg, <span class="ar">y</span> = wt)) +
+  <span class="fn">geom_point</span>() +
+  <span class="fn">facet_grid</span>(am ~ cyl, <span class="ar">scales</span> = <span class="str">"free_y"</span>)</pre>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SCALES -->
+  <div class="content-section">
+    <h2 class="section-title">Scales</h2>
+    <p class="body-text">Scales control how data values are translated to visual properties. Every aesthetic mapping has a corresponding scale function.</p>
+
+    <div class="code-block">
+      <div class="code-header">
+        <span class="code-lang"><span class="code-lang-badge">R</span> Common scale functions</span>
+        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+      </div>
+      <pre><span class="cm"># Axis scales</span>
+<span class="fn">scale_x_continuous</span>(<span class="ar">breaks</span> = <span class="fn">seq</span>(<span class="num">10</span>, <span class="num">35</span>, <span class="ar">by</span> = <span class="num">5</span>))
+<span class="fn">scale_y_log10</span>()
+<span class="fn">scale_x_date</span>(<span class="ar">date_labels</span> = <span class="str">"%Y-%m"</span>)
+<span class="fn">scale_x_reverse</span>()       <span class="cm"># Reverse the axis</span>
+
+<span class="cm"># Color/fill scales — continuous</span>
+<span class="fn">scale_color_gradient</span>(<span class="ar">low</span> = <span class="str">"white"</span>, <span class="ar">high</span> = <span class="str">"darkred"</span>)
+<span class="fn">scale_fill_gradient2</span>(<span class="ar">low</span>=<span class="str">"blue"</span>, <span class="ar">mid</span>=<span class="str">"white"</span>, <span class="ar">high</span>=<span class="str">"red"</span>)
+
+<span class="cm"># Color/fill scales — discrete</span>
+<span class="fn">scale_color_manual</span>(<span class="ar">values</span> = <span class="fn">c</span>(<span class="str">"red"</span>, <span class="str">"blue"</span>, <span class="str">"green"</span>))
+<span class="fn">scale_fill_brewer</span>(<span class="ar">palette</span> = <span class="str">"Set2"</span>)
+<span class="fn">scale_color_viridis_d</span>()  <span class="cm"># Colorblind-friendly</span>
+
+<span class="cm"># Size / alpha</span>
+<span class="fn">scale_size_continuous</span>(<span class="ar">range</span> = <span class="fn">c</span>(<span class="num">1</span>, <span class="num">10</span>))
+<span class="fn">scale_alpha_continuous</span>(<span class="ar">range</span> = <span class="fn">c</span>(<span class="num">0.2</span>, <span class="num">1</span>))
+
+<span class="cm"># Formatting y-axis as percent</span>
+<span class="fn">scale_y_continuous</span>(<span class="ar">labels</span> = scales::<span class="fn">percent_format</span>())
+<span class="fn">scale_y_continuous</span>(<span class="ar">labels</span> = scales::<span class="fn">comma</span>)</pre>
+    </div>
+  </div>
+
+  <div style="display:flex;gap:16px;margin-top:48px;padding-top:32px;border-top:1px solid var(--border)">
+    <a href="r-guide.html" style="color:var(--muted);text-decoration:none;font-size:14px">← R Guide</a>
+    <a href="geoms.html" style="color:var(--accent);text-decoration:none;font-size:14px;font-weight:600;margin-left:auto">Next: Geom Functions →</a>
+  </div>
+</main>
+
+<script>
+function switchTab(btn, id) {
+  const bar = btn.closest('.tab-bar');
+  bar.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  let el = bar.nextElementSibling;
+  while(el && el.classList.contains('tab-panel')) {
+    el.classList.remove('active'); el = el.nextElementSibling;
+  }
+  document.getElementById(id).classList.add('active');
+}
+function copyCode(btn) {
+  const text = btn.closest('.code-block').querySelector('pre').innerText;
+  navigator.clipboard.writeText(text).then(() => {
+    btn.textContent = 'Copied!'; btn.classList.add('copied');
+    setTimeout(() => { btn.textContent = 'Copy'; btn.classList.remove('copied'); }, 2000);
+  });
+}
+</script>
+</body>
+</html>

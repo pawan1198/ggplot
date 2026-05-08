@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Geom Functions — RViz</title>
+<link rel="stylesheet" href="shared.css">
+</head>
+<body>
+
+<nav class="sidebar">
+  <div class="sidebar-top">
+    <a href="index.html" class="sidebar-logo">R<span>viz</span></a>
+    <div class="sidebar-page">Geom Functions</div>
+  </div>
+  <div class="sidebar-nav">
+    <div class="nav-group">
+      <div class="nav-section">Getting Started</div>
+      <a href="index.html" class="nav-item">Home</a>
+      <a href="r-guide.html" class="nav-item">R Guide & Basics</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-section">ggplot2 Core</div>
+      <a href="ggplot2-intro.html" class="nav-item">Introduction & Grammar</a>
+      <a href="geoms.html" class="nav-item active">Geom Functions</a>
+      <a href="plot-titles.html" class="nav-item">Titles & Labels</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-section">Customization</div>
+      <a href="themes.html" class="nav-item">Themes & Styling</a>
+      <a href="barplots.html" class="nav-item">Bar Charts</a>
+      <a href="combining.html" class="nav-item">Combining Plots</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-section">Reference</div>
+      <a href="reference.html" class="nav-item">Quick Reference</a>
+    </div>
+  </div>
+  <div class="sidebar-bottom">
+    <a href="index.html" class="back-home">← Back to Home</a>
+  </div>
+</nav>
+
+<main class="main-content">
+  <div class="page-header">
+    <div class="page-eyebrow">Module 08 — Visual Elements</div>
+    <h1 class="page-title">Geom Function <em>Gallery</em></h1>
+    <p class="page-desc">Geoms are the geometric shapes used to represent data. Here is a complete reference with working code for every major geom in ggplot2.</p>
+  </div>
+
+  <!-- SCATTER -->
+  <div class="content-section">
+    <h2 class="section-title">Scatter Plots — geom_point()</h2>
+    <div class="code-block">
+      <div class="code-header">
+        <span class="code-lang"><span class="code-lang-badge">R</span> geom_point</span>
+        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+      </div>
+      <pre><span class="fn">library</span>(ggplot2)
+
+<span class="cm"># Basic scatter</span>
+<span class="fn">ggplot</span>(mtcars, <span class="fn">aes</span>(<span class="ar">x</span> = mpg, <span class="ar">y</span> = wt)) +
+  <span class="fn">geom_point</span>()
+
+<span class="cm"># Styled scatter with regression line</span>
+<span class="fn">ggplot</span>(mtcars, <span class="fn">aes</span>(<span class="ar">x</span> = wt, <span class="ar">y</span> = mpg)) +
+  <span class="fn">geom_point</span>(<span class="ar">size</span> = <span class="num">2</span>, <span class="ar">color</span> = <span class="str">"blue"</span>) +
+  <span class="fn">geom_smooth</span>(<span class="ar">method</span> = <span class="str">"lm"</span>, <span class="ar">se</span> = <span class="kw">FALSE</span>)
+
+<span class="cm"># Color-mapped scatter with 3 variables</span>
+<span class="fn">ggplot</span>(mtcars, <span class="fn">aes</span>(<span class="ar">x</span> = mpg, <span class="ar">y</span> = wt, <span class="ar">color</span> = <span class="fn">factor</span>(cyl))) +
+  <span class="fn">geom_point</span>(<span class="ar">size</span> = <span class="num">3</span>, <span class="ar">alpha</span> = <span class="num">0.8</span>) +
+  <span class="fn">scale_color_manual</span>(<span class="ar">values</span> = <span class="fn">c</span>(<span class="str">"#e84855"</span>,<span class="str">"#2d6be4"</span>,<span class="str">"#12a36a"</span>)) +
+  <span class="fn">labs</span>(<span class="ar">color</span> = <span class="str">"Cylinders"</span>)</pre>
+    </div>
+  </div>
+
+  <!-- LINE -->
+  <div class="content-section">
+    <h2 class="section-title">Line Charts — geom_line()</h2>
+    <div class="code-block">
+      <div class="code-header">
+        <span class="code-lang"><span class="code-lang-badge">R</span> geom_line</span>
+        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+      </div>
+      <pre><span class="cm"># Basic line chart</span>
+<span class="fn">ggplot</span>(economics, <span class="fn">aes</span>(<span class="ar">x</span> = date, <span class="ar">y</span> = unemploy)) +
+  <span class="fn">geom_line</span>()
+
+<span class="cm"># Multiple lines</span>
+<span class="fn">ggplot</span>(economics_long, <span class="fn">aes</span>(<span class="ar">x</span> = date, <span class="ar">y</span> = value01, <span class="ar">color</span> = variable)) +
+  <span class="fn">geom_line</span>()
+
+<span class="cm"># geom_path — connects points in order they appear in data</span>
+<span class="fn">ggplot</span>(economics, <span class="fn">aes</span>(<span class="ar">x</span> = unemploy/pop, <span class="ar">y</span> = psavert)) +
+  <span class="fn">geom_path</span>(<span class="ar">alpha</span> = <span class="num">0.5</span>)</pre>
+    </div>
+  </div>
+
+  <!-- BAR / HISTOGRAM -->
+  <div class="content-section">
+    <h2 class="section-title">Bars & Histograms</h2>
+    <div class="code-block">
+      <div class="code-header">
+        <span class="code-lang"><span class="code-lang-badge">R</span> geom_bar & geom_histogram</span>
+        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+      </div>
+      <pre><span class="cm"># geom_bar — count by category (stat="count" is default)</span>
+<span class="fn">ggplot</span>(mtcars, <span class="fn">aes</span>(<span class="ar">x</span> = <span class="fn">factor</span>(cyl))) +
+  <span class="fn">geom_bar</span>()
+
+<span class="cm"># geom_bar — pre-summarized (stat="identity")</span>
+<span class="fn">ggplot</span>(df1, <span class="fn">aes</span>(<span class="ar">x</span> = group, <span class="ar">y</span> = values)) +
+  <span class="fn">geom_bar</span>(<span class="ar">stat</span> = <span class="str">"identity"</span>)
+
+<span class="cm"># geom_col — shorthand for stat="identity"</span>
+<span class="fn">ggplot</span>(df1, <span class="fn">aes</span>(<span class="ar">x</span> = group, <span class="ar">y</span> = values)) +
+  <span class="fn">geom_col</span>()
+
+<span class="cm"># geom_histogram — continuous data</span>
+<span class="fn">ggplot</span>(mtcars, <span class="fn">aes</span>(<span class="ar">x</span> = mpg)) +
+  <span class="fn">geom_histogram</span>(<span class="ar">bins</span> = <span class="num">10</span>, <span class="ar">fill</span> = <span class="str">"steelblue"</span>, <span class="ar">color</span> = <span class="str">"white"</span>)
+
+<span class="cm"># geom_histogram with binwidth</span>
+<span class="fn">ggplot</span>(mtcars, <span class="fn">aes</span>(<span class="ar">x</span> = mpg)) +
+  <span class="fn">geom_histogram</span>(<span class="ar">binwidth</span> = <span class="num">2</span>, <span class="ar">fill</span> = <span class="str">"steelblue"</span>)</pre>
+    </div>
+  </div>
+
+  <!-- BOXPLOT & VIOLIN -->
+  <div class="content-section">
+    <h2 class="section-title">Distribution — geom_boxplot() & geom_violin()</h2>
+    <div class="code-block">
+      <div class="code-header">
+        <span class="code-lang"><span class="code-lang-badge">R</span> Boxplot and violin</span>
+        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+      </div>
+      <pre><span class="cm"># Box plot</span>
+<span class="fn">ggplot</span>(mtcars, <span class="fn">aes</span>(<span class="ar">x</span> = <span class="fn">factor</span>(cyl), <span class="ar">y</span> = mpg)) +
+  <span class="fn">geom_boxplot</span>(<span class="ar">fill</span> = <span class="str">"steelblue"</span>)
+
+<span class="cm"># Violin plot</span>
+<span class="fn">ggplot</span>(mtcars, <span class="fn">aes</span>(<span class="ar">x</span> = <span class="fn">factor</span>(cyl), <span class="ar">y</span> = mpg)) +
+  <span class="fn">geom_violin</span>(<span class="ar">fill</span> = <span class="str">"steelblue"</span>, <span class="ar">alpha</span> = <span class="num">0.6</span>)
+
+<span class="cm"># Combined violin + box</span>
+<span class="fn">ggplot</span>(mtcars, <span class="fn">aes</span>(<span class="ar">x</span> = <span class="fn">factor</span>(cyl), <span class="ar">y</span> = mpg)) +
+  <span class="fn">geom_violin</span>(<span class="ar">fill</span> = <span class="str">"lightblue"</span>) +
+  <span class="fn">geom_boxplot</span>(<span class="ar">width</span> = <span class="num">0.1</span>)   <span class="cm"># Narrow box overlaid</span></pre>
+    </div>
+  </div>
+
+  <!-- DENSITY -->
+  <div class="content-section">
+    <h2 class="section-title">Density — geom_density()</h2>
+    <div class="code-block">
+      <div class="code-header">
+        <span class="code-lang"><span class="code-lang-badge">R</span> Density plots</span>
+        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+      </div>
+      <pre><span class="cm"># Basic density plot</span>
+<span class="fn">ggplot</span>(mtcars, <span class="fn">aes</span>(<span class="ar">x</span> = mpg)) +
+  <span class="fn">geom_density</span>(<span class="ar">fill</span> = <span class="str">"steelblue"</span>, <span class="ar">alpha</span> = <span class="num">0.5</span>)
+
+<span class="cm"># Multiple overlapping densities</span>
+cyls <- <span class="fn">as.factor</span>(mtcars$cyl)
+<span class="fn">ggplot</span>(mtcars, <span class="fn">aes</span>(<span class="ar">x</span> = mpg, <span class="ar">fill</span> = cyls)) +
+  <span class="fn">geom_density</span>(<span class="ar">alpha</span> = <span class="num">0.7</span>) +
+  <span class="fn">theme</span>(<span class="ar">legend.position</span> = <span class="str">"top"</span>)</pre>
+    </div>
+  </div>
+
+  <!-- AREA -->
+  <div class="content-section">
+    <h2 class="section-title">Area — geom_area()</h2>
+    <div class="code-block">
+      <div class="code-header">
+        <span class="code-lang"><span class="code-lang-badge">R</span> Area plots</span>
+        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+      </div>
+      <pre><span class="cm"># Basic area plot</span>
+<span class="fn">ggplot</span>(economics, <span class="fn">aes</span>(<span class="ar">x</span> = date, <span class="ar">y</span> = unemploy)) +
+  <span class="fn">geom_area</span>(<span class="ar">fill</span> = <span class="fn">rgb</span>(<span class="num">0</span>, <span class="num">0.5</span>, <span class="num">1</span>, <span class="ar">alpha</span> = <span class="num">0.5</span>))
+
+<span class="cm"># Ribbon — upper and lower bounds</span>
+<span class="fn">ggplot</span>(economics, <span class="fn">aes</span>(<span class="ar">x</span> = date)) +
+  <span class="fn">geom_ribbon</span>(<span class="fn">aes</span>(<span class="ar">ymin</span> = pce - <span class="num">200</span>, <span class="ar">ymax</span> = pce + <span class="num">200</span>),
+              <span class="ar">fill</span> = <span class="str">"steelblue"</span>, <span class="ar">alpha</span> = <span class="num">0.4</span>)</pre>
+    </div>
+  </div>
+
+  <!-- HEATMAP / TILE -->
+  <div class="content-section">
+    <h2 class="section-title">Heatmap — geom_tile()</h2>
+    <div class="code-block">
+      <div class="code-header">
+        <span class="code-lang"><span class="code-lang-badge">R</span> Heatmap with geom_tile</span>
+        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+      </div>
+      <pre><span class="cm"># Create correlation matrix heatmap</span>
+cor_data <- <span class="kw">as.data.frame</span>(<span class="fn">cor</span>(mtcars))
+cor_data$var1 <- <span class="fn">rownames</span>(cor_data)
+
+<span class="fn">library</span>(tidyr)
+cor_long <- <span class="fn">pivot_longer</span>(cor_data, -var1, <span class="ar">names_to</span>=<span class="str">"var2"</span>, <span class="ar">values_to</span>=<span class="str">"corr"</span>)
+
+<span class="fn">ggplot</span>(cor_long, <span class="fn">aes</span>(<span class="ar">x</span>=var1, <span class="ar">y</span>=var2, <span class="ar">fill</span>=corr)) +
+  <span class="fn">geom_tile</span>() +
+  <span class="fn">scale_fill_gradient2</span>(<span class="ar">low</span>=<span class="str">"#2d6be4"</span>, <span class="ar">mid</span>=<span class="str">"white"</span>, <span class="ar">high</span>=<span class="str">"#e84855"</span>) +
+  <span class="fn">theme_minimal</span>() +
+  <span class="fn">theme</span>(<span class="ar">axis.text.x</span> = <span class="fn">element_text</span>(<span class="ar">angle</span>=<span class="num">45</span>, <span class="ar">hjust</span>=<span class="num">1</span>))</pre>
+    </div>
+  </div>
+
+  <!-- COMPLETE REFERENCE TABLE -->
+  <div class="content-section">
+    <h2 class="section-title">Complete Geom Reference</h2>
+    <table class="data-table">
+      <tr><th>Geom Function</th><th>Plot Type</th><th>Required aes()</th></tr>
+      <tr><td><code class="inline">geom_point()</code></td><td>Scatter plot</td><td>x, y</td></tr>
+      <tr><td><code class="inline">geom_line()</code></td><td>Line chart (sorted by x)</td><td>x, y</td></tr>
+      <tr><td><code class="inline">geom_path()</code></td><td>Line chart (data order)</td><td>x, y</td></tr>
+      <tr><td><code class="inline">geom_bar()</code></td><td>Bar chart (counts)</td><td>x</td></tr>
+      <tr><td><code class="inline">geom_col()</code></td><td>Bar chart (identity)</td><td>x, y</td></tr>
+      <tr><td><code class="inline">geom_histogram()</code></td><td>Histogram</td><td>x</td></tr>
+      <tr><td><code class="inline">geom_density()</code></td><td>Kernel density curve</td><td>x</td></tr>
+      <tr><td><code class="inline">geom_boxplot()</code></td><td>Box plot</td><td>x, y</td></tr>
+      <tr><td><code class="inline">geom_violin()</code></td><td>Violin plot</td><td>x, y</td></tr>
+      <tr><td><code class="inline">geom_area()</code></td><td>Area chart</td><td>x, y</td></tr>
+      <tr><td><code class="inline">geom_ribbon()</code></td><td>Shaded band</td><td>x, ymin, ymax</td></tr>
+      <tr><td><code class="inline">geom_tile()</code></td><td>Heatmap / raster</td><td>x, y, fill</td></tr>
+      <tr><td><code class="inline">geom_smooth()</code></td><td>Smoothed conditional mean</td><td>x, y</td></tr>
+      <tr><td><code class="inline">geom_abline()</code></td><td>Reference line (slope + intercept)</td><td>slope, intercept</td></tr>
+      <tr><td><code class="inline">geom_hline()</code></td><td>Horizontal reference line</td><td>yintercept</td></tr>
+      <tr><td><code class="inline">geom_vline()</code></td><td>Vertical reference line</td><td>xintercept</td></tr>
+      <tr><td><code class="inline">geom_segment()</code></td><td>Line segment</td><td>x, y, xend, yend</td></tr>
+      <tr><td><code class="inline">geom_curve()</code></td><td>Curved line segment</td><td>x, y, xend, yend</td></tr>
+      <tr><td><code class="inline">geom_text()</code></td><td>Text labels</td><td>x, y, label</td></tr>
+      <tr><td><code class="inline">geom_label()</code></td><td>Text with background box</td><td>x, y, label</td></tr>
+      <tr><td><code class="inline">geom_errorbar()</code></td><td>Error bars</td><td>x, ymin, ymax</td></tr>
+      <tr><td><code class="inline">geom_crossbar()</code></td><td>Crossbar with center</td><td>x, y, ymin, ymax</td></tr>
+      <tr><td><code class="inline">geom_dotplot()</code></td><td>Dot plot</td><td>x</td></tr>
+      <tr><td><code class="inline">geom_jitter()</code></td><td>Jittered scatter</td><td>x, y</td></tr>
+      <tr><td><code class="inline">geom_polygon()</code></td><td>Filled polygon</td><td>x, y</td></tr>
+      <tr><td><code class="inline">geom_map()</code></td><td>Map polygons</td><td>map_id</td></tr>
+      <tr><td><code class="inline">geom_blank()</code></td><td>Empty — for axis range only</td><td>x, y</td></tr>
+      <tr><td><code class="inline">geom_rug()</code></td><td>Marginal rug marks</td><td>x or y</td></tr>
+      <tr><td><code class="inline">geom_step()</code></td><td>Step chart</td><td>x, y</td></tr>
+    </table>
+  </div>
+
+  <div style="display:flex;gap:16px;margin-top:48px;padding-top:32px;border-top:1px solid var(--border)">
+    <a href="ggplot2-intro.html" style="color:var(--muted);text-decoration:none;font-size:14px">← ggplot2 Intro</a>
+    <a href="plot-titles.html" style="color:var(--accent);text-decoration:none;font-size:14px;font-weight:600;margin-left:auto">Next: Titles & Labels →</a>
+  </div>
+</main>
+
+<script>
+function copyCode(btn) {
+  const text = btn.closest('.code-block').querySelector('pre').innerText;
+  navigator.clipboard.writeText(text).then(() => {
+    btn.textContent = 'Copied!'; btn.classList.add('copied');
+    setTimeout(() => { btn.textContent = 'Copy'; btn.classList.remove('copied'); }, 2000);
+  });
+}
+</script>
+</body>
+</html>

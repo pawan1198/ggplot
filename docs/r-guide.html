@@ -1,0 +1,386 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>R Guide — RViz</title>
+<link rel="stylesheet" href="shared.css">
+</head>
+<body>
+
+<nav class="sidebar">
+  <div class="sidebar-top">
+    <a href="index.html" class="sidebar-logo">R<span>viz</span></a>
+    <div class="sidebar-page">R Guide & Basics</div>
+  </div>
+  <div class="sidebar-nav">
+    <div class="nav-group">
+      <div class="nav-section">Getting Started</div>
+      <a href="index.html" class="nav-item">Home</a>
+      <a href="r-guide.html" class="nav-item active">R Guide & Basics</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-section">ggplot2 Core</div>
+      <a href="ggplot2-intro.html" class="nav-item">Introduction & Grammar</a>
+      <a href="geoms.html" class="nav-item">Geom Functions</a>
+      <a href="plot-titles.html" class="nav-item">Titles & Labels</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-section">Customization</div>
+      <a href="themes.html" class="nav-item">Themes & Styling</a>
+      <a href="barplots.html" class="nav-item">Bar Charts</a>
+      <a href="combining.html" class="nav-item">Combining Plots</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-section">Reference</div>
+      <a href="reference.html" class="nav-item">Quick Reference</a>
+    </div>
+  </div>
+  <div class="sidebar-bottom">
+    <a href="index.html" class="back-home">← Back to Home</a>
+  </div>
+</nav>
+
+<main class="main-content">
+  <div class="page-header">
+    <div class="page-eyebrow">Module 01 — Foundation</div>
+    <h1 class="page-title">Getting Started with <em>R</em></h1>
+    <p class="page-desc">R is one of the most popular programming languages in statistical computing. Open-source, easy to learn, and powerful for manipulating and visualizing data.</p>
+  </div>
+
+  <!-- INSTALLATION -->
+  <div class="content-section" id="install">
+    <h2 class="section-title">Download & Install R and RStudio</h2>
+    <p class="body-text">To use R, you need two things: <strong>R itself</strong> (the language engine) and <strong>RStudio</strong> (the IDE that makes it comfortable to use). Download links:</p>
+    <ul class="body-list">
+      <li><strong>RStudio:</strong> <code class="inline">https://www.rstudio.com/products/rstudio/download/</code></li>
+      <li><strong>R (CRAN):</strong> <code class="inline">https://cran.r-project.org/</code></li>
+    </ul>
+
+    <div class="tabs">
+      <div class="tab-bar">
+        <button class="tab-btn active" onclick="switchTab(this,'install-linux')">🐧 Linux</button>
+        <button class="tab-btn" onclick="switchTab(this,'install-win')">🪟 Windows</button>
+        <button class="tab-btn" onclick="switchTab(this,'install-mac')">🍎 macOS</button>
+      </div>
+
+      <div id="install-linux" class="tab-panel active">
+        <h3 class="subsection-title">Debian / Ubuntu / Linux Mint</h3>
+        <div class="code-block">
+          <div class="code-header">
+            <span class="code-lang"><span class="code-lang-badge">bash</span> Terminal</span>
+            <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+          </div>
+          <pre><span class="cm"># Install R base (as superuser)</span>
+sudo apt-get install r-base
+
+<span class="cm"># Install RStudio — download .deb from rstudio.com first, then:</span>
+sudo apt install -f ./rstudio-2024.x.x-amd64.deb
+
+<span class="cm"># Alternative: use the desktop package manager</span>
+sudo apt-get install rstudio-desktop</pre>
+        </div>
+      </div>
+
+      <div id="install-win" class="tab-panel">
+        <h3 class="subsection-title">Windows — Step by Step</h3>
+        <ol class="body-list">
+          <li>Go to <strong>cran.r-project.org</strong> → "Download R for Windows" → save the <code class="inline">.exe</code></li>
+          <li>Run the <code class="inline">.exe</code> file and follow the installation wizard</li>
+          <li>Go to <strong>rstudio.com/products/rstudio/download</strong></li>
+          <li>Download the RStudio Desktop installer (<code class="inline">.exe</code>) and run it</li>
+        </ol>
+        <div class="callout note">
+          <span class="callout-icon">📌</span>
+          <div class="callout-body"><strong>Note:</strong> Always install R <em>before</em> RStudio so RStudio can detect your R installation automatically.</div>
+        </div>
+      </div>
+
+      <div id="install-mac" class="tab-panel">
+        <h3 class="subsection-title">macOS — Step by Step</h3>
+        <ol class="body-list">
+          <li>Go to <strong>cran.r-project.org</strong> → "Download R for macOS" → download the <code class="inline">.pkg</code></li>
+          <li>Double-click and follow the installer prompts</li>
+          <li>Download RStudio <code class="inline">.dmg</code> → drag to Applications folder</li>
+        </ol>
+        <div class="code-block">
+          <div class="code-header">
+            <span class="code-lang"><span class="code-lang-badge">bash</span> Homebrew (alternative)</span>
+            <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+          </div>
+          <pre>brew install --cask r
+brew install --cask rstudio</pre>
+        </div>
+        <p class="body-text" style="font-size:13px;color:var(--muted)">⚠️ Download the version matching your Mac OS version (Intel vs Apple Silicon).</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- WORKING DIRECTORY -->
+  <div class="content-section" id="workdir">
+    <h2 class="section-title">The Working Directory</h2>
+    <p class="body-text">The working directory is the file path R uses as the starting point for all relative file paths — the default location for importing and exporting files.</p>
+    <div class="code-block">
+      <div class="code-header">
+        <span class="code-lang"><span class="code-lang-badge">R</span> Working Directory</span>
+        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+      </div>
+      <pre><span class="cm"># Returns your current working directory</span>
+<span class="fn">getwd</span>()
+<span class="cm"># e.g. output: "/Users/pawan/Documents/R"</span>
+
+<span class="cm"># Change your working directory to a desired path</span>
+<span class="fn">setwd</span>(<span class="str">"~/R"</span>)
+<span class="fn">setwd</span>(<span class="str">"/home/pawan/projects"</span>)  <span class="cm"># Linux/Mac</span>
+<span class="fn">setwd</span>(<span class="str">"C:/Users/Pawan/R"</span>)       <span class="cm"># Windows (use / not \)</span></pre>
+    </div>
+  </div>
+
+  <!-- PACKAGES -->
+  <div class="content-section" id="packages">
+    <h2 class="section-title">Using Packages in R</h2>
+    <p class="body-text">R packages are collections of functions and tools developed by the R community. They extend R's capabilities — from data manipulation to machine learning to visualization.</p>
+    <div class="code-block">
+      <div class="code-header">
+        <span class="code-lang"><span class="code-lang-badge">R</span> Package Management</span>
+        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+      </div>
+      <pre><span class="cm"># Install a package (only needed once)</span>
+<span class="fn">install.packages</span>(<span class="str">"ggplot2"</span>)
+<span class="fn">install.packages</span>(<span class="str">"tidyverse"</span>)  <span class="cm"># Installs ggplot2, dplyr, tidyr, etc.</span>
+
+<span class="cm"># Install multiple packages at once</span>
+<span class="fn">install.packages</span>(<span class="fn">c</span>(<span class="str">"ggplot2"</span>, <span class="str">"ggthemes"</span>, <span class="str">"patchwork"</span>))
+
+<span class="cm"># Load a package (every session)</span>
+<span class="fn">library</span>(ggplot2)
+<span class="fn">library</span>(tidyverse)
+
+<span class="cm"># Check installed packages</span>
+<span class="fn">installed.packages</span>()[, <span class="str">"Package"</span>]
+
+<span class="cm"># Update all packages</span>
+<span class="fn">update.packages</span>()</pre>
+    </div>
+    <div class="callout tip">
+      <span class="callout-icon">💡</span>
+      <div class="callout-body"><strong>Tip:</strong> You only need to <code class="inline">install.packages()</code> once. But you need <code class="inline">library()</code> at the start of every new R session.</div>
+    </div>
+  </div>
+
+  <!-- VECTORS -->
+  <div class="content-section" id="vectors">
+    <h2 class="section-title">Vectors in R</h2>
+    <p class="body-text">A vector is a one-dimensional array that holds numeric, character, or logical data. It is the fundamental data structure in R.</p>
+
+    <h3 class="subsection-title">Types of Vector</h3>
+    <div class="cards-grid">
+      <div class="card">
+        <div class="card-icon">🔢</div>
+        <h4>Numeric</h4>
+        <p>e.g. <code class="inline">c(1, 2, 3.5)</code><br>Whole numbers and decimals</p>
+      </div>
+      <div class="card">
+        <div class="card-icon">🔤</div>
+        <h4>Character</h4>
+        <p>e.g. <code class="inline">c("a", "b", "hello")</code><br>Text strings in quotes</p>
+      </div>
+      <div class="card">
+        <div class="card-icon">🏷️</div>
+        <h4>Factor</h4>
+        <p>Categorical data stored as levels — useful for grouping</p>
+      </div>
+      <div class="card">
+        <div class="card-icon">✅</div>
+        <h4>Boolean</h4>
+        <p>e.g. <code class="inline">c(TRUE, FALSE)</code><br>Logical true/false values</p>
+      </div>
+    </div>
+
+    <h3 class="subsection-title">Creating Vectors</h3>
+    <div class="code-block">
+      <div class="code-header">
+        <span class="code-lang"><span class="code-lang-badge">R</span> Vector creation</span>
+        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+      </div>
+      <pre><span class="cm"># Numeric vector with comma</span>
+<span class="fn">c</span>(<span class="num">1</span>, <span class="num">3</span>, <span class="num">5</span>)
+
+<span class="cm"># Integer sequence with colon (faster for sequences)</span>
+<span class="fn">c</span>(<span class="num">1</span>:<span class="num">7</span>)   <span class="cm"># = c(1, 2, 3, 4, 5, 6, 7)</span>
+
+<span class="cm"># Character vector</span>
+<span class="fn">c</span>(<span class="str">"a"</span>, <span class="str">"b"</span>, <span class="str">"hello"</span>)
+
+<span class="cm"># Store with -> (R convention) or =</span>
+<span class="fn">c</span>(<span class="num">1</span>:<span class="num">10</span>) -> v
+v
+<span class="fn">c</span>(<span class="str">"my"</span>, <span class="str">"vector"</span>) -> words
+
+<span class="cm"># Sequence with step size</span>
+<span class="fn">seq</span>(<span class="num">1</span>, <span class="num">20</span>, <span class="ar">by</span> = <span class="num">3</span>)   <span class="cm"># 1 4 7 10 13 16 19</span>
+
+<span class="cm"># Repeated values</span>
+<span class="fn">rep</span>(<span class="num">3</span>, <span class="ar">times</span> = <span class="num">4</span>)          <span class="cm"># 3 3 3 3</span>
+<span class="fn">rep</span>(<span class="fn">c</span>(<span class="num">1</span>:<span class="num">4</span>), <span class="ar">times</span> = <span class="num">2</span>)    <span class="cm"># 1 2 3 4 1 2 3 4</span>
+<span class="fn">rep</span>(<span class="fn">c</span>(<span class="num">1</span>:<span class="num">4</span>), <span class="ar">each</span> = <span class="num">2</span>)     <span class="cm"># 1 1 2 2 3 3 4 4</span>
+
+<span class="cm"># Check the type of a vector</span>
+<span class="fn">class</span>(v)   <span class="cm"># "integer"</span></pre>
+    </div>
+
+    <h3 class="subsection-title">Vector Functions</h3>
+    <table class="data-table">
+      <tr><th>Function</th><th>Description</th><th>Example</th></tr>
+      <tr><td><code class="inline">sort(v)</code></td><td>Sort ascending (or descending with decreasing=TRUE)</td><td><code class="inline">sort(c(3,1,2))</code> → 1 2 3</td></tr>
+      <tr><td><code class="inline">rev(v)</code></td><td>Reverse order of vector</td><td><code class="inline">rev(c(1,2,3))</code> → 3 2 1</td></tr>
+      <tr><td><code class="inline">table(v)</code></td><td>Count frequency of each value</td><td>Frequency table</td></tr>
+      <tr><td><code class="inline">unique(v)</code></td><td>Return distinct elements only</td><td>Removes duplicates</td></tr>
+      <tr><td><code class="inline">length(v)</code></td><td>Number of elements</td><td><code class="inline">length(1:10)</code> → 10</td></tr>
+      <tr><td><code class="inline">sum(v)</code></td><td>Sum all elements</td><td>Total</td></tr>
+      <tr><td><code class="inline">mean(v)</code></td><td>Average of elements</td><td>Arithmetic mean</td></tr>
+      <tr><td><code class="inline">which(v > 5)</code></td><td>Indices where condition is TRUE</td><td>Positional filtering</td></tr>
+    </table>
+
+    <div class="code-block">
+      <div class="code-header">
+        <span class="code-lang"><span class="code-lang-badge">R</span> Vector functions in action</span>
+        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+      </div>
+      <pre><span class="fn">c</span>(<span class="num">1</span>,<span class="num">3</span>,<span class="num">5</span>,<span class="num">2</span>,<span class="num">7</span>,<span class="num">4</span>,<span class="num">9</span>,<span class="num">24</span>,<span class="num">12</span>,<span class="num">25</span>,<span class="num">13</span>,<span class="num">22</span>,<span class="num">12</span>,<span class="num">3</span>) -> a
+
+<span class="fn">sort</span>(a)    <span class="cm"># 1 2 3 3 4 5 7 9 12 12 13 22 24 25</span>
+<span class="fn">rev</span>(a)     <span class="cm"># Reverses the order</span>
+<span class="fn">table</span>(a)   <span class="cm"># Counts occurrences of each value</span>
+<span class="fn">unique</span>(a)  <span class="cm"># Removes duplicates</span>
+<span class="fn">length</span>(a)  <span class="cm"># 14</span>
+<span class="fn">mean</span>(a)    <span class="cm"># Mean value</span></pre>
+    </div>
+  </div>
+
+  <!-- DATA FRAMES -->
+  <div class="content-section" id="dataframes">
+    <h2 class="section-title">Data Frames</h2>
+    <p class="body-text">A data frame is the core data structure for tabular data in R — like a spreadsheet or database table. Each column is a vector; all columns have the same length.</p>
+
+    <div class="callout note">
+      <span class="callout-icon">📌</span>
+      <div class="callout-body"><strong>Syntax:</strong> <code class="inline">df[row, column]</code> — the first argument is always the row, the second is the column. Example: <code class="inline">df[1:9, c(2,5,6)]</code> selects rows 1–9 and columns 2, 5, 6.</div>
+    </div>
+
+    <div class="code-block">
+      <div class="code-header">
+        <span class="code-lang"><span class="code-lang-badge">R</span> Creating & accessing data frames</span>
+        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+      </div>
+      <pre><span class="cm"># Create a data frame</span>
+<span class="fn">data.frame</span>(<span class="ar">x</span> = <span class="num">1</span>:<span class="num">7</span>,
+           <span class="ar">y</span> = <span class="fn">c</span>(<span class="str">"Sun"</span>,<span class="str">"Mon"</span>,<span class="str">"Tue"</span>,<span class="str">"Wed"</span>,<span class="str">"Thu"</span>,<span class="str">"Fri"</span>,<span class="str">"Sat"</span>)) -> df
+df
+
+<span class="cm"># Accessing rows and columns</span>
+df[, <span class="num">2</span>]    <span class="cm"># All rows of column 2</span>
+df[<span class="num">2</span>, ]    <span class="cm"># All columns of row 2</span>
+df$x       <span class="cm"># Column 'x' by name (returns a vector)</span>
+df[<span class="num">1</span>:<span class="num">3</span>, <span class="num">1</span>] <span class="cm"># Rows 1–3, column 1</span>
+
+<span class="cm"># Useful info functions</span>
+<span class="fn">nrow</span>(df)   <span class="cm"># Number of rows</span>
+<span class="fn">ncol</span>(df)   <span class="cm"># Number of columns</span>
+<span class="fn">dim</span>(df)    <span class="cm"># Both dimensions</span>
+<span class="fn">str</span>(df)    <span class="cm"># Structure overview</span>
+<span class="fn">head</span>(df)   <span class="cm"># First 6 rows</span>
+<span class="fn">tail</span>(df)   <span class="cm"># Last 6 rows</span>
+<span class="fn">summary</span>(df)<span class="cm"># Statistical summary</span></pre>
+    </div>
+
+    <h3 class="subsection-title">Combining Data Frames</h3>
+    <div class="code-block">
+      <div class="code-header">
+        <span class="code-lang"><span class="code-lang-badge">R</span> cbind & rbind</span>
+        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+      </div>
+      <pre>df1 <- <span class="fn">data.frame</span>(<span class="ar">x</span> = <span class="num">1</span>:<span class="num">3</span>, <span class="ar">y</span> = <span class="fn">c</span>(<span class="str">"a"</span>,<span class="str">"b"</span>,<span class="str">"c"</span>), <span class="ar">z</span> = <span class="num">12</span>:<span class="num">14</span>)
+df2 <- <span class="fn">data.frame</span>(<span class="ar">x</span> = <span class="num">4</span>:<span class="num">6</span>, <span class="ar">y</span> = <span class="fn">c</span>(<span class="str">"A"</span>,<span class="str">"B"</span>,<span class="str">"C"</span>), <span class="ar">z</span> = <span class="num">21</span>:<span class="num">23</span>)
+
+<span class="fn">cbind</span>(df1, df2)  <span class="cm"># Combine by columns (side by side) — must have same nrow</span>
+<span class="fn">rbind</span>(df1, df2)  <span class="cm"># Combine by rows (stack) — must have same column names</span></pre>
+    </div>
+
+    <h3 class="subsection-title">Subsetting Data Frames</h3>
+    <div class="code-block">
+      <div class="code-header">
+        <span class="code-lang"><span class="code-lang-badge">R</span> Subsetting</span>
+        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+      </div>
+      <pre><span class="cm"># Built-in datasets (great for practice)</span>
+data(mtcars)    <span class="cm"># Car performance data</span>
+data(iris)      <span class="cm"># Fisher's iris flowers</span>
+data(economics) <span class="cm"># US economic data (in ggplot2)</span>
+
+<span class="cm"># subset() — filter rows based on condition</span>
+<span class="fn">subset</span>(mtcars, mpg > <span class="num">25</span>) -> fast_cars  <span class="cm"># Cars with >25 mpg</span>
+
+<span class="cm"># Select specific columns</span>
+<span class="fn">subset</span>(mtcars, <span class="ar">select</span> = <span class="fn">c</span>(<span class="str">"mpg"</span>, <span class="str">"cyl"</span>, <span class="str">"hp"</span>)) -> small_df
+
+<span class="cm"># Using brackets</span>
+mtcars[mtcars$mpg > <span class="num">25</span>, ]    <span class="cm"># Same as subset above</span>
+mtcars[, <span class="fn">c</span>(<span class="str">"mpg"</span>, <span class="str">"hp"</span>)]     <span class="cm"># Select columns</span>
+
+<span class="cm"># dplyr (tidyverse) — more readable</span>
+<span class="fn">library</span>(dplyr)
+mtcars |> <span class="fn">filter</span>(mpg > <span class="num">25</span>)
+mtcars |> <span class="fn">select</span>(mpg, cyl, hp)
+mtcars |> <span class="fn">arrange</span>(<span class="fn">desc</span>(mpg))</pre>
+    </div>
+  </div>
+
+  <!-- SAVING PLOTS -->
+  <div class="content-section">
+    <h2 class="section-title">Saving Plots with ggsave()</h2>
+    <p class="body-text">After creating a ggplot2 plot, use <code class="inline">ggsave()</code> to export it to a file. It automatically uses the last plot unless you specify otherwise.</p>
+    <div class="code-block">
+      <div class="code-header">
+        <span class="code-lang"><span class="code-lang-badge">R</span> ggsave</span>
+        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+      </div>
+      <pre><span class="cm"># Save the last plot</span>
+<span class="fn">ggsave</span>(<span class="str">"my_plot.png"</span>, <span class="ar">width</span> = <span class="num">8</span>, <span class="ar">height</span> = <span class="num">5</span>, <span class="ar">dpi</span> = <span class="num">300</span>)
+
+<span class="cm"># Save a specific plot object</span>
+p <- <span class="fn">ggplot</span>(mtcars, <span class="fn">aes</span>(<span class="ar">x</span> = wt, <span class="ar">y</span> = mpg)) + <span class="fn">geom_point</span>()
+<span class="fn">ggsave</span>(<span class="str">"plot.pdf"</span>, <span class="ar">plot</span> = p, <span class="ar">width</span> = <span class="num">10</span>, <span class="ar">height</span> = <span class="num">7</span>)
+
+<span class="cm"># Formats: png, pdf, svg, tiff, jpg, eps</span>
+<span class="fn">ggsave</span>(<span class="str">"plot.svg"</span>, <span class="ar">device</span> = <span class="str">"svg"</span>)</pre>
+    </div>
+  </div>
+
+  <div style="display:flex;gap:16px;margin-top:48px;padding-top:32px;border-top:1px solid var(--border)">
+    <a href="index.html" style="color:var(--muted);text-decoration:none;font-size:14px">← Home</a>
+    <a href="ggplot2-intro.html" style="color:var(--accent);text-decoration:none;font-size:14px;font-weight:600;margin-left:auto">Next: ggplot2 Introduction →</a>
+  </div>
+</main>
+
+<script>
+function switchTab(btn, id) {
+  const bar = btn.closest('.tab-bar');
+  bar.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  let el = bar.nextElementSibling;
+  while(el && el.classList.contains('tab-panel')) {
+    el.classList.remove('active'); el = el.nextElementSibling;
+  }
+  document.getElementById(id).classList.add('active');
+}
+function copyCode(btn) {
+  const text = btn.closest('.code-block').querySelector('pre').innerText;
+  navigator.clipboard.writeText(text).then(() => {
+    btn.textContent = 'Copied!'; btn.classList.add('copied');
+    setTimeout(() => { btn.textContent = 'Copy'; btn.classList.remove('copied'); }, 2000);
+  });
+}
+</script>
+</body>
+</html>

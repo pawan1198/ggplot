@@ -1,0 +1,562 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>R & ggplot2 — Complete Learning Hub</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=Instrument+Sans:ital,wght@0,400;0,500;0,600;1,400&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --ink:#0e0f14;
+  --paper:#f7f5f0;
+  --warm:#ede8df;
+  --accent:#e84855;
+  --blue:#2d6be4;
+  --green:#12a36a;
+  --gold:#d4a017;
+  --purple:#7c4dff;
+  --border:#d8d2c8;
+  --text:#1a1b20;
+  --muted:#6b6760;
+}
+html{scroll-behavior:smooth}
+body{
+  background:var(--paper);
+  color:var(--text);
+  font-family:'Instrument Sans',sans-serif;
+  font-size:16px;
+  line-height:1.6;
+  overflow-x:hidden;
+}
+
+/* NAV */
+nav{
+  position:fixed;top:0;left:0;right:0;z-index:1000;
+  background:rgba(247,245,240,0.92);
+  backdrop-filter:blur(16px);
+  border-bottom:1px solid var(--border);
+  padding:0 48px;
+  height:64px;
+  display:flex;align-items:center;justify-content:space-between;
+}
+.nav-logo{
+  font-family:'Syne',sans-serif;
+  font-weight:800;font-size:20px;
+  color:var(--ink);
+  text-decoration:none;
+  letter-spacing:-0.5px;
+}
+.nav-logo span{color:var(--accent)}
+.nav-links{display:flex;gap:8px;align-items:center}
+.nav-links a{
+  padding:7px 16px;border-radius:99px;
+  font-size:14px;font-weight:500;
+  color:var(--muted);text-decoration:none;
+  transition:all .2s;
+}
+.nav-links a:hover{background:var(--warm);color:var(--text)}
+.nav-links a.btn{
+  background:var(--ink);color:#fff;
+  padding:8px 20px;
+}
+.nav-links a.btn:hover{background:var(--accent)}
+
+/* HERO */
+.hero{
+  min-height:100vh;
+  display:flex;flex-direction:column;justify-content:center;
+  padding:100px 80px 80px;
+  position:relative;
+  overflow:hidden;
+}
+.hero-bg{
+  position:absolute;inset:0;
+  background:
+    radial-gradient(ellipse 80% 60% at 70% 50%, rgba(232,72,85,0.06) 0%, transparent 60%),
+    radial-gradient(ellipse 60% 80% at 20% 30%, rgba(45,107,228,0.05) 0%, transparent 60%);
+  pointer-events:none;
+}
+.hero-eyebrow{
+  font-family:'JetBrains Mono',monospace;
+  font-size:13px;color:var(--muted);
+  letter-spacing:2px;text-transform:uppercase;
+  margin-bottom:24px;
+  display:flex;align-items:center;gap:12px;
+}
+.hero-eyebrow::before{
+  content:'';width:32px;height:1px;background:var(--muted);
+}
+.hero h1{
+  font-family:'Syne',sans-serif;
+  font-size:clamp(52px, 7vw, 96px);
+  font-weight:800;
+  line-height:1.0;
+  letter-spacing:-3px;
+  color:var(--ink);
+  max-width:900px;
+  margin-bottom:28px;
+}
+.hero h1 em{
+  font-style:normal;
+  color:var(--accent);
+  position:relative;
+}
+.hero h1 em::after{
+  content:'';
+  position:absolute;bottom:-4px;left:0;right:0;
+  height:3px;background:var(--accent);
+  border-radius:2px;
+}
+.hero-desc{
+  font-size:19px;color:var(--muted);
+  max-width:560px;line-height:1.7;
+  margin-bottom:48px;
+}
+.hero-actions{display:flex;gap:16px;flex-wrap:wrap}
+.btn-primary{
+  background:var(--ink);color:#fff;
+  padding:14px 32px;border-radius:8px;
+  font-size:15px;font-weight:600;
+  text-decoration:none;
+  transition:all .2s;
+  border:2px solid var(--ink);
+}
+.btn-primary:hover{background:var(--accent);border-color:var(--accent)}
+.btn-outline{
+  background:transparent;color:var(--ink);
+  padding:14px 32px;border-radius:8px;
+  font-size:15px;font-weight:600;
+  text-decoration:none;
+  border:2px solid var(--border);
+  transition:all .2s;
+}
+.btn-outline:hover{border-color:var(--ink)}
+
+.hero-stats{
+  margin-top:72px;
+  display:flex;gap:56px;flex-wrap:wrap;
+  padding-top:32px;
+  border-top:1px solid var(--border);
+}
+.stat{display:flex;flex-direction:column;gap:4px}
+.stat-num{
+  font-family:'Syne',sans-serif;
+  font-size:36px;font-weight:800;
+  color:var(--ink);letter-spacing:-1px;
+}
+.stat-label{font-size:13px;color:var(--muted);font-weight:500}
+
+/* SECTION */
+section{padding:96px 80px}
+.section-eyebrow{
+  font-family:'JetBrains Mono',monospace;
+  font-size:12px;color:var(--muted);
+  letter-spacing:2px;text-transform:uppercase;
+  margin-bottom:16px;
+}
+h2{
+  font-family:'Syne',sans-serif;
+  font-size:clamp(32px,4vw,52px);
+  font-weight:800;letter-spacing:-1.5px;
+  color:var(--ink);margin-bottom:16px;
+  line-height:1.1;
+}
+.section-desc{
+  font-size:18px;color:var(--muted);
+  max-width:560px;line-height:1.7;
+  margin-bottom:60px;
+}
+
+/* MODULES GRID */
+.modules-grid{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:2px;
+  background:var(--border);
+  border:2px solid var(--border);
+  border-radius:16px;
+  overflow:hidden;
+}
+.module-card{
+  background:var(--paper);
+  padding:36px 32px;
+  text-decoration:none;
+  color:inherit;
+  transition:background .2s;
+  position:relative;
+}
+.module-card:hover{background:var(--warm)}
+.module-card:hover .module-arrow{transform:translate(4px,-4px)}
+.module-num{
+  font-family:'JetBrains Mono',monospace;
+  font-size:11px;color:var(--muted);
+  letter-spacing:1.5px;margin-bottom:20px;
+}
+.module-icon{font-size:28px;margin-bottom:16px}
+.module-card h3{
+  font-family:'Syne',sans-serif;
+  font-size:20px;font-weight:700;
+  color:var(--ink);margin-bottom:8px;
+  letter-spacing:-0.3px;
+}
+.module-card p{font-size:14px;color:var(--muted);line-height:1.6}
+.module-arrow{
+  position:absolute;top:32px;right:32px;
+  font-size:18px;color:var(--muted);
+  transition:transform .2s;
+}
+.module-tag{
+  display:inline-block;margin-top:16px;
+  padding:3px 10px;border-radius:99px;
+  font-size:11px;font-weight:600;
+  letter-spacing:.5px;
+}
+.tag-r{background:rgba(45,107,228,.1);color:var(--blue)}
+.tag-gg{background:rgba(232,72,85,.1);color:var(--accent)}
+.tag-adv{background:rgba(124,77,255,.1);color:var(--purple)}
+
+/* FEATURES */
+.features-grid{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:40px;
+}
+.feature{
+  padding:32px;
+  border:1px solid var(--border);
+  border-radius:12px;
+  background:var(--paper);
+}
+.feature-icon{
+  width:48px;height:48px;border-radius:12px;
+  display:flex;align-items:center;justify-content:center;
+  font-size:22px;margin-bottom:20px;
+}
+.feature h3{
+  font-family:'Syne',sans-serif;
+  font-size:18px;font-weight:700;
+  margin-bottom:8px;
+  letter-spacing:-0.2px;
+}
+.feature p{font-size:14px;color:var(--muted);line-height:1.7}
+
+/* CODE PREVIEW */
+.code-preview{
+  background:var(--ink);
+  border-radius:16px;
+  overflow:hidden;
+  margin-top:60px;
+}
+.code-preview-header{
+  display:flex;align-items:center;gap:8px;
+  padding:14px 20px;
+  background:rgba(255,255,255,.04);
+  border-bottom:1px solid rgba(255,255,255,.08);
+}
+.dot{width:12px;height:12px;border-radius:50%}
+.dot-r{background:#ff5f57}
+.dot-y{background:#ffbd2e}
+.dot-g{background:#28ca41}
+.code-preview-label{
+  margin-left:8px;
+  font-family:'JetBrains Mono',monospace;
+  font-size:12px;color:rgba(255,255,255,.4);
+}
+.code-preview pre{
+  padding:28px 32px;
+  font-family:'JetBrains Mono',monospace;
+  font-size:13.5px;line-height:1.8;
+  color:#e0e0e0;overflow-x:auto;
+}
+.code-preview .kw{color:#c792ea}
+.code-preview .fn{color:#82aaff}
+.code-preview .str{color:#c3e88d}
+.code-preview .num{color:#f78c6c}
+.code-preview .cm{color:#546e7a}
+.code-preview .ar{color:#ffcb6b}
+
+/* TOPICS STRIP */
+.topics-strip{
+  background:var(--warm);
+  border-top:1px solid var(--border);
+  border-bottom:1px solid var(--border);
+  padding:48px 80px;
+}
+.topics-inner{
+  display:flex;flex-wrap:wrap;gap:12px;
+}
+.topic-chip{
+  display:inline-flex;align-items:center;gap:8px;
+  background:var(--paper);
+  border:1px solid var(--border);
+  border-radius:99px;
+  padding:8px 16px;
+  font-size:14px;font-weight:500;
+  color:var(--text);
+  text-decoration:none;
+  transition:all .2s;
+}
+.topic-chip:hover{
+  background:var(--ink);
+  color:#fff;border-color:var(--ink);
+}
+.topic-chip span{font-size:16px}
+
+/* FOOTER */
+footer{
+  background:var(--ink);
+  color:rgba(255,255,255,.6);
+  padding:48px 80px;
+  display:flex;justify-content:space-between;align-items:center;
+  flex-wrap:wrap;gap:24px;
+}
+.footer-logo{
+  font-family:'Syne',sans-serif;
+  font-size:18px;font-weight:800;
+  color:#fff;letter-spacing:-0.5px;
+}
+.footer-logo span{color:var(--accent)}
+.footer-links{display:flex;gap:24px}
+.footer-links a{
+  color:rgba(255,255,255,.5);
+  text-decoration:none;font-size:14px;
+  transition:color .2s;
+}
+.footer-links a:hover{color:#fff}
+
+@media(max-width:900px){
+  nav{padding:0 24px}
+  .hero{padding:100px 24px 60px}
+  section{padding:60px 24px}
+  .modules-grid{grid-template-columns:1fr}
+  .features-grid{grid-template-columns:1fr}
+  .topics-strip{padding:40px 24px}
+  footer{padding:40px 24px}
+  .hero-stats{gap:32px}
+}
+</style>
+</head>
+<body>
+
+<nav>
+  <a href="index.html" class="nav-logo">R<span>viz</span></a>
+  <div class="nav-links">
+    <a href="r-guide.html">R Guide</a>
+    <a href="ggplot2-intro.html">ggplot2</a>
+    <a href="themes.html">Themes</a>
+    <a href="barplots.html">Bar Charts</a>
+    <a href="combining.html">Combining</a>
+    <a href="reference.html" class="btn">Reference →</a>
+  </div>
+</nav>
+
+<div class="hero">
+  <div class="hero-bg"></div>
+  <div class="hero-eyebrow">Complete Learning Resource</div>
+  <h1>Master R &amp; <em>ggplot2</em> Data Visualization</h1>
+  <p class="hero-desc">A comprehensive, hands-on guide covering R fundamentals through advanced ggplot2 visualization — with full code examples, theme galleries, and interactive references.</p>
+  <div class="hero-actions">
+    <a href="r-guide.html" class="btn-primary">Start with R Basics</a>
+    <a href="ggplot2-intro.html" class="btn-outline">Jump to ggplot2 →</a>
+  </div>
+  <div class="hero-stats">
+    <div class="stat">
+      <span class="stat-num">8+</span>
+      <span class="stat-label">Complete modules</span>
+    </div>
+    <div class="stat">
+      <span class="stat-num">150+</span>
+      <span class="stat-label">Code examples</span>
+    </div>
+    <div class="stat">
+      <span class="stat-num">20+</span>
+      <span class="stat-label">Geom functions</span>
+    </div>
+    <div class="stat">
+      <span class="stat-num">15+</span>
+      <span class="stat-label">Themes covered</span>
+    </div>
+  </div>
+</div>
+
+<section style="background:var(--paper)">
+  <div class="section-eyebrow">All Modules</div>
+  <h2>Everything you need to know</h2>
+  <p class="section-desc">From installing R to combining multiple plots with patchwork — each module builds on the last.</p>
+
+  <div class="modules-grid">
+    <a href="r-guide.html" class="module-card">
+      <div class="module-num">01</div>
+      <div class="module-icon">🚀</div>
+      <h3>Getting Started with R</h3>
+      <p>Install R &amp; RStudio, understand working directories, packages, vectors, and data frames.</p>
+      <span class="module-tag tag-r">R Fundamentals</span>
+      <span class="module-arrow">↗</span>
+    </a>
+    <a href="ggplot2-intro.html" class="module-card">
+      <div class="module-num">02</div>
+      <div class="module-icon">📊</div>
+      <h3>ggplot2 Introduction</h3>
+      <p>The grammar of graphics, layered plot construction, aesthetic mappings, and all geom functions.</p>
+      <span class="module-tag tag-gg">ggplot2</span>
+      <span class="module-arrow">↗</span>
+    </a>
+    <a href="plot-titles.html" class="module-card">
+      <div class="module-num">03</div>
+      <div class="module-icon">🏷️</div>
+      <h3>Titles, Labels &amp; Annotations</h3>
+      <p>ggtitle(), labs(), captions, tags, position control, and rich text with ggtext.</p>
+      <span class="module-tag tag-gg">ggplot2</span>
+      <span class="module-arrow">↗</span>
+    </a>
+    <a href="themes.html" class="module-card">
+      <div class="module-num">04</div>
+      <div class="module-icon">🎨</div>
+      <h3>Themes &amp; Styling</h3>
+      <p>Built-in themes, ggthemes, hrbrthemes, ggthemr, ggtech, ggdark — with visual gallery.</p>
+      <span class="module-tag tag-adv">Extension Packages</span>
+      <span class="module-arrow">↗</span>
+    </a>
+    <a href="barplots.html" class="module-card">
+      <div class="module-num">05</div>
+      <div class="module-icon">📈</div>
+      <h3>Bar Charts (5 Examples)</h3>
+      <p>Base R barplots, ggplot2 barcharts, stacked, 100%-filled, and grouped bar charts.</p>
+      <span class="module-tag tag-gg">ggplot2</span>
+      <span class="module-arrow">↗</span>
+    </a>
+    <a href="combining.html" class="module-card">
+      <div class="module-num">06</div>
+      <div class="module-icon">🧩</div>
+      <h3>Combining Plots</h3>
+      <p>gridExtra, patchwork, and cowplot — layouts, operators, annotations, and spacers.</p>
+      <span class="module-tag tag-adv">Advanced</span>
+      <span class="module-arrow">↗</span>
+    </a>
+    <a href="reference.html" class="module-card">
+      <div class="module-num">07</div>
+      <div class="module-icon">⚡</div>
+      <h3>Quick Reference</h3>
+      <p>All key functions at a glance — geoms, scales, themes, coordinates, and faceting.</p>
+      <span class="module-tag tag-r">Reference</span>
+      <span class="module-arrow">↗</span>
+    </a>
+    <a href="geoms.html" class="module-card">
+      <div class="module-num">08</div>
+      <div class="module-icon">🔵</div>
+      <h3>Geom Function Gallery</h3>
+      <p>Every geom function with full working code — from geom_point to geom_violin and beyond.</p>
+      <span class="module-tag tag-gg">ggplot2</span>
+      <span class="module-arrow">↗</span>
+    </a>
+    <a href="reference.html#quiz" class="module-card">
+      <div class="module-num">09</div>
+      <div class="module-icon">🎯</div>
+      <h3>Practice &amp; Quiz</h3>
+      <p>Test your knowledge with interactive questions covering all topics.</p>
+      <span class="module-tag tag-r">Interactive</span>
+      <span class="module-arrow">↗</span>
+    </a>
+  </div>
+</section>
+
+<div class="topics-strip">
+  <div class="topics-inner">
+    <a href="r-guide.html" class="topic-chip"><span>📦</span> Packages</a>
+    <a href="r-guide.html#vectors" class="topic-chip"><span>🔢</span> Vectors</a>
+    <a href="r-guide.html#dataframes" class="topic-chip"><span>📋</span> Data Frames</a>
+    <a href="ggplot2-intro.html" class="topic-chip"><span>📐</span> Grammar of Graphics</a>
+    <a href="ggplot2-intro.html#aes" class="topic-chip"><span>🎨</span> Aesthetics</a>
+    <a href="geoms.html" class="topic-chip"><span>🔵</span> geom_point</a>
+    <a href="geoms.html" class="topic-chip"><span>📊</span> geom_bar</a>
+    <a href="geoms.html" class="topic-chip"><span>〰️</span> geom_line</a>
+    <a href="geoms.html" class="topic-chip"><span>🏔️</span> geom_area</a>
+    <a href="geoms.html" class="topic-chip"><span>📦</span> geom_boxplot</a>
+    <a href="geoms.html" class="topic-chip"><span>🎻</span> geom_violin</a>
+    <a href="themes.html" class="topic-chip"><span>🌗</span> theme_dark</a>
+    <a href="themes.html" class="topic-chip"><span>✨</span> theme_minimal</a>
+    <a href="themes.html" class="topic-chip"><span>📰</span> ggthemes</a>
+    <a href="themes.html" class="topic-chip"><span>🖋️</span> hrbrthemes</a>
+    <a href="themes.html" class="topic-chip"><span>🌐</span> ggtech</a>
+    <a href="barplots.html" class="topic-chip"><span>📊</span> Stacked Bars</a>
+    <a href="barplots.html" class="topic-chip"><span>📊</span> Grouped Bars</a>
+    <a href="combining.html" class="topic-chip"><span>🧩</span> patchwork</a>
+    <a href="combining.html" class="topic-chip"><span>🗂️</span> gridExtra</a>
+    <a href="plot-titles.html" class="topic-chip"><span>🏷️</span> labs()</a>
+    <a href="plot-titles.html" class="topic-chip"><span>📝</span> ggtitle()</a>
+    <a href="reference.html" class="topic-chip"><span>📌</span> facet_wrap</a>
+    <a href="reference.html" class="topic-chip"><span>🗺️</span> coord_polar</a>
+  </div>
+</div>
+
+<section style="background:var(--warm)">
+  <div class="section-eyebrow">Why this guide</div>
+  <h2>Complete, practical, and readable</h2>
+  <p class="section-desc">Every topic is covered with working code you can copy directly into RStudio and run immediately.</p>
+
+  <div class="features-grid">
+    <div class="feature">
+      <div class="feature-icon" style="background:rgba(232,72,85,.1)">📖</div>
+      <h3>Full material from all source files</h3>
+      <p>All content from the original .Rmd files, PDFs, and HTML documents has been consolidated, expanded, and organized into a coherent learning path.</p>
+    </div>
+    <div class="feature">
+      <div class="feature-icon" style="background:rgba(45,107,228,.1)">💻</div>
+      <h3>Runnable code in every section</h3>
+      <p>Every concept is demonstrated with complete, working R code. Copy any snippet directly into RStudio — no setup required beyond installing the packages shown.</p>
+    </div>
+    <div class="feature">
+      <div class="feature-icon" style="background:rgba(18,163,106,.1)">🎨</div>
+      <h3>Theme gallery with examples</h3>
+      <p>The themes module covers all 8 built-in ggplot2 themes plus ggthemes, hrbrthemes, ggthemr, ggtech, and ggdark — each with working code.</p>
+    </div>
+    <div class="feature">
+      <div class="feature-icon" style="background:rgba(124,77,255,.1)">🔢</div>
+      <h3>R fundamentals included</h3>
+      <p>The R Guide covers everything from installation to vectors, data frames, and subsetting — making this suitable for complete beginners and experienced users alike.</p>
+    </div>
+  </div>
+
+  <div class="code-preview">
+    <div class="code-preview-header">
+      <div class="dot dot-r"></div><div class="dot dot-y"></div><div class="dot dot-g"></div>
+      <span class="code-preview-label">example.R — build a complete ggplot2 visualization</span>
+    </div>
+    <pre><span class="cm"># Load the library</span>
+<span class="fn">library</span>(ggplot2)
+
+<span class="cm"># Create a polished scatter plot with smooth line</span>
+<span class="fn">ggplot</span>(mtcars, <span class="fn">aes</span>(<span class="ar">x</span> = wt, <span class="ar">y</span> = mpg, <span class="ar">color</span> = <span class="fn">factor</span>(cyl))) +
+  <span class="fn">geom_point</span>(<span class="ar">size</span> = <span class="num">3</span>, <span class="ar">alpha</span> = <span class="num">0.8</span>) +
+  <span class="fn">geom_smooth</span>(<span class="ar">method</span> = <span class="str">"lm"</span>, <span class="ar">se</span> = <span class="kw">FALSE</span>, <span class="ar">lwd</span> = <span class="num">0.8</span>) +
+  <span class="fn">scale_color_manual</span>(<span class="ar">values</span> = <span class="fn">c</span>(<span class="str">"#e84855"</span>, <span class="str">"#2d6be4"</span>, <span class="str">"#12a36a"</span>)) +
+  <span class="fn">labs</span>(
+    <span class="ar">title</span>   = <span class="str">"Car Weight vs. Fuel Efficiency"</span>,
+    <span class="ar">subtitle</span>= <span class="str">"Grouped by number of cylinders"</span>,
+    <span class="ar">caption</span> = <span class="str">"Source: Motor Trend US magazine, 1974"</span>,
+    <span class="ar">x</span>       = <span class="str">"Weight (1000 lbs)"</span>,
+    <span class="ar">y</span>       = <span class="str">"Miles per Gallon"</span>,
+    <span class="ar">color</span>   = <span class="str">"Cylinders"</span>
+  ) +
+  <span class="fn">theme_minimal</span>(<span class="ar">base_size</span> = <span class="num">13</span>) +
+  <span class="fn">theme</span>(<span class="ar">legend.position</span> = <span class="str">"top"</span>,
+        <span class="ar">plot.title</span> = <span class="fn">element_text</span>(<span class="ar">face</span> = <span class="str">"bold"</span>))</pre>
+  </div>
+</section>
+
+<footer>
+  <div class="footer-logo">R<span>viz</span></div>
+  <div style="font-size:14px;text-align:center">
+    Based on original content by <strong style="color:#fff">Pawan</strong> — Expanded &amp; Redesigned
+  </div>
+  <div class="footer-links">
+    <a href="r-guide.html">R Guide</a>
+    <a href="ggplot2-intro.html">ggplot2</a>
+    <a href="themes.html">Themes</a>
+    <a href="reference.html">Reference</a>
+  </div>
+</footer>
+
+</body>
+</html>
