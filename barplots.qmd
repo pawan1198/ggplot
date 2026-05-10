@@ -1,0 +1,290 @@
+---
+title: "Bar Charts (5 Examples)"
+subtitle: "Base R barplot → ggplot2 → stacked → 100%-filled → grouped"
+description: "Complete guide to drawing bar charts in R. Covers Base R barplot(), ggplot2 geom_bar, horizontal bars, stacked, proportional 100%, and grouped/dodged bar charts."
+---
+
+## Example data
+
+```r
+# df1 — four groups, simple values
+df1 <- data.frame(
+  values = c(5, 2, 7, 2),
+  group  = LETTERS[1:4]       # "A", "B", "C", "D"
+)
+df1
+
+# df2 — four main groups, each with two subgroups
+df2 <- data.frame(
+  values    = c(3, 2, 6, 3, 4, 3, 8, 2),
+  maingroup = rep(LETTERS[1:4], each = 2),
+  subgroup  = letters[1:2]    # "a", "b"
+)
+df2
+```
+
+---
+
+## Example 1 — Base R barplot
+
+Base R's `barplot()` requires no packages.
+
+```r
+# Default — vertical grey bars
+barplot(values ~ group, df1)
+
+# Horizontal bars
+barplot(values ~ group,
+        df1,
+        horiz = TRUE)
+
+# With colours
+barplot(values ~ group,
+        df1,
+        col = 1:4)
+
+# With custom named colours
+barplot(values ~ group,
+        df1,
+        col = c("tomato","steelblue","forestgreen","gold"))
+
+# Add a legend
+barplot(values ~ group, df1, col = 1:4)
+legend("topright",
+       df1$group,
+       fill = 1:4)
+```
+
+---
+
+## Example 2 — ggplot2 basic bar chart
+
+```r
+library(ggplot2)
+```
+
+### Vertical (default)
+
+```r
+# stat = "identity" — use y values as-is
+ggplot(df1, aes(x = group, y = values)) +
+  geom_bar(stat = "identity")
+
+# geom_col() is shorthand for geom_bar(stat = "identity")
+ggplot(df1, aes(x = group, y = values)) +
+  geom_col()
+```
+
+### Horizontal with `coord_flip()`
+
+```r
+ggplot(df1, aes(x = group, y = values)) +
+  geom_bar(stat = "identity") +
+  coord_flip()
+```
+
+### Sorted horizontal bars
+
+```r
+ggplot(df1, aes(x = values, y = reorder(group, values))) +
+  geom_col(fill = "steelblue") +
+  labs(x = "Values", y = "Group")
+```
+
+### With colours and legend
+
+```r
+ggplot(df1, aes(x = group, y = values, fill = group)) +
+  geom_bar(stat = "identity") +
+  scale_fill_manual(values = c("#e84855","#2d6be4","#12a36a","#d4a017")) +
+  theme_minimal()
+```
+
+### With value labels
+
+```r
+ggplot(df1, aes(x = group, y = values, fill = group)) +
+  geom_col() +
+  geom_text(aes(label = values), vjust = -0.4, fontface = "bold") +
+  theme_minimal() +
+  theme(legend.position = "none")
+```
+
+### stat = "count" (count rows, no y mapping needed)
+
+```r
+ggplot(mtcars, aes(x = factor(cyl))) +
+  geom_bar() +
+  scale_x_discrete(name = "Number of Cylinders") +
+  labs(y = "Count") +
+  theme_minimal()
+```
+
+---
+
+## Example 3 — Stacked bar chart
+
+Stacked bars show how subgroups contribute to a total. Map `fill` to the subgroup variable.
+
+```r
+ggplot(df2, aes(x = maingroup, y = values, fill = subgroup)) +
+  geom_bar(stat = "identity")
+```
+
+### Styled stacked chart
+
+```r
+ggplot(df2, aes(x = maingroup, y = values, fill = subgroup)) +
+  geom_bar(stat = "identity") +
+  scale_fill_manual(values = c("a" = "#2d6be4", "b" = "#e84855")) +
+  geom_text(aes(label = values),
+            position = position_stack(vjust = 0.5),
+            colour = "white", fontface = "bold") +
+  labs(title = "Stacked Bar Chart",
+       x = "Group", y = "Values", fill = "Subgroup") +
+  theme_minimal()
+```
+
+---
+
+## Example 4 — 100% stacked (proportional)
+
+Scale all bars to the same height to compare proportions across groups.
+
+### Scaled to 1.0
+
+```r
+ggplot(df2, aes(x = maingroup, y = values, fill = subgroup)) +
+  geom_bar(stat = "identity", position = "fill")
+# Y axis shows 0.00 – 1.00
+```
+
+### Scaled to 100%
+
+```r
+library(scales)
+
+ggplot(df2, aes(x = maingroup, y = values, fill = subgroup)) +
+  geom_bar(stat = "identity", position = "fill") +
+  scale_y_continuous(labels = percent_format()) +
+  labs(y = "Percentage") +
+  theme_minimal()
+```
+
+### With percentage labels inside bars
+
+```r
+library(dplyr)
+library(scales)
+
+df2_pct <- df2 |>
+  group_by(maingroup) |>
+  mutate(pct = values / sum(values))
+
+ggplot(df2_pct, aes(x = maingroup, y = values, fill = subgroup)) +
+  geom_bar(stat = "identity", position = "fill") +
+  geom_text(aes(label = percent(pct, accuracy = 1)),
+            position = position_fill(vjust = 0.5),
+            colour = "white", fontface = "bold") +
+  scale_y_continuous(labels = percent_format()) +
+  scale_fill_manual(values = c("a" = "#2d6be4", "b" = "#e84855")) +
+  labs(title = "100% Stacked Bar Chart", y = "Proportion") +
+  theme_minimal()
+```
+
+---
+
+## Example 5 — Grouped (dodged) bar chart
+
+Grouped bars place subgroups **side by side**. Use `position = "dodge"`.
+
+```r
+ggplot(df2, aes(x = maingroup, y = values, fill = subgroup)) +
+  geom_bar(stat = "identity", position = "dodge")
+```
+
+### Fine-tune gap between bars
+
+```r
+ggplot(df2, aes(x = maingroup, y = values, fill = subgroup)) +
+  geom_bar(stat = "identity",
+           position = position_dodge(width = 0.8),
+           width    = 0.7)
+```
+
+### Full styled grouped chart with value labels
+
+```r
+ggplot(df2, aes(x = maingroup, y = values, fill = subgroup)) +
+  geom_bar(stat = "identity",
+           position = position_dodge(width = 0.8),
+           width    = 0.7) +
+  geom_text(aes(label = values),
+            position = position_dodge(width = 0.8),
+            vjust    = -0.4,
+            fontface = "bold",
+            size     = 3.5) +
+  scale_fill_manual(
+    values = c("a" = "#2d6be4", "b" = "#e84855"),
+    labels = c("a" = "Subgroup A", "b" = "Subgroup B")
+  ) +
+  labs(title = "Grouped Bar Chart",
+       x     = "Main Group",
+       y     = "Values",
+       fill  = "Subgroup") +
+  theme_minimal(base_size = 13) +
+  theme(legend.position = "top",
+        plot.title = element_text(face = "bold"))
+```
+
+---
+
+## `position =` quick reference
+
+| Value | Effect | When to use |
+|-------|--------|-------------|
+| `"stack"` | Subgroups stacked (default) | Show totals + composition |
+| `"fill"` | Stacked to 1.0 / 100% | Compare proportions |
+| `"dodge"` | Side by side | Direct subgroup comparison |
+| `"identity"` | Overlap (no adjustment) | Rarely — need alpha |
+
+---
+
+## Extra: error bars on bar charts
+
+```r
+library(dplyr)
+library(ggplot2)
+
+# Summarise mtcars
+summary_df <- mtcars |>
+  group_by(cyl) |>
+  summarise(mean_mpg = mean(mpg),
+            se       = sd(mpg) / sqrt(n()))
+
+ggplot(summary_df, aes(x = factor(cyl), y = mean_mpg, fill = factor(cyl))) +
+  geom_col(alpha = 0.85) +
+  geom_errorbar(aes(ymin = mean_mpg - se,
+                    ymax = mean_mpg + se),
+                width = 0.25, linewidth = 0.8) +
+  scale_fill_manual(values = c("#e84855","#2d6be4","#12a36a")) +
+  labs(title = "Mean MPG ± SE by Cylinder Count",
+       x = "Cylinders", y = "Mean MPG") +
+  theme_minimal() +
+  theme(legend.position = "none")
+```
+
+---
+
+## Extra: lollipop chart (alternative to bars)
+
+```r
+ggplot(df1, aes(x = group, y = values)) +
+  geom_segment(aes(xend = group, yend = 0),
+               colour = "grey60", linewidth = 1) +
+  geom_point(size = 6, colour = "#e84855") +
+  geom_text(aes(label = values), colour = "white",
+            fontface = "bold", size = 3) +
+  labs(title = "Lollipop Chart", x = "Group", y = "Values") +
+  theme_minimal()
+```

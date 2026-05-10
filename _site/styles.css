@@ -1,0 +1,218 @@
+/* Extra polish on top of SCSS theme */
+
+/* Eyebrow label above headings */
+.eyebrow {
+  font-family: "JetBrains Mono", monospace;
+  font-size: 0.72rem;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: #6b6760;
+  display: block;
+  margin-bottom: 0.4rem;
+}
+
+/* Function signature pill */
+.fn-sig {
+  display: inline-block;
+  background: #0e0f14;
+  color: #82aaff;
+  font-family: "JetBrains Mono", monospace;
+  font-size: 0.82rem;
+  padding: 0.2em 0.7em;
+  border-radius: 6px;
+  margin: 0.15rem 0.15rem 0.15rem 0;
+}
+
+/* Grid layout for cards */
+.module-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  gap: 1rem;
+  margin: 1.5rem 0;
+}
+
+.module-card {
+  background: #faf8f4;
+  border: 1px solid #d8d2c8;
+  border-radius: 12px;
+  padding: 1.4rem;
+  text-decoration: none;
+  color: inherit;
+  transition: all 0.2s;
+  display: block;
+}
+
+.module-card:hover {
+  border-color: #e84855;
+  box-shadow: 0 4px 20px rgba(232,72,85,0.08);
+  transform: translateY(-2px);
+  text-decoration: none;
+}
+
+.module-card .num {
+  font-family: "JetBrains Mono", monospace;
+  font-size: 0.72rem;
+  color: #6b6760;
+  letter-spacing: 1.5px;
+  display: block;
+  margin-bottom: 0.6rem;
+}
+
+.module-card .icon {
+  font-size: 1.6rem;
+  margin-bottom: 0.5rem;
+  display: block;
+}
+
+.module-card h3 {
+  font-family: "Syne", sans-serif;
+  font-size: 1rem;
+  font-weight: 700;
+  color: #0e0f14;
+  margin: 0 0 0.4rem;
+  border: none;
+  padding: 0;
+}
+
+.module-card p {
+  font-size: 0.83rem;
+  color: #6b6760;
+  margin: 0;
+  line-height: 1.55;
+}
+
+/* Stat row on homepage */
+.stat-row {
+  display: flex;
+  gap: 3rem;
+  padding: 1.75rem 0;
+  border-top: 1px solid #d8d2c8;
+  border-bottom: 1px solid #d8d2c8;
+  margin: 2rem 0;
+  flex-wrap: wrap;
+}
+
+.stat-item .num {
+  font-family: "Syne", sans-serif;
+  font-size: 2.4rem;
+  font-weight: 800;
+  color: #0e0f14;
+  letter-spacing: -1px;
+  display: block;
+  line-height: 1;
+}
+
+.stat-item .lbl {
+  font-size: 0.8rem;
+  color: #6b6760;
+  font-weight: 500;
+  display: block;
+  margin-top: 0.25rem;
+}
+
+/* Geom reference table chips */
+.geom-chip {
+  display: inline-block;
+  background: #ede8df;
+  border: 1px solid #d8d2c8;
+  border-radius: 6px;
+  padding: 0.25rem 0.55rem;
+  font-family: "JetBrains Mono", monospace;
+  font-size: 0.78rem;
+  color: #e84855;
+  margin: 0.15rem;
+  white-space: nowrap;
+}
+
+/* Tip / note pill */
+.tip-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  background: rgba(18,163,106,0.08);
+  border: 1px solid rgba(18,163,106,0.2);
+  border-radius: 99px;
+  padding: 0.25rem 0.75rem;
+  font-size: 0.8rem;
+  color: #0d8c5b;
+  font-weight: 500;
+  margin-bottom: 0.75rem;
+}
+
+/* Theme preview bar mini-chart */
+.theme-bar-preview {
+  display: flex;
+  align-items: flex-end;
+  gap: 4px;
+  height: 60px;
+  padding: 8px 12px 0;
+}
+
+.theme-bar-preview .bar {
+  flex: 1;
+  border-radius: 3px 3px 0 0;
+  opacity: 0.85;
+}
+
+/* Operator demo */
+.operator-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+  margin: 1.25rem 0;
+}
+
+.operator-card {
+  background: #faf8f4;
+  border: 1px solid #d8d2c8;
+  border-radius: 10px;
+  padding: 1rem 1.25rem;
+}
+
+.operator-card .op {
+  font-family: "JetBrains Mono", monospace;
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #e84855;
+  display: block;
+  margin-bottom: 0.3rem;
+}
+
+.operator-card .desc {
+  font-size: 0.83rem;
+  color: #6b6760;
+}
+
+/* Cheat-sheet two-col */
+.cheat-2col {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.5rem;
+  margin: 1rem 0;
+}
+
+.cheat-item {
+  background: #faf8f4;
+  border: 1px solid #d8d2c8;
+  border-radius: 8px;
+  padding: 0.65rem 0.9rem;
+  font-size: 0.83rem;
+}
+
+.cheat-item code {
+  display: block;
+  font-size: 0.78rem;
+  margin-bottom: 0.2rem;
+}
+
+.cheat-item span {
+  color: #6b6760;
+  font-size: 0.78rem;
+}
+
+@media(max-width:640px) {
+  .module-grid        { grid-template-columns: 1fr; }
+  .operator-grid      { grid-template-columns: 1fr; }
+  .cheat-2col         { grid-template-columns: 1fr; }
+  .stat-row           { gap: 1.5rem; }
+}

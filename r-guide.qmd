@@ -1,0 +1,296 @@
+---
+title: "R Guide & Basics"
+subtitle: "Installation, working directories, packages, vectors, and data frames"
+description: "Everything you need to get started with R — from installing R and RStudio to data frames, subsetting, and saving plots."
+---
+
+## Getting Started with R
+
+R is one of the most popular programming languages in statistical computing. It's open-source, easy to learn, and powerful for manipulating and visualizing data.
+
+::: {.callout-note}
+This guide covers **R fundamentals** needed before diving into ggplot2. If you already know R, skip ahead to [ggplot2 Introduction](ggplot2-intro.qmd).
+:::
+
+---
+
+## Download & Install R and RStudio
+
+You need two things: **R** (the language engine) and **RStudio** (the IDE).
+
+- **R (CRAN):** <https://cran.r-project.org/>
+- **RStudio:** <https://www.rstudio.com/products/rstudio/download/>
+
+### Linux (Debian / Ubuntu / Mint)
+
+```bash
+# Install R base
+sudo apt-get install r-base
+
+# Install RStudio (.deb downloaded from rstudio.com)
+sudo apt install -f ./rstudio-2024.x.x-amd64.deb
+
+# Alternative
+sudo apt-get install rstudio-desktop
+```
+
+### Windows
+
+1. Go to <https://cran.r-project.org/> → **Download R for Windows** → save `.exe`
+2. Run the `.exe` and follow the installer
+3. Download RStudio Desktop from <https://www.rstudio.com/products/rstudio/download/>
+4. Run the RStudio `.exe`
+
+::: {.callout-tip}
+Always install **R before RStudio** so RStudio can detect R automatically.
+:::
+
+### macOS
+
+1. Go to <https://cran.r-project.org/> → **Download R for macOS** → download `.pkg`
+2. Double-click and follow the installer
+3. Download RStudio `.dmg` → drag to Applications
+
+```bash
+# Or with Homebrew
+brew install --cask r
+brew install --cask rstudio
+```
+
+---
+
+## The Working Directory
+
+The working directory is the default file path R uses for reading and writing files.
+
+```r
+# See your current working directory
+getwd()
+# e.g. "/Users/pawan/Documents/R"
+
+# Change the working directory
+setwd("~/R")
+setwd("/home/pawan/projects")    # Linux / Mac
+setwd("C:/Users/Pawan/R")        # Windows — use / not \
+```
+
+---
+
+## Using Packages in R
+
+Packages are collections of functions built by the R community that extend R's capabilities.
+
+```r
+# Install a package (only once)
+install.packages("ggplot2")
+
+# Install multiple at once
+install.packages(c("ggplot2", "ggthemes", "patchwork", "dplyr", "tidyr"))
+
+# Load a package (every session)
+library(ggplot2)
+library(tidyverse)
+
+# Update all installed packages
+update.packages()
+
+# See all installed packages
+installed.packages()[, "Package"]
+```
+
+::: {.callout-important}
+`install.packages()` is run **once**. `library()` is needed at the start of **every** new R session.
+:::
+
+---
+
+## Vectors in R
+
+A vector is a one-dimensional array that holds numeric, character, logical, or factor data.
+
+### Types of vector
+
+| Type | Example | Notes |
+|------|---------|-------|
+| Numeric | `c(1, 2.5, 3)` | Decimal and whole numbers |
+| Integer | `c(1L, 2L, 3L)` | Whole numbers (suffix `L`) |
+| Character | `c("a", "hello")` | Text strings in quotes |
+| Factor | `factor(c("M","F","M"))` | Categorical levels |
+| Logical | `c(TRUE, FALSE, TRUE)` | Boolean values |
+
+### Creating vectors
+
+```r
+# Numeric — comma
+c(1, 3, 5)
+
+# Integer sequence — colon
+c(1:7)           # 1 2 3 4 5 6 7
+
+# Character
+c("a", "b", "hello")
+
+# Store with <- or ->
+v <- c(1:10)
+c("Mon", "Tue", "Wed") -> days
+
+# Sequence with step
+seq(1, 20, by = 3)      # 1 4 7 10 13 16 19
+
+# Repeated elements
+rep(3, times = 4)              # 3 3 3 3
+rep(c(1:4), times = 2)         # 1 2 3 4 1 2 3 4
+rep(c(1:4), each  = 2)         # 1 1 2 2 3 3 4 4
+
+# Check type
+class(v)    # "integer"
+typeof(v)   # "integer"
+length(v)   # 10
+```
+
+### Vector functions
+
+```r
+c(1,3,5,2,7,4,9,24,12,25,13,22,12,3) -> a
+
+sort(a)         # ascending order
+sort(a, decreasing = TRUE)  # descending
+rev(a)          # reverse the order
+table(a)        # frequency of each value
+unique(a)       # remove duplicates
+length(a)       # number of elements
+sum(a)          # total
+mean(a)         # arithmetic mean
+median(a)       # median
+var(a)          # variance
+sd(a)           # standard deviation
+which(a > 10)   # indices where condition is TRUE
+```
+
+| Function | Returns |
+|----------|---------|
+| `sort(v)` | Sorted vector (ascending) |
+| `rev(v)` | Reversed vector |
+| `table(v)` | Frequency count |
+| `unique(v)` | Distinct elements |
+| `length(v)` | Number of elements |
+| `sum(v)` | Sum of elements |
+| `mean(v)` | Arithmetic mean |
+| `which(v > 5)` | Indices where TRUE |
+| `cumsum(v)` | Cumulative sum |
+| `diff(v)` | First differences |
+
+---
+
+## Data Frames
+
+A data frame is R's tabular data structure — like a spreadsheet. Each column is a vector; all columns have equal length.
+
+**Syntax:** `df[row, column]` — first argument = row, second = column.
+
+```r
+# Create a data frame
+data.frame(
+  x = 1:7,
+  y = c("Sun","Mon","Tue","Wed","Thurs","Fri","Sat")
+) -> df
+df
+
+# Access columns
+df[ , 2]      # all rows, column 2
+df$x          # column x by name (returns vector)
+df[2,  ]      # all columns of row 2
+df[1:3, 1]    # rows 1–3, column 1
+
+# Useful info
+nrow(df)      # number of rows
+ncol(df)      # number of columns
+dim(df)       # c(rows, cols)
+str(df)       # structure overview
+head(df)      # first 6 rows
+tail(df)      # last 6 rows
+summary(df)   # descriptive statistics
+names(df)     # column names
+colnames(df)  # same as names
+```
+
+### Combine data frames
+
+```r
+df1 <- data.frame(x = 1:3, y = c("a","b","c"), z = 12:14)
+df2 <- data.frame(x = 4:6, y = c("A","B","C"), z = 21:23)
+
+cbind(df1, df2)   # by columns (side by side) — same nrow required
+rbind(df1, df2)   # by rows   (stacked)       — same column names required
+```
+
+### Subsetting
+
+```r
+# subset() — filter rows
+subset(mtcars, mpg > 25) -> fast_cars
+
+# Select specific columns only
+subset(mtcars, select = c("mpg", "cyl", "hp")) -> small_df
+
+# Using [ ] brackets
+mtcars[mtcars$mpg > 25, ]        # filter rows
+mtcars[, c("mpg", "hp")]          # select columns
+
+# dplyr (tidyverse) — most readable
+library(dplyr)
+mtcars |> filter(mpg > 25)
+mtcars |> select(mpg, cyl, hp)
+mtcars |> arrange(desc(mpg))
+mtcars |> mutate(kpl = mpg * 0.425)
+```
+
+---
+
+## Built-in Datasets
+
+R ships with many practice datasets:
+
+```r
+data(mtcars)     # car performance data (32 cars, 11 variables)
+data(iris)       # Fisher's iris flowers (150 rows, 5 variables)
+data(economics)  # US economic data (in ggplot2 package)
+data(diamonds)   # Diamond prices (in ggplot2)
+data(gapminder)  # Country data (install.packages("gapminder"))
+
+# See all available datasets
+data()
+```
+
+---
+
+## Saving Plots with ggsave()
+
+```r
+library(ggplot2)
+
+# Build a plot
+p <- ggplot(mtcars, aes(x = wt, y = mpg)) +
+  geom_point() +
+  theme_minimal()
+
+# Save the last-rendered plot
+ggsave("my_plot.png", width = 8, height = 5, dpi = 300)
+
+# Save a specific plot object
+ggsave("my_plot.pdf", plot = p, width = 10, height = 7)
+
+# Common formats
+ggsave("plot.svg",  device = "svg")
+ggsave("plot.tiff", device = "tiff", dpi = 300)
+ggsave("plot.jpg",  device = "jpeg", quality = 95)
+
+# Units: "in" (default), "cm", "mm", "px"
+ggsave("~/ggplot/plot.png", width = 3200, height = 2800, units = "px")
+```
+
+---
+
+## Next steps
+
+- [ggplot2 Introduction →](ggplot2-intro.qmd)

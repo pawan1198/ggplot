@@ -1,0 +1,318 @@
+---
+title: "Legends in ggplot2"
+subtitle: "Adding, titling, repositioning, customising, and removing legends"
+description: "Complete guide to ggplot2 legends — auto-creation, title methods, label ordering, position control, appearance customisation, and removal."
+---
+
+## How legends are created
+
+A legend appears automatically whenever you map a variable to `colour`, `fill`, `shape`, `size`, `alpha`, or `linetype` inside `aes()`. No extra code needed.
+
+```r
+# Sample data used throughout this page
+set.seed(1)
+df <- data.frame(
+  x     = c(rnorm(300, -3, 1.5), rnorm(300, 0, 1)),
+  group = c(rep("A", 300), rep("B", 300))
+)
+```
+
+---
+
+## Adding a legend (by aesthetic mapping)
+
+### colour
+
+```r
+library(ggplot2)
+
+# Colour — creates a colour legend
+ggplot(df, aes(x = x, colour = group)) +
+  geom_density(alpha = 0.5)
+
+# Scatter with colour
+set.seed(1)
+df2 <- data.frame(x = runif(200),
+                  y = 3 * runif(200)^2 + rnorm(200, sd = 2.5),
+                  group = ifelse(runif(200) < 0.5, "A", "B"))
+
+ggplot(df2, aes(x = x, y = y, colour = group)) +
+  geom_point(size = 2)
+```
+
+### fill
+
+```r
+ggplot(df, aes(x = x, fill = group)) +
+  geom_density(alpha = 0.5)
+```
+
+### colour + fill together
+
+```r
+ggplot(df, aes(x = x, fill = group, colour = group)) +
+  geom_density(alpha = 0.5)
+```
+
+### alpha
+
+```r
+ggplot(df2, aes(x = x, y = y, alpha = y)) +
+  geom_point(colour = 4)
+```
+
+### shape
+
+```r
+ggplot(mtcars, aes(x = wt, y = mpg, shape = factor(cyl))) +
+  geom_point(size = 3)
+```
+
+---
+
+## Changing the legend title
+
+Three equivalent options — choose the one that fits your workflow.
+
+### Option 1 — `guides()`
+
+```r
+ggplot(df, aes(x = x, fill = group)) +
+  geom_density(alpha = 0.5) +
+  guides(fill = guide_legend(title = "Group"))
+```
+
+### Option 2 — `labs()`
+
+```r
+ggplot(df, aes(x = x, fill = group)) +
+  geom_density(alpha = 0.5) +
+  labs(fill = "Group")          # or colour = , shape = , size = , alpha =
+```
+
+### Option 3 — scale function `name =`
+
+```r
+ggplot(df, aes(x = x, fill = group)) +
+  geom_density(alpha = 0.5) +
+  scale_fill_discrete(name = "Group")
+```
+
+### Remove the title
+
+```r
+ggplot(df, aes(x = x, fill = group)) +
+  geom_density(alpha = 0.5) +
+  theme(legend.title = element_blank())
+```
+
+---
+
+## Changing legend labels
+
+```r
+# Rename labels with scale_fill_hue
+ggplot(df, aes(x = x, fill = group)) +
+  geom_density(alpha = 0.5) +
+  scale_fill_hue(labels = c("Group 1", "Group 2"))
+
+# Custom colours + labels at once
+ggplot(df, aes(x = x, fill = group)) +
+  geom_density(alpha = 0.5) +
+  scale_fill_manual(
+    values = c("A" = "#e84855", "B" = "#2d6be4"),
+    labels = c("A" = "Control",  "B" = "Treatment")
+  )
+```
+
+## Reordering legend labels
+
+```r
+# Reorder by factor levels
+df$group2 <- factor(df$group, levels = c("B", "A"))
+
+ggplot(df, aes(x = x, fill = group2)) +
+  geom_density(alpha = 0.5) +
+  labs(fill = "Group")
+```
+
+---
+
+## Legend position
+
+Default position is `"right"`. Use `theme(legend.position = ...)` to change it.
+
+```r
+# Top
+ggplot(df, aes(x = x, fill = group)) +
+  geom_density(alpha = 0.5) +
+  theme(legend.position = "top")
+
+# Bottom
+ggplot(df, aes(x = x, fill = group)) +
+  geom_density(alpha = 0.5) +
+  theme(legend.position = "bottom")
+
+# Left
+ggplot(df, aes(x = x, fill = group)) +
+  geom_density(alpha = 0.5) +
+  theme(legend.position = "left")
+
+# None (remove)
+ggplot(df, aes(x = x, fill = group)) +
+  geom_density(alpha = 0.5) +
+  theme(legend.position = "none")
+```
+
+### Custom coordinates (inside the plot)
+
+Set `legend.position` to a vector `c(x, y)` where both values are between 0 and 1 (fraction of the plot area).
+
+```r
+ggplot(df, aes(x = x, fill = group)) +
+  geom_density(alpha = 0.5) +
+  theme(
+    legend.position   = c(0.2, 0.8),        # x=20%, y=80%
+    legend.background = element_rect(fill = "white", colour = "grey80")
+  )
+```
+
+::: {.callout-tip}
+## Related arguments
+- `legend.justification` — anchor point of the legend box (`c(0,0)` = bottom-left, `c(1,1)` = top-right)
+- `legend.direction` — `"horizontal"` or `"vertical"`
+- `legend.box` — arrangement when multiple legends: `"horizontal"` or `"vertical"`
+- `legend.box.just` — justification of entire legend box
+:::
+
+---
+
+## Legend appearance customisation
+
+### Style the title
+
+```r
+ggplot(df, aes(x = x, fill = group)) +
+  geom_density(alpha = 0.5) +
+  theme(
+    legend.title = element_text(
+      colour = "steelblue",
+      size   = 11,
+      face   = "bold",
+      family = "sans"
+    )
+  )
+```
+
+### Style the text labels
+
+```r
+ggplot(df, aes(x = x, fill = group)) +
+  geom_density(alpha = 0.5) +
+  theme(
+    legend.text = element_text(size = 11, colour = "grey30")
+  )
+```
+
+### Background and border
+
+```r
+ggplot(df, aes(x = x, fill = group)) +
+  geom_density(alpha = 0.5) +
+  theme(
+    legend.background = element_rect(
+      fill   = "#f0f4ff",   # background colour
+      colour = "steelblue", # border colour
+      linewidth = 0.6
+    )
+  )
+```
+
+### Key size
+
+```r
+ggplot(df, aes(x = x, fill = group)) +
+  geom_density(alpha = 0.5) +
+  theme(legend.key.size = unit(1, "cm"))   # width & height of colour keys
+```
+
+### Override symbol size (scatter)
+
+```r
+ggplot(df2, aes(x = x, y = y, colour = group)) +
+  geom_point(size = 1, alpha = 0.5) +
+  guides(colour = guide_legend(
+    override.aes = list(size = 4, alpha = 1)  # bigger symbols in legend
+  ))
+```
+
+### Horizontal legend with multiple rows
+
+```r
+ggplot(df, aes(x = x, fill = group)) +
+  geom_density(alpha = 0.5) +
+  theme(legend.position = "bottom") +
+  guides(fill = guide_legend(nrow = 1, byrow = TRUE))
+```
+
+---
+
+## Removing a specific legend
+
+When multiple aesthetics create multiple legends, you can remove just one:
+
+```r
+# Remove only fill legend — keep colour legend
+ggplot(df, aes(x = x, fill = group, colour = group)) +
+  geom_density(alpha = 0.5) +
+  guides(fill = "none")     # or guides(fill = FALSE)
+```
+
+---
+
+## Full styled example
+
+```r
+library(ggplot2)
+
+ggplot(mtcars, aes(x = wt, y = mpg,
+                   colour = factor(cyl),
+                   shape  = factor(am))) +
+  geom_point(size = 3, alpha = 0.85) +
+  scale_colour_manual(
+    values = c("4" = "#e84855", "6" = "#2d6be4", "8" = "#12a36a"),
+    name   = "Cylinders"
+  ) +
+  scale_shape_manual(
+    values = c("0" = 16, "1" = 17),
+    labels = c("0" = "Automatic", "1" = "Manual"),
+    name   = "Transmission"
+  ) +
+  labs(title = "mtcars: Weight vs Fuel Economy") +
+  theme_minimal(base_size = 13) +
+  theme(
+    legend.position   = "top",
+    legend.title      = element_text(face = "bold", size = 10),
+    legend.text       = element_text(size = 10),
+    legend.background = element_rect(fill = "white", colour = "grey85"),
+    legend.key.size   = unit(0.9, "cm"),
+    plot.title        = element_text(face = "bold")
+  )
+```
+
+---
+
+## Quick reference
+
+| Goal | Code |
+|------|------|
+| Move legend top | `theme(legend.position = "top")` |
+| Move legend inside | `theme(legend.position = c(0.2, 0.8))` |
+| Remove legend | `theme(legend.position = "none")` |
+| Remove one legend | `guides(fill = "none")` |
+| Change title via labs | `labs(fill = "My title")` |
+| Remove title | `theme(legend.title = element_blank())` |
+| Rename labels | `scale_fill_manual(labels = c(...))` |
+| Reorder labels | `factor(var, levels = c("B","A"))` |
+| Bigger keys | `theme(legend.key.size = unit(1,"cm"))` |
+| Bigger symbols | `guides(colour = guide_legend(override.aes = list(size=4)))` |

@@ -1,0 +1,376 @@
+---
+title: "Annotations, Lines & Arrows"
+subtitle: "geom_text, geom_label, ggrepel, ggtext, reference lines, segments, curves and arrows"
+description: "Add text, labels, rich-text annotations, reference lines, segments, curves and arrows to ggplot2 plots. Covers geom_text, geom_label, ggrepel, ggtext, geom_vline, geom_hline, geom_abline, geom_segment, and geom_curve."
+---
+
+## Text annotations — `geom_text()`
+
+`geom_text()` adds plain text at specified coordinates or mapped from data.
+
+```r
+library(ggplot2)
+
+# Add a single annotation at fixed coordinates
+ggplot(mtcars, aes(x = wt, y = mpg)) +
+  geom_point() +
+  geom_text(aes(x = 4.5, y = 30,
+                label = "High efficiency zone"),
+            stat = "unique",
+            colour = "steelblue", size = 4)
+
+# Label each data point from a column
+ggplot(mtcars, aes(x = wt, y = mpg, label = rownames(mtcars))) +
+  geom_point(colour = "tomato") +
+  geom_text(size = 2.5, nudge_y = 0.4)
+
+# Customise size, colour, face, angle
+ggplot(mtcars, aes(x = wt, y = mpg)) +
+  geom_point() +
+  geom_text(aes(x = 2, y = 15,
+                label = "Important note"),
+            stat  = "unique",
+            size  = 5,
+            colour = "red",
+            fontface = "bold",
+            angle = 10)
+```
+
+::: {.callout-note}
+Set `stat = "unique"` when adding a single annotation to avoid it being drawn once per data row.
+:::
+
+---
+
+## Labels with background — `geom_label()`
+
+`geom_label()` works like `geom_text()` but draws a filled rectangle behind the text, making it easier to read on busy plots.
+
+```r
+library(ggplot2)
+
+# Single label
+ggplot(mtcars, aes(x = wt, y = mpg)) +
+  geom_point() +
+  geom_label(aes(x = 4.5, y = 30,
+                 label = "Target region"),
+             stat  = "unique",
+             fill  = "#fff3cd",
+             colour = "darkorange")
+
+# Label every point
+ggplot(mtcars, aes(x = wt, y = mpg,
+                   label = rownames(mtcars))) +
+  geom_point(colour = "#e84855") +
+  geom_label(size = 2.2, fill = "white",
+             label.size = 0.3,
+             label.padding = unit(0.15, "lines"))
+
+# Custom colours
+ggplot(mtcars, aes(x = wt, y = mpg)) +
+  geom_point() +
+  geom_label(aes(x = 2, y = 15,
+                 label = "Economy cars"),
+             stat  = "unique",
+             size  = 5,
+             colour = "red",
+             fill   = "green")
+```
+
+---
+
+## Non-overlapping labels — `ggrepel`
+
+`ggrepel` automatically repositions labels so they don't overlap each other or the data points.
+
+```r
+install.packages("ggrepel")
+library(ggplot2)
+library(ggrepel)
+
+# geom_text_repel
+ggplot(mtcars, aes(x = wt, y = mpg, label = rownames(mtcars))) +
+  geom_point(colour = "steelblue") +
+  geom_text_repel(size = 3, max.overlaps = 20)
+
+# geom_label_repel (with background box)
+ggplot(mtcars, aes(x = wt, y = mpg, label = rownames(mtcars))) +
+  geom_point(colour = "tomato") +
+  geom_label_repel(
+    size          = 2.8,
+    box.padding   = 0.35,
+    point.padding = 0.5,
+    fill          = "white",
+    label.size    = 0.25,
+    max.overlaps  = 15
+  )
+
+# Label only selected points
+library(dplyr)
+top <- mtcars |> filter(mpg > 25 | wt < 2)
+
+ggplot(mtcars, aes(x = wt, y = mpg)) +
+  geom_point(colour = "grey60") +
+  geom_point(data = top, colour = "#e84855", size = 3) +
+  geom_label_repel(data = top,
+                   aes(label = rownames(top)),
+                   size = 3, fill = "white")
+```
+
+---
+
+## Rich text — `ggtext`
+
+`ggtext` allows **Markdown and HTML** in plot text via `element_markdown()` and `geom_richtext()`.
+
+```r
+install.packages("ggtext")
+library(ggplot2)
+library(ggtext)
+
+# Markdown in title and labels
+ggplot(mtcars, aes(x = wt, y = mpg, colour = factor(cyl))) +
+  geom_point(size = 2.5) +
+  labs(
+    title = "**Weight** vs *Fuel Economy* by <span style='color:#e84855'>Cylinders</span>",
+    x     = "Weight (1,000 lbs)",
+    y     = "Miles per Gallon"
+  ) +
+  theme_minimal() +
+  theme(
+    plot.title = element_markdown(size = 14)
+  )
+
+# geom_richtext — HTML/Markdown in annotations
+ggplot(mtcars, aes(x = wt, y = mpg)) +
+  geom_point() +
+  geom_richtext(
+    aes(x = 4.5, y = 30,
+        label = "**Economy zone**<br><span style='color:grey'>mpg > 25</span>"),
+    stat       = "unique",
+    fill       = "white",
+    label.colour = "steelblue"
+  )
+
+# Coloured axis labels with element_markdown
+ggplot(mtcars, aes(x = factor(cyl), y = mpg, fill = factor(cyl))) +
+  geom_boxplot() +
+  scale_fill_manual(values = c("#e84855","#2d6be4","#12a36a")) +
+  scale_x_discrete(labels = c(
+    "4" = "<span style='color:#e84855'>**4 cyl**</span>",
+    "6" = "<span style='color:#2d6be4'>**6 cyl**</span>",
+    "8" = "<span style='color:#12a36a'>**8 cyl**</span>"
+  )) +
+  theme_minimal() +
+  theme(
+    axis.text.x  = element_markdown(),
+    legend.position = "none"
+  )
+```
+
+---
+
+## General annotations — `annotate()`
+
+`annotate()` is a versatile function for adding shapes, text, and lines without a data frame.
+
+```r
+library(ggplot2)
+
+p <- ggplot(mtcars, aes(x = wt, y = mpg)) + geom_point()
+
+# Text
+p + annotate("text", x = 4.5, y = 30,
+             label = "Annotation text",
+             colour = "tomato", size = 5, fontface = "bold")
+
+# Rectangle (shaded region)
+p + annotate("rect",
+             xmin = 1.5, xmax = 2.5,
+             ymin = 25,  ymax = 35,
+             alpha = 0.15, fill = "steelblue")
+
+# Segment
+p + annotate("segment",
+             x = 2, y = 20,
+             xend = 3, yend = 25,
+             colour = "red", linewidth = 1,
+             arrow = arrow(length = unit(0.3,"cm")))
+
+# Point
+p + annotate("point", x = 3.5, y = 20,
+             colour = "red", size = 5, shape = 18)
+
+# Label box
+p + annotate("label",
+             x = 4, y = 32,
+             label = "Outlier zone",
+             fill = "#fff3cd", colour = "darkorange")
+```
+
+---
+
+## Reference lines
+
+### Vertical lines — `geom_vline()`
+
+```r
+library(ggplot2)
+
+set.seed(1)
+df <- data.frame(x = rnorm(100), y = rnorm(100))
+
+# Single vertical line
+ggplot(df, aes(x = x, y = y)) +
+  geom_point() +
+  geom_vline(xintercept = 0, linetype = 2, colour = 2)
+
+# Multiple vertical lines
+ggplot(df, aes(x = x, y = y)) +
+  geom_point() +
+  geom_vline(xintercept = c(-1, 0, 1),
+             linetype    = 1,
+             colour      = 2:4,
+             linewidth   = 0.8)
+
+# Vertical line at the mean
+ggplot(mtcars, aes(x = mpg)) +
+  geom_histogram(bins = 12, fill = "steelblue", colour = "white") +
+  geom_vline(xintercept = mean(mtcars$mpg),
+             colour = "tomato", linetype = 2, linewidth = 1) +
+  annotate("text", x = mean(mtcars$mpg) + 1.5, y = 7,
+           label = paste0("Mean = ", round(mean(mtcars$mpg), 1)),
+           colour = "tomato", hjust = 0)
+```
+
+### Horizontal lines — `geom_hline()`
+
+```r
+# Single horizontal line
+ggplot(df, aes(x = x, y = y)) +
+  geom_point() +
+  geom_hline(yintercept = 0, linetype = 2, colour = 2)
+
+# Multiple horizontal lines
+ggplot(df, aes(x = x, y = y)) +
+  geom_point() +
+  geom_hline(yintercept = c(-1, 0, 1),
+             linetype   = 3,
+             colour     = 4,
+             linewidth  = 1)
+```
+
+### Diagonal lines — `geom_abline()`
+
+```r
+# y = x line (identity line)
+ggplot(df, aes(x = x, y = y)) +
+  geom_point() +
+  geom_abline(intercept = 0, slope = 1,
+              colour = "tomato", linetype = 2)
+
+# Custom regression line
+model <- lm(mpg ~ wt, data = mtcars)
+ggplot(mtcars, aes(x = wt, y = mpg)) +
+  geom_point() +
+  geom_abline(intercept = coef(model)[1],
+              slope     = coef(model)[2],
+              colour    = "steelblue", linewidth = 1)
+```
+
+---
+
+## Segments & arrows — `geom_segment()`
+
+```r
+library(ggplot2)
+
+set.seed(1)
+df <- data.frame(x = rnorm(100), y = rnorm(100))
+
+# Basic segment
+ggplot(df, aes(x = x, y = y)) +
+  geom_point() +
+  geom_segment(x = -1, y = 0, xend = 1, yend = 1,
+               colour = 2, linewidth = 1)
+
+# Arrow
+ggplot(df, aes(x = x, y = y)) +
+  geom_point() +
+  geom_segment(
+    x     = -2, y    = 1,
+    xend  =  1, yend = -1,
+    colour    = 2,
+    linewidth = 1,
+    arrow     = arrow(length = unit(0.4, "cm"),
+                      type   = "closed")    # "open" or "closed"
+  )
+
+# Annotation with segment + label
+ggplot(mtcars, aes(x = wt, y = mpg)) +
+  geom_point(colour = "grey60") +
+  geom_segment(x = 1.6, y = 33, xend = 1.88, yend = 30.4,
+               colour = "#e84855",
+               arrow  = arrow(length = unit(0.3,"cm"))) +
+  annotate("text", x = 1.45, y = 33.5,
+           label = "Most fuel-efficient",
+           colour = "#e84855", size = 3.5)
+```
+
+---
+
+## Curves — `geom_curve()`
+
+`geom_curve()` draws a curved line instead of straight — useful for callout arrows.
+
+```r
+library(ggplot2)
+
+set.seed(1)
+df <- data.frame(x = rnorm(100), y = rnorm(100))
+
+# Basic curve
+ggplot(df, aes(x = x, y = y)) +
+  geom_point() +
+  geom_curve(x = -2, y = 1, xend = 1, yend = -1,
+             colour = 4, linewidth = 1)
+
+# curvature: 0 = straight, negative = left, positive = right
+ggplot(df, aes(x = x, y = y)) +
+  geom_point() +
+  geom_curve(x = -2, y = 1, xend = 1, yend = -1,
+             colour     = 4,
+             curvature  = -0.3,
+             linewidth  = 1)
+
+# Curved arrow annotation
+ggplot(mtcars, aes(x = wt, y = mpg)) +
+  geom_point(colour = "grey60") +
+  geom_curve(
+    x = 1.55, y = 35, xend = 1.86, yend = 30.9,
+    colour    = "#e84855",
+    curvature = -0.25,
+    arrow     = arrow(length = unit(0.3,"cm"), type = "closed")
+  ) +
+  annotate("text", x = 1.3, y = 35.5,
+           label = "Toyota Corolla", colour = "#e84855", size = 3.5)
+```
+
+---
+
+## Quick reference
+
+| Function | Purpose | Key args |
+|----------|---------|----------|
+| `geom_text()` | Plain text labels | `label`, `size`, `colour`, `angle`, `nudge_y` |
+| `geom_label()` | Text with background box | `label`, `fill`, `label.size` |
+| `geom_text_repel()` | Non-overlapping text (ggrepel) | `max.overlaps`, `box.padding` |
+| `geom_label_repel()` | Non-overlapping labels (ggrepel) | `fill`, `label.size` |
+| `geom_richtext()` | HTML/Markdown text (ggtext) | `label`, `fill` |
+| `element_markdown()` | Markdown in theme elements | Use in `theme(plot.title = ...)` |
+| `annotate()` | Ad-hoc shapes & text | `"text"`, `"rect"`, `"segment"`, `"label"` |
+| `geom_vline()` | Vertical reference line | `xintercept`, `linetype`, `colour` |
+| `geom_hline()` | Horizontal reference line | `yintercept`, `linetype`, `colour` |
+| `geom_abline()` | Diagonal reference line | `intercept`, `slope` |
+| `geom_segment()` | Line segment / arrow | `x`,`y`,`xend`,`yend`, `arrow` |
+| `geom_curve()` | Curved segment / arrow | `curvature` (-1 to 1), `arrow` |

@@ -1,0 +1,450 @@
+---
+title: "Themes & Styling"
+subtitle: "Built-in themes, ggthemes, hrbrthemes, ggdark, mdthemes, ggthemr, ggtech — with full customisation"
+description: "A complete guide to ggplot2 themes — all 8 built-in themes plus extension packages ggthemes, hrbrthemes, ggdark, mdthemes, ggthemr and ggtech. Includes theme_set() and full theme() customisation."
+---
+
+## Built-in themes
+
+ggplot2 ships with 8 themes. The default is `theme_grey()` — you never need to specify it unless you want to be explicit.
+
+```r
+install.packages("ggplot2")
+library(ggplot2)
+```
+
+| Function | Description |
+|----------|-------------|
+| `theme_grey()` | Default — grey background, white grid lines |
+| `theme_bw()` | Black & white — white panel, dark border |
+| `theme_linedraw()` | Black lines on white background only |
+| `theme_light()` | Like linedraw but with grey lines and axes |
+| `theme_dark()` | Dark panel background |
+| `theme_minimal()` | No background annotations — very clean |
+| `theme_classic()` | No grid lines — axes only |
+| `theme_void()` | Completely empty — blank canvas |
+
+### Examples
+
+```r
+library(ggplot2)
+iris -> dataset
+
+p <- ggplot(dataset, aes(x = Sepal.Length, y = Sepal.Width, fill = Species)) +
+  geom_bar(stat = "identity", position = "stack") +
+  facet_wrap(~ Species)
+
+p + theme_grey()      # default
+p + theme_bw(base_size = 14)
+p + theme_minimal()
+p + theme_classic()
+p + theme_dark()
+p + theme_light()
+p + theme_linedraw()
+p + theme_void()
+```
+
+::: {.callout-tip}
+## `base_size` argument
+All built-in themes accept a `base_size` argument to scale all text proportionally:
+
+```r
+p + theme_bw(base_size = 20)   # larger text
+p + theme_minimal(base_size = 9) # smaller text
+```
+:::
+
+---
+
+## ggthemes
+
+`ggthemes` contains themes inspired by well-known publications and tools. Many come with matching colour scales.
+
+```r
+install.packages("ggthemes")
+library(ggplot2)
+library(ggthemes)
+```
+
+### Available themes
+
+```r
+theme_base()            theme_calc()
+theme_clean()           theme_economist()
+theme_excel()           theme_excel_new()
+theme_few()             theme_fivethirtyeight()
+theme_foundation()      theme_gdocs()
+theme_hc()              theme_igray()
+theme_map()             theme_pander()
+theme_solarized()       theme_solid()
+theme_stata()           theme_tufte()
+theme_wsj()
+```
+
+### Usage examples
+
+```r
+library(ggplot2)
+library(ggthemes)
+
+cyls <- as.factor(mtcars$cyl)
+p <- ggplot(mtcars, aes(x = mpg, fill = cyls)) +
+  geom_density(alpha = 0.7) +
+  theme(legend.position = "top")
+
+# The Economist style
+p + theme_economist() + scale_fill_economist()
+
+# FiveThirtyEight style
+p + theme_fivethirtyeight() + scale_fill_fivethirtyeight()
+
+# Wall Street Journal
+p + theme_wsj() + scale_fill_wsj()
+
+# Stata
+p + theme_stata() + scale_color_stata()
+
+# Edward Tufte minimalism
+p + theme_tufte()
+
+# Google Docs
+p + theme_gdocs() + scale_fill_gdocs()
+
+# Excel (new)
+p + theme_excel_new() + scale_fill_excel_new()
+
+# Stephen Few
+p + theme_few() + scale_fill_few()
+
+# Highcharts
+p + theme_hc() + scale_fill_hc()
+
+# Base R look
+p + theme_base()
+
+# Solarized
+p + theme_solarized() + scale_fill_solarized()
+```
+
+### Matching colour scales
+
+| Theme | Colour scale |
+|-------|-------------|
+| `theme_economist()` | `scale_colour_economist()` / `scale_fill_economist()` |
+| `theme_fivethirtyeight()` | `scale_colour_fivethirtyeight()` |
+| `theme_wsj()` | `scale_colour_wsj()` / `scale_fill_wsj()` |
+| `theme_stata()` | `scale_colour_stata()` |
+| `theme_gdocs()` | `scale_fill_gdocs()` |
+| `theme_few()` | `scale_colour_few()` / `scale_fill_few()` |
+| `theme_hc()` | `scale_colour_hc()` / `scale_fill_hc()` |
+| `theme_solarized()` | `scale_colour_solarized()` / `scale_fill_solarized()` |
+
+---
+
+## hrbrthemes
+
+`hrbrthemes` provides **typography-centric** themes — clean, minimal, with beautiful font choices.
+
+```r
+install.packages("hrbrthemes")
+library(ggplot2)
+library(hrbrthemes)
+```
+
+### Available themes
+
+```r
+theme_ipsum()         # Arial Narrow
+theme_ipsum_es()      # Esteban
+theme_ipsum_rc()      # Roboto Condensed
+theme_ipsum_ps()      # IBM Plex Sans
+theme_ipsum_pub()     # Public Sans
+theme_ipsum_tw()      # Titillium Web
+theme_ipsum_modern_rc() # Modern Roboto Condensed dark
+theme_ft_rc()         # Roboto Condensed (FT-inspired)
+theme_modern_rc()     # Dark Roboto Condensed
+theme_tinyhand()
+```
+
+### Usage examples
+
+```r
+library(ggplot2)
+library(hrbrthemes)
+
+iris -> dataset
+
+p <- ggplot(dataset, aes(x = Sepal.Length, y = Sepal.Width, fill = Species)) +
+  geom_bar(stat = "identity", position = "stack") +
+  facet_wrap(~ Species)
+
+# Arial Narrow
+p + theme_ipsum() + theme(legend.position = "top")
+
+# Roboto Condensed
+p + theme_ipsum_rc() + theme(legend.position = "top")
+
+# FT-inspired dark
+p + theme_ft_rc() + theme(legend.position = "top")
+
+# With matching scale
+p + theme_ipsum() + scale_fill_ipsum() +
+  theme(legend.position = "top")
+```
+
+---
+
+## ggdark
+
+`ggdark` provides **dark mode** versions of all 8 built-in ggplot2 themes. It can also convert **any** theme into dark mode with `dark_mode()`.
+
+```r
+install.packages("ggdark")
+library(ggplot2)
+library(ggdark)
+```
+
+### Dark theme functions
+
+```r
+dark_theme_gray()       dark_theme_bw()
+dark_theme_linedraw()   dark_theme_light()
+dark_theme_dark()       dark_theme_minimal()
+dark_theme_classic()    dark_theme_void()
+
+# Convert any theme to dark mode
+dark_mode(theme_economist())
+dark_mode(theme_ipsum())
+```
+
+### Usage examples
+
+```r
+library(ggplot2)
+library(ggdark)
+
+mtcars -> dt
+cyls <- as.factor(dt$cyl)
+
+p <- ggplot(mtcars, aes(x = mpg, fill = cyls)) +
+  geom_density(alpha = 0.7) +
+  theme(legend.position = "top")
+
+p + dark_theme_classic()
+p + dark_theme_linedraw()
+p + dark_theme_minimal()
+
+# Dark mode on any theme
+p + dark_mode(theme_minimal())
+p + dark_mode(theme_economist())
+```
+
+---
+
+## mdthemes
+
+`mdthemes` wraps all themes from ggplot2, ggthemes, hrbrthemes and other packages with **Markdown support** — plot titles and labels can use `**bold**` and `*italic*` syntax.
+
+```r
+install.packages("mdthemes")
+library(ggplot2)
+library(mdthemes)
+```
+
+```r
+library(ggplot2)
+library(mdthemes)
+
+cyls <- as.factor(mtcars$cyl)
+
+p <- ggplot(mtcars, aes(x = mpg, fill = cyls)) +
+  geom_density(alpha = 0.7) +
+  labs(title    = "**Fuel Economy** by *Cylinders*",
+       subtitle = "**Bold** and *italic* in titles") +
+  theme(legend.position = "top")
+
+# Regular theme — markdown NOT rendered
+p + theme_bw()
+
+# md version — markdown IS rendered
+p + md_theme_bw()
+p + md_theme_minimal()
+p + md_theme_classic()
+```
+
+---
+
+## ggthemr
+
+`ggthemr` works differently — it sets a **global theme** for all subsequent plots using `ggthemr()`, rather than being added as a layer.
+
+```r
+# Install from GitHub
+# devtools::install_github('Mikata-Project/ggthemr')
+library(ggthemr)
+library(ggplot2)
+```
+
+```r
+# Set a global theme
+ggthemr("flat")
+
+cyls <- as.factor(mtcars$cyl)
+ggplot(mtcars, aes(x = mpg, fill = cyls)) +
+  geom_density(alpha = 0.7) +
+  theme(legend.position = "top")
+
+# ALWAYS reset after use
+ggthemr_reset()
+```
+
+### Available palettes
+
+```r
+ggthemr("flat")           ggthemr("flat dark")
+ggthemr("camouflage")     ggthemr("carrot")
+ggthemr("chalk")          ggthemr("copper")
+ggthemr("dust")           ggthemr("earth")
+ggthemr("fresh")          ggthemr("grape")
+ggthemr("grass")          ggthemr("greyscale")
+ggthemr("light")          ggthemr("lilac")
+ggthemr("pale")           ggthemr("sea")
+ggthemr("sky")            ggthemr("solarized")
+```
+
+::: {.callout-warning}
+## Always reset ggthemr
+ggthemr sets a global state. Always call `ggthemr_reset()` when done to restore the default ggplot2 theme.
+:::
+
+---
+
+## ggtech
+
+`ggtech` provides themes inspired by major tech companies.
+
+```r
+# Install from GitHub
+# devtools::install_github("ricardo-bion/ggtech", dependencies = TRUE)
+library(ggtech)
+library(ggplot2)
+```
+
+```r
+cyls <- as.factor(mtcars$cyl)
+
+ggplot(mtcars, aes(x = mpg, fill = cyls)) +
+  geom_density(alpha = 0.7) +
+  ggtitle("Tech company themes") +
+  theme_tech(theme = "airbnb") +
+  scale_fill_tech(theme = "airbnb") +
+  theme(legend.position = "top")
+```
+
+### Available styles
+
+```r
+theme_tech(theme = "airbnb")    # Airbnb coral & grey
+theme_tech(theme = "google")    # Google colours
+theme_tech(theme = "twitter")   # Twitter blue
+theme_tech(theme = "facebook")  # Facebook blue
+theme_tech(theme = "etsy")      # Etsy orange
+theme_tech(theme = "X23andme")  # 23andMe
+```
+
+---
+
+## Setting a global theme
+
+Use `theme_set()` to apply a theme to **all subsequent plots** in your session:
+
+```r
+library(ggplot2)
+
+# Save current theme and set a new one
+old <- theme_set(theme_minimal(base_size = 13))
+
+# Now ALL plots use theme_minimal
+ggplot(mtcars, aes(x = wt, y = mpg)) + geom_point()
+ggplot(iris, aes(x = Sepal.Width)) + geom_histogram()
+
+# Restore the previous theme
+theme_set(old)
+```
+
+---
+
+## Custom theme with `theme()`
+
+Build your own reusable theme:
+
+```r
+library(ggplot2)
+
+my_theme <- theme_minimal(base_size = 13) +
+  theme(
+    # Titles
+    plot.title      = element_text(face = "bold", size = 16,
+                                   colour = "#0e0f14", margin = margin(b = 8)),
+    plot.subtitle   = element_text(colour = "#6b6760", size = 12,
+                                   margin = margin(b = 12)),
+    plot.caption    = element_text(colour = "#aaaaaa", size = 9, hjust = 1),
+
+    # Axes
+    axis.title      = element_text(size = 11, colour = "#3d3e47"),
+    axis.text       = element_text(size = 10, colour = "#6b6760"),
+    axis.line       = element_line(colour = "#d8d2c8"),
+
+    # Grid
+    panel.grid.major = element_line(colour = "#ede8df", linewidth = 0.4),
+    panel.grid.minor = element_blank(),
+    panel.background = element_rect(fill = "#faf8f4", colour = NA),
+    plot.background  = element_rect(fill = "#ffffff", colour = NA),
+
+    # Legend
+    legend.position  = "top",
+    legend.title     = element_text(face = "bold", size = 10),
+    legend.text      = element_text(size = 10),
+
+    # Facet strips
+    strip.background = element_blank(),
+    strip.text       = element_text(face = "bold", size = 11),
+
+    # Margins
+    plot.margin      = margin(16, 16, 16, 16)
+  )
+
+# Apply to any plot
+ggplot(mtcars, aes(x = wt, y = mpg, colour = factor(cyl))) +
+  geom_point(size = 3, alpha = 0.85) +
+  scale_colour_manual(values = c("#e84855","#2d6be4","#12a36a")) +
+  labs(title = "Custom Theme", colour = "Cylinders") +
+  my_theme
+```
+
+---
+
+## Quick reference — theme() arguments
+
+| Argument | Controls | Function |
+|----------|---------|---------|
+| `plot.title` | Title text | `element_text()` |
+| `plot.subtitle` | Subtitle text | `element_text()` |
+| `plot.caption` | Caption text | `element_text()` |
+| `plot.background` | Outer plot area | `element_rect()` |
+| `panel.background` | Inner panel area | `element_rect()` |
+| `panel.grid.major` | Major grid lines | `element_line()` / `element_blank()` |
+| `panel.grid.minor` | Minor grid lines | `element_line()` / `element_blank()` |
+| `panel.border` | Panel border | `element_rect()` |
+| `axis.title` | Axis label text | `element_text()` |
+| `axis.text` | Axis tick labels | `element_text()` |
+| `axis.text.x` | X-axis tick labels | `element_text(angle = 45)` |
+| `axis.line` | Axis lines | `element_line()` |
+| `axis.ticks` | Tick marks | `element_line()` / `element_blank()` |
+| `legend.position` | Legend location | `"top"`, `"bottom"`, `"none"`, `c(x,y)` |
+| `legend.title` | Legend title text | `element_text()` |
+| `legend.background` | Legend background | `element_rect()` |
+| `legend.key.size` | Legend key size | `unit(1, "cm")` |
+| `strip.background` | Facet strip bg | `element_rect()` / `element_blank()` |
+| `strip.text` | Facet strip text | `element_text()` |
+| `plot.margin` | Outer margins | `margin(t, r, b, l)` |

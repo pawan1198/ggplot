@@ -1,0 +1,356 @@
+---
+title: "Geom Functions"
+subtitle: "Every geometric object in ggplot2 with working code examples"
+description: "Complete reference for all ggplot2 geom functions — scatter, line, bar, histogram, boxplot, violin, density, area, tile, text, and more."
+---
+
+Geoms are the **geometric objects** used to represent data. Every geom function starts with `geom_`. You can stack multiple geoms in one plot by chaining them with `+`.
+
+---
+
+## Scatter — `geom_point()`
+
+```r
+library(ggplot2)
+
+# Basic scatter
+ggplot(mtcars, aes(x = wt, y = mpg)) +
+  geom_point()
+
+# Colour, size, alpha
+ggplot(mtcars, aes(x = wt, y = mpg, colour = factor(cyl))) +
+  geom_point(size = 3, alpha = 0.8)
+
+# Add regression line
+ggplot(mtcars, aes(x = wt, y = mpg)) +
+  geom_point(colour = "steelblue", size = 2) +
+  geom_smooth(method = "lm", se = FALSE, colour = "tomato")
+
+# Bubble chart — size mapped to data
+ggplot(mtcars, aes(x = wt, y = mpg, size = hp, colour = factor(cyl))) +
+  geom_point(alpha = 0.7) +
+  scale_size_continuous(range = c(2, 12))
+```
+
+---
+
+## Lines — `geom_line()` / `geom_path()`
+
+```r
+# Time-series line chart
+ggplot(economics, aes(x = date, y = unemploy)) +
+  geom_line()
+
+# Styled line
+ggplot(economics, aes(x = date, y = unemploy)) +
+  geom_line(colour = "#2d6be4", linewidth = 1)
+
+# Multiple lines by group
+ggplot(economics_long, aes(x = date, y = value01, colour = variable)) +
+  geom_line()
+
+# Step line (useful for step-wise data)
+ggplot(economics, aes(x = date, y = unemploy)) +
+  geom_step()
+
+# geom_path — connects in data order (not sorted by x)
+ggplot(economics, aes(x = unemploy/pop, y = psavert)) +
+  geom_path(alpha = 0.4) +
+  labs(x = "Unemployment rate", y = "Personal savings rate")
+```
+
+---
+
+## Bars — `geom_bar()` / `geom_col()`
+
+```r
+# Count bars (default stat="count")
+ggplot(mtcars, aes(x = factor(cyl))) +
+  geom_bar()
+
+# Identity bars (pre-summarised)
+df <- data.frame(group = LETTERS[1:4], values = c(5,2,7,2))
+
+ggplot(df, aes(x = group, y = values)) +
+  geom_bar(stat = "identity")
+
+# geom_col — shorthand for stat="identity"
+ggplot(df, aes(x = group, y = values, fill = group)) +
+  geom_col()
+
+# Horizontal with coord_flip
+ggplot(df, aes(x = values, y = reorder(group, values))) +
+  geom_col(fill = "#2d6be4")
+
+# With value labels on top
+ggplot(df, aes(x = group, y = values)) +
+  geom_col(fill = "steelblue") +
+  geom_text(aes(label = values), vjust = -0.4, fontface = "bold")
+```
+
+---
+
+## Histogram — `geom_histogram()`
+
+```r
+# Basic histogram
+ggplot(mtcars, aes(x = mpg)) +
+  geom_histogram(bins = 10)
+
+# Custom bin width & fill
+ggplot(mtcars, aes(x = mpg)) +
+  geom_histogram(binwidth = 3, fill = "steelblue", colour = "white")
+
+# Density overlay
+ggplot(mtcars, aes(x = mpg, y = after_stat(density))) +
+  geom_histogram(fill = "#c3e7ff", colour = "white", bins = 12) +
+  geom_density(colour = "#2d6be4", linewidth = 1)
+
+# Multiple groups
+ggplot(mtcars, aes(x = mpg, fill = factor(cyl))) +
+  geom_histogram(alpha = 0.6, binwidth = 2, position = "identity")
+```
+
+---
+
+## Density — `geom_density()`
+
+```r
+# Basic density
+ggplot(mtcars, aes(x = mpg)) +
+  geom_density(fill = "steelblue", alpha = 0.5)
+
+# Multiple groups
+cyls <- as.factor(mtcars$cyl)
+ggplot(mtcars, aes(x = mpg, fill = cyls)) +
+  geom_density(alpha = 0.6) +
+  theme(legend.position = "top")
+
+# 2D density heat map
+ggplot(mtcars, aes(x = wt, y = mpg)) +
+  geom_density_2d_filled(alpha = 0.7) +
+  geom_point(colour = "white", size = 1.5)
+```
+
+---
+
+## Boxplot — `geom_boxplot()`
+
+```r
+# Basic boxplot
+ggplot(mtcars, aes(x = factor(cyl), y = mpg)) +
+  geom_boxplot()
+
+# Coloured fill + notches
+ggplot(mtcars, aes(x = factor(cyl), y = mpg, fill = factor(cyl))) +
+  geom_boxplot(notch = TRUE, outlier.colour = "tomato", outlier.size = 2) +
+  scale_fill_brewer(palette = "Set2") +
+  theme(legend.position = "none")
+
+# With jittered points overlaid
+ggplot(mtcars, aes(x = factor(cyl), y = mpg)) +
+  geom_boxplot(fill = "grey90", outlier.shape = NA) +
+  geom_jitter(aes(colour = factor(cyl)), width = 0.15, size = 2, alpha = 0.7)
+```
+
+---
+
+## Violin — `geom_violin()`
+
+```r
+# Basic violin
+ggplot(mtcars, aes(x = factor(cyl), y = mpg)) +
+  geom_violin(fill = "steelblue", alpha = 0.6)
+
+# Violin + boxplot combo
+ggplot(mtcars, aes(x = factor(cyl), y = mpg, fill = factor(cyl))) +
+  geom_violin(alpha = 0.5) +
+  geom_boxplot(width = 0.12, fill = "white") +
+  scale_fill_brewer(palette = "Set1") +
+  theme(legend.position = "none") +
+  labs(x = "Cylinders", y = "MPG")
+
+# Half violin — gghalves package
+# install.packages("gghalves")
+# library(gghalves)
+# ggplot(mtcars, aes(x = factor(cyl), y = mpg)) +
+#   geom_half_violin() + geom_half_point()
+```
+
+---
+
+## Area — `geom_area()` / `geom_ribbon()`
+
+```r
+# Area chart
+ggplot(economics, aes(x = date, y = unemploy)) +
+  geom_area(fill = rgb(0, 0.5, 1, alpha = 0.5), colour = "#2d6be4")
+
+# Ribbon — shaded confidence band
+ggplot(economics, aes(x = date)) +
+  geom_ribbon(aes(ymin = unemploy - 500, ymax = unemploy + 500),
+              fill = "#2d6be4", alpha = 0.3) +
+  geom_line(aes(y = unemploy), colour = "#2d6be4")
+
+# Stacked area chart
+library(tidyr)
+economics_long |>
+  dplyr::filter(variable %in% c("pce","pop")) |>
+  ggplot(aes(x = date, y = value01, fill = variable)) +
+  geom_area(alpha = 0.7, position = "stack")
+```
+
+---
+
+## Heatmap — `geom_tile()` / `geom_raster()`
+
+```r
+# Correlation matrix heatmap
+library(tidyr)
+
+cor_df <- as.data.frame(cor(mtcars))
+cor_df$var1 <- rownames(cor_df)
+cor_long <- pivot_longer(cor_df, -var1, names_to = "var2", values_to = "corr")
+
+ggplot(cor_long, aes(x = var1, y = var2, fill = corr)) +
+  geom_tile() +
+  scale_fill_gradient2(
+    low = "#2d6be4", mid = "white", high = "#e84855", midpoint = 0
+  ) +
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1)) +
+  labs(title = "mtcars Correlation Matrix", fill = "r")
+
+# Calendar heatmap style
+ggplot(diamonds, aes(x = cut, y = color, fill = carat)) +
+  geom_tile() +
+  scale_fill_viridis_c()
+```
+
+---
+
+## Smooth trend — `geom_smooth()`
+
+```r
+# Default LOESS smooth
+ggplot(mtcars, aes(x = wt, y = mpg)) +
+  geom_point() +
+  geom_smooth()
+
+# Linear regression
+ggplot(mtcars, aes(x = wt, y = mpg)) +
+  geom_point() +
+  geom_smooth(method = "lm", se = FALSE, colour = "tomato")
+
+# By group
+ggplot(mtcars, aes(x = wt, y = mpg, colour = factor(cyl))) +
+  geom_point() +
+  geom_smooth(method = "lm", se = FALSE)
+
+# method options: "lm", "glm", "gam", "loess", "rlm"
+```
+
+---
+
+## Jitter — `geom_jitter()`
+
+```r
+# Avoid overplotting in categorical data
+ggplot(mtcars, aes(x = factor(cyl), y = mpg)) +
+  geom_jitter(width = 0.2, height = 0, colour = "steelblue", size = 2, alpha = 0.7)
+
+# geom_jitter is shorthand for geom_point(position = position_jitter())
+ggplot(mtcars, aes(x = factor(cyl), y = mpg, colour = factor(cyl))) +
+  geom_point(position = position_jitter(width = 0.15), size = 3, alpha = 0.7)
+```
+
+---
+
+## Error bars — `geom_errorbar()` / `geom_crossbar()`
+
+```r
+library(dplyr)
+
+# Compute mean and SE per group
+summary_df <- mtcars |>
+  group_by(cyl) |>
+  summarise(mean_mpg = mean(mpg),
+            se_mpg   = sd(mpg) / sqrt(n()))
+
+# Error bar plot
+ggplot(summary_df, aes(x = factor(cyl), y = mean_mpg)) +
+  geom_col(fill = "steelblue", alpha = 0.7) +
+  geom_errorbar(aes(ymin = mean_mpg - se_mpg,
+                    ymax = mean_mpg + se_mpg),
+                width = 0.2, linewidth = 0.8) +
+  labs(x = "Cylinders", y = "Mean MPG ± SE")
+
+# Point + errorbar
+ggplot(summary_df, aes(x = factor(cyl), y = mean_mpg)) +
+  geom_point(size = 4, colour = "#e84855") +
+  geom_errorbar(aes(ymin = mean_mpg - se_mpg,
+                    ymax = mean_mpg + se_mpg),
+                width = 0.2)
+```
+
+---
+
+## Rug marks — `geom_rug()`
+
+```r
+ggplot(mtcars, aes(x = wt, y = mpg)) +
+  geom_point() +
+  geom_rug(alpha = 0.4, linewidth = 0.6)
+
+# Only on x-axis
+ggplot(mtcars, aes(x = wt, y = mpg)) +
+  geom_point() +
+  geom_rug(sides = "b")   # "b"=bottom, "l"=left, "t"=top, "r"=right
+```
+
+---
+
+## Complete Geom Reference
+
+| Geom | Chart type | Required `aes()` |
+|------|-----------|-----------------|
+| `geom_point()` | Scatter | `x`, `y` |
+| `geom_line()` | Line (sorted x) | `x`, `y` |
+| `geom_path()` | Line (data order) | `x`, `y` |
+| `geom_step()` | Step line | `x`, `y` |
+| `geom_bar()` | Bar (counts) | `x` |
+| `geom_col()` | Bar (identity) | `x`, `y` |
+| `geom_histogram()` | Histogram | `x` |
+| `geom_density()` | Kernel density | `x` |
+| `geom_density_2d()` | 2D density contour | `x`, `y` |
+| `geom_boxplot()` | Boxplot | `x`, `y` |
+| `geom_violin()` | Violin | `x`, `y` |
+| `geom_dotplot()` | Dot plot | `x` |
+| `geom_jitter()` | Jittered scatter | `x`, `y` |
+| `geom_area()` | Area chart | `x`, `y` |
+| `geom_ribbon()` | Shaded band | `x`, `ymin`, `ymax` |
+| `geom_tile()` | Heatmap tiles | `x`, `y`, `fill` |
+| `geom_raster()` | Raster image | `x`, `y`, `fill` |
+| `geom_smooth()` | Smoothed trend | `x`, `y` |
+| `geom_hline()` | Horizontal ref line | `yintercept` |
+| `geom_vline()` | Vertical ref line | `xintercept` |
+| `geom_abline()` | Diagonal line | `slope`, `intercept` |
+| `geom_segment()` | Line segment | `x`,`y`,`xend`,`yend` |
+| `geom_curve()` | Curved segment | `x`,`y`,`xend`,`yend` |
+| `geom_text()` | Text labels | `x`, `y`, `label` |
+| `geom_label()` | Text with box | `x`, `y`, `label` |
+| `geom_errorbar()` | Error bars | `x`, `ymin`, `ymax` |
+| `geom_crossbar()` | Crossbar | `x`, `y`, `ymin`, `ymax` |
+| `geom_polygon()` | Filled polygon | `x`, `y` |
+| `geom_map()` | Map polygons | `map_id` |
+| `geom_rug()` | Marginal rug marks | `x` or `y` |
+| `geom_blank()` | Empty — axis range only | `x`, `y` |
+
+::: {.callout-note}
+## Additional geom packages
+- **`ggrepel`** — `geom_text_repel()`, `geom_label_repel()` for non-overlapping labels  
+- **`ggtext`** — `geom_richtext()` for Markdown/HTML in annotations  
+- **`ggbeeswarm`** — `geom_beeswarm()` for beeswarm scatter  
+- **`ggridges`** — `geom_density_ridges()` for ridge plots  
+- **`ggsignif`** — `geom_signif()` for significance brackets  
+:::

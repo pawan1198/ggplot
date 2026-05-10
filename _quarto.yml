@@ -1,0 +1,114 @@
+project:
+  type: website
+  output-dir: _site
+
+website:
+  title: "RViz"
+  description: "A comprehensive, hands-on learning resource for R and ggplot2 data visualization"
+  search: true
+
+  navbar:
+    background: "#0e0f14"
+    foreground: "#f0ece4"
+    title: "RViz"
+    left:
+      - href: index.qmd
+        text: "Home"
+      - href: r-guide.qmd
+        text: "R Guide"
+      - text: "ggplot2"
+        menu:
+          - href: ggplot2-intro.qmd
+            text: "Introduction & Grammar"
+          - href: geoms.qmd
+            text: "Geom Functions"
+          - href: titles-labels.qmd
+            text: "Titles & Labels"
+          - href: background-grid.qmd
+            text: "Background & Grid"
+          - href: legends.qmd
+            text: "Legends"
+          - href: annotations.qmd
+            text: "Annotations"
+          - href: facets.qmd
+            text: "Faceting"
+          - href: coordinates.qmd
+            text: "Coordinates"
+      - text: "Charts"
+        menu:
+          - href: barplots.qmd
+            text: "Bar Charts"
+          - href: combining.qmd
+            text: "Combining Plots"
+      - href: themes.qmd
+        text: "Themes"
+      - href: reference.qmd
+        text: "Reference"
+
+  sidebar:
+    style: "docked"
+    search: true
+    background: "#faf8f4"
+    contents:
+      - section: "Getting Started"
+        contents:
+          - href: index.qmd
+            text: "Overview"
+          - href: r-guide.qmd
+            text: "R Guide & Basics"
+      - section: "ggplot2 Core"
+        contents:
+          - href: ggplot2-intro.qmd
+            text: "Introduction & Grammar"
+          - href: geoms.qmd
+            text: "Geom Functions"
+          - href: titles-labels.qmd
+            text: "Titles & Labels"
+          - href: background-grid.qmd
+            text: "Background & Grid"
+          - href: legends.qmd
+            text: "Legends"
+          - href: annotations.qmd
+            text: "Annotations"
+          - href: facets.qmd
+            text: "Faceting"
+          - href: coordinates.qmd
+            text: "Coordinates"
+      - section: "Customization"
+        contents:
+          - href: themes.qmd
+            text: "Themes & Styling"
+          - href: barplots.qmd
+            text: "Bar Charts"
+          - href: combining.qmd
+            text: "Combining Plots"
+      - section: "Reference"
+        contents:
+          - href: reference.qmd
+            text: "Quick Reference"
+
+  page-footer:
+    left: "Built with [Quarto](https://quarto.org)"
+    center: "R & ggplot2 Complete Guide by **Pawan Jangra**"
+    right: "2024"
+
+format:
+  html:
+    theme:
+      light: [flatly, custom.scss]
+    css: styles.css
+    toc: true
+    toc-depth: 3
+    toc-title: "On this page"
+    code-copy: true
+    code-fold: false
+    highlight-style: github
+    smooth-scroll: true
+    anchor-sections: true
+
+execute:
+  freeze: auto
+  echo: true
+  warning: false
+  message: false
+  eval: false

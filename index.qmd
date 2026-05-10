@@ -1,0 +1,163 @@
+---
+title: "Master R & ggplot2 Data Visualization"
+subtitle: "A comprehensive, hands-on guide — from R fundamentals to publication-quality plots"
+description: "Complete learning resource covering R basics, ggplot2 grammar of graphics, geoms, themes, faceting, combining plots and more."
+page-layout: full
+toc: false
+---
+
+```{=html}
+<div class="stat-row">
+  <div class="stat-item"><span class="num">12+</span><span class="lbl">Complete modules</span></div>
+  <div class="stat-item"><span class="num">150+</span><span class="lbl">Code examples</span></div>
+  <div class="stat-item"><span class="num">30+</span><span class="lbl">Geom functions</span></div>
+  <div class="stat-item"><span class="num">15+</span><span class="lbl">Themes covered</span></div>
+  <div class="stat-item"><span class="num">5</span><span class="lbl">Bar chart types</span></div>
+</div>
+```
+
+## What's covered
+
+```{=html}
+<div class="module-grid">
+
+  <a href="r-guide.qmd" class="module-card">
+    <span class="num">01</span>
+    <span class="icon">🚀</span>
+    <h3>R Guide & Basics</h3>
+    <p>Install R & RStudio, working directories, packages, vectors, and data frames.</p>
+  </a>
+
+  <a href="ggplot2-intro.qmd" class="module-card">
+    <span class="num">02</span>
+    <span class="icon">📊</span>
+    <h3>ggplot2 Introduction</h3>
+    <p>Grammar of graphics, layered construction, aesthetics, scales, and faceting.</p>
+  </a>
+
+  <a href="geoms.qmd" class="module-card">
+    <span class="num">03</span>
+    <span class="icon">🔵</span>
+    <h3>Geom Functions</h3>
+    <p>Every geom from geom_point to geom_violin — with working code examples.</p>
+  </a>
+
+  <a href="titles-labels.qmd" class="module-card">
+    <span class="num">04</span>
+    <span class="icon">🏷️</span>
+    <h3>Titles & Labels</h3>
+    <p>ggtitle(), labs(), caption, tag, position, and full element_text() styling.</p>
+  </a>
+
+  <a href="background-grid.qmd" class="module-card">
+    <span class="num">05</span>
+    <span class="icon">🎨</span>
+    <h3>Background & Grid</h3>
+    <p>Panel & plot background colors, borders, grid lines, breaks, and margins.</p>
+  </a>
+
+  <a href="legends.qmd" class="module-card">
+    <span class="num">06</span>
+    <span class="icon">🗝️</span>
+    <h3>Legends</h3>
+    <p>Adding, titling, repositioning, customizing, and removing ggplot2 legends.</p>
+  </a>
+
+  <a href="annotations.qmd" class="module-card">
+    <span class="num">07</span>
+    <span class="icon">✍️</span>
+    <h3>Text & Annotations</h3>
+    <p>geom_text, geom_label, ggrepel, ggtext rich text, segments, curves, arrows.</p>
+  </a>
+
+  <a href="facets.qmd" class="module-card">
+    <span class="num">08</span>
+    <span class="icon">🗂️</span>
+    <h3>Faceting</h3>
+    <p>facet_wrap() and facet_grid() — rows, scales, strips, panel spacing.</p>
+  </a>
+
+  <a href="coordinates.qmd" class="module-card">
+    <span class="num">09</span>
+    <span class="icon">🗺️</span>
+    <h3>Coordinates</h3>
+    <p>coord_cartesian, coord_flip, coord_polar, coord_trans, map projections.</p>
+  </a>
+
+  <a href="themes.qmd" class="module-card">
+    <span class="num">10</span>
+    <span class="icon">✨</span>
+    <h3>Themes & Styling</h3>
+    <p>Built-in themes, ggthemes, hrbrthemes, ggdark, mdthemes, ggthemr, ggtech.</p>
+  </a>
+
+  <a href="barplots.qmd" class="module-card">
+    <span class="num">11</span>
+    <span class="icon">📈</span>
+    <h3>Bar Charts (5 Examples)</h3>
+    <p>Base R → ggplot2 → stacked → 100%-filled → grouped bar charts.</p>
+  </a>
+
+  <a href="combining.qmd" class="module-card">
+    <span class="num">12</span>
+    <span class="icon">🧩</span>
+    <h3>Combining Plots</h3>
+    <p>patchwork operators, gridExtra grid.arrange, and cowplot plot_grid.</p>
+  </a>
+
+</div>
+```
+
+## Core packages
+
+| Package | Purpose | Install |
+|---------|---------|---------|
+| `ggplot2` | Core visualization | `install.packages("ggplot2")` |
+| `ggthemes` | Extra themes & scales | `install.packages("ggthemes")` |
+| `hrbrthemes` | Typography-centric themes | `install.packages("hrbrthemes")` |
+| `ggdark` | Dark mode themes | `install.packages("ggdark")` |
+| `patchwork` | Combine multiple plots | `install.packages("patchwork")` |
+| `ggrepel` | Non-overlapping labels | `install.packages("ggrepel")` |
+| `ggtext` | Markdown/HTML in plots | `install.packages("ggtext")` |
+| `gridExtra` | Grid layouts | `install.packages("gridExtra")` |
+| `cowplot` | Publication-ready layouts | `install.packages("cowplot")` |
+| `scales` | Axis formatting helpers | `install.packages("scales")` |
+
+## Quick-start
+
+Install everything at once:
+
+```r
+pkgs <- c(
+  "ggplot2", "ggthemes", "hrbrthemes", "ggdark",
+  "patchwork", "ggrepel", "ggtext", "gridExtra",
+  "cowplot", "scales", "tidyverse"
+)
+install.packages(pkgs)
+```
+
+Your first ggplot2 plot:
+
+```r
+library(ggplot2)
+
+ggplot(mtcars, aes(x = wt, y = mpg, colour = factor(cyl))) +
+  geom_point(size = 3, alpha = 0.85) +
+  geom_smooth(method = "lm", se = FALSE, lwd = 0.8) +
+  scale_colour_manual(values = c("#e84855", "#2d6be4", "#12a36a")) +
+  labs(
+    title    = "Vehicle Weight vs Fuel Economy",
+    subtitle = "Grouped by number of cylinders · mtcars dataset",
+    x        = "Weight (1,000 lbs)",
+    y        = "Miles per Gallon",
+    colour   = "Cylinders"
+  ) +
+  theme_minimal(base_size = 13) +
+  theme(legend.position = "top",
+        plot.title      = element_text(face = "bold"))
+```
+
+::: {.callout-tip}
+## Navigation tip
+Use the **sidebar** on the left to jump to any section. Each page has a **table of contents** on the right for within-page navigation.
+:::

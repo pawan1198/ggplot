@@ -1,0 +1,248 @@
+---
+title: "Titles, Labels & Text Styling"
+subtitle: "ggtitle(), labs(), captions, tags, axis text, and full element_text() control"
+description: "Master ggplot2 plot labelling — titles, subtitles, captions, tags, axis labels, and how to style every text element with element_text()."
+---
+
+## Overview
+
+Two main ways to add labels in ggplot2:
+
+- `ggtitle()` — dedicated title + subtitle function  
+- `labs()` — set title, subtitle, caption, tag, axis labels, and legend titles all at once
+
+---
+
+## Title
+
+### Using `ggtitle()`
+
+```r
+library(ggplot2)
+
+ggplot(economics, aes(date, unemploy)) +
+  geom_area(fill = rgb(0, 0.5, 1, alpha = 0.5)) +
+  ggtitle("US Unemployment Over Time")
+```
+
+### Using `labs()`
+
+```r
+ggplot(economics, aes(date, unemploy)) +
+  geom_area(fill = rgb(0, 0.5, 1, alpha = 0.5)) +
+  labs(title = "US Unemployment Over Time")
+```
+
+### Title position
+
+Default: aligned to the **panel** (plot data area).  
+Set `"plot"` to align to the full figure including margins.
+
+```r
+ggplot(economics, aes(date, unemploy)) +
+  geom_area(fill = rgb(0, 0.5, 1, alpha = 0.5)) +
+  labs(title = "Aligned to full plot width") +
+  theme(plot.title.position = "plot")   # "panel" | "plot"
+```
+
+---
+
+## Subtitle
+
+```r
+# Option 1 — ggtitle()
+ggplot(economics, aes(date, unemploy)) +
+  geom_area(fill = rgb(0, 0.5, 1, alpha = 0.5)) +
+  ggtitle("Title of the plot",
+          subtitle = "Subtitle of the plot")
+
+# Option 2 — labs()
+ggplot(economics, aes(date, unemploy)) +
+  geom_area(fill = rgb(0, 0.5, 1, alpha = 0.5)) +
+  labs(title    = "Title of the plot",
+       subtitle = "Subtitle of the plot")
+```
+
+---
+
+## Caption
+
+Captions appear at the **bottom-right** by default. Great for data source attribution.
+
+```r
+ggplot(economics, aes(date, unemploy)) +
+  geom_area(fill = rgb(0, 0.5, 1, alpha = 0.5)) +
+  labs(title   = "US Unemployment",
+       caption = "Source: Bureau of Labor Statistics")
+
+# Move caption to left
+ggplot(economics, aes(date, unemploy)) +
+  geom_area(fill = rgb(0, 0.5, 1, alpha = 0.5)) +
+  labs(caption = "Source: BLS") +
+  theme(plot.caption.position = "plot",
+        plot.caption           = element_text(hjust = 0))  # 0=left, 1=right
+```
+
+---
+
+## Tag
+
+Tags are placed at the **top-left**. Useful for labelling panels (A, B, C…) in multi-panel figures.
+
+```r
+ggplot(economics, aes(date, unemploy)) +
+  geom_area(fill = rgb(0, 0.5, 1, alpha = 0.5)) +
+  labs(title = "US Unemployment", tag = "Fig. 1")
+
+# Change tag position
+ggplot(economics, aes(date, unemploy)) +
+  geom_area(fill = rgb(0, 0.5, 1, alpha = 0.5)) +
+  labs(tag = "A") +
+  theme(plot.tag.position = "bottomright")
+  # options: "topleft","top","topright","left","right","bottomleft","bottom","bottomright"
+```
+
+---
+
+## All labels in one `labs()` call
+
+```r
+library(ggplot2)
+
+ggplot(iris, aes(x = Sepal.Width, y = Petal.Width, fill = Species)) +
+  geom_bar(stat = "identity") +
+  facet_wrap(~ Species) +
+  labs(
+    title    = "Petal Width by Species",
+    subtitle = "Iris dataset · faceted by species",
+    caption  = "Source: R built-in iris dataset",
+    tag      = "Fig. 1",
+    x        = "Sepal Width (cm)",
+    y        = "Petal Width (cm)",
+    fill     = "Iris Species"
+  )
+```
+
+---
+
+## Axis Labels
+
+```r
+# Simple axis labels
+ggplot(mtcars, aes(x = wt, y = mpg)) +
+  geom_point() +
+  xlab("Weight (1,000 lbs)") +
+  ylab("Miles per Gallon")
+
+# Remove axis labels
+ggplot(mtcars, aes(x = wt, y = mpg)) +
+  geom_point() +
+  labs(x = NULL, y = NULL)
+
+# Rotate x-axis tick labels
+ggplot(mtcars, aes(x = row.names(mtcars), y = mpg)) +
+  geom_col(fill = "steelblue") +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1, vjust = 1))
+
+# Remove axis tick text
+ggplot(mtcars, aes(x = wt, y = mpg)) +
+  geom_point() +
+  theme(axis.text.x  = element_blank(),
+        axis.ticks.x = element_blank())
+```
+
+---
+
+## Styling Text with `element_text()`
+
+```r
+ggplot(mtcars, aes(x = wt, y = mpg)) +
+  geom_point(colour = "steelblue", size = 3) +
+  labs(
+    title    = "Vehicle Weight vs Fuel Economy",
+    subtitle = "Each dot is one car model from the 1974 Motor Trend magazine",
+    caption  = "Source: Motor Trend US, 1974",
+    x        = "Weight (1,000 lbs)",
+    y        = "Miles per Gallon"
+  ) +
+  theme_minimal() +
+  theme(
+    plot.title    = element_text(
+      family     = "serif",       # Font family
+      face       = "bold",        # "plain","bold","italic","bold.italic"
+      colour     = "#0e0f14",
+      size       = 18,
+      hjust      = 0,             # 0=left, 0.5=centre, 1=right
+      vjust      = 1,
+      lineheight = 1.2,
+      margin     = margin(b = 8)  # space below title
+    ),
+    plot.subtitle = element_text(size = 12, colour = "#6b6760", hjust = 0,
+                                 margin = margin(b = 14)),
+    plot.caption  = element_text(size = 9,  colour = "#aaa", hjust = 1),
+    axis.title    = element_text(size = 11, face = "italic"),
+    axis.text     = element_text(size = 10),
+    axis.text.x   = element_text(angle = 0, hjust = 0.5)
+  )
+```
+
+### `element_text()` arguments
+
+| Argument | Values | Description |
+|----------|--------|-------------|
+| `face` | `"plain"`, `"bold"`, `"italic"`, `"bold.italic"` | Font weight/style |
+| `size` | Number (pts) | Font size |
+| `colour` | Colour name or hex | Text colour |
+| `family` | Font family name | e.g. `"sans"`, `"serif"`, `"mono"` |
+| `hjust` | 0–1 | Horizontal alignment |
+| `vjust` | 0–1 | Vertical alignment |
+| `angle` | Degrees | Rotation |
+| `lineheight` | Number | Line spacing |
+| `margin` | `margin(t,r,b,l)` | Space around text |
+
+---
+
+## Full Styling Example from Source
+
+```r
+library(ggplot2)
+
+ggplot(economics, aes(date, unemploy)) +
+  geom_area(fill = rgb(0, 0.5, 1, alpha = 0.5)) +
+  labs(title    = "Title of the plot",
+       subtitle = "Subtitle of the plot",
+       caption  = "This is the caption",
+       tag      = "Fig. 1") +
+  theme(
+    plot.title    = element_text(
+      family     = "serif",
+      face       = "bold",
+      colour     = 4,          # colour index 4 = blue
+      size       = 15,
+      hjust      = 1,
+      vjust      = 1,
+      angle      = -10,
+      lineheight = 1,
+      margin     = margin(20, 0, 0, 0)   # t, r, b, l
+    ),
+    plot.subtitle          = element_text(hjust = 0),
+    plot.caption           = element_text(hjust = 0.25),
+    plot.tag               = element_text(face = "italic"),
+    plot.title.position    = "plot",    # align title to full width
+    plot.caption.position  = "panel",
+    plot.tag.position      = "top"
+  )
+```
+
+---
+
+::: {.callout-tip}
+## Remember: TRBL for margins
+
+The `margin()` function takes **T**op, **R**ight, **B**ottom, **L**eft — remember the word **TR**ou**BL**e.
+
+```r
+margin(t = 20, r = 10, b = 5, l = 10)   # named args
+margin(20, 10, 5, 10)                    # positional
+```
+:::

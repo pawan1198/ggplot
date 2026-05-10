@@ -1,0 +1,388 @@
+---
+title: "Quick Reference"
+subtitle: "All key ggplot2 functions, theme arguments, scales, and packages — at a glance"
+description: "Complete ggplot2 quick reference — geoms, aesthetics, scales, coordinates, facets, themes, combining plots, and full theme() argument table."
+---
+
+## Essential packages
+
+```r
+pkgs <- c(
+  "ggplot2",     # Core visualization
+  "ggthemes",    # Extra themes (economist, wsj, fivethirtyeight…)
+  "hrbrthemes",  # Typography-centric themes
+  "ggdark",      # Dark mode themes
+  "mdthemes",    # Markdown-enabled themes
+  "patchwork",   # Combine plots with operators
+  "ggrepel",     # Non-overlapping labels
+  "ggtext",      # Markdown/HTML in text elements
+  "gridExtra",   # grid.arrange() layouts
+  "cowplot",     # plot_grid() publication layouts
+  "scales",      # Axis formatting helpers
+  "dplyr",       # Data wrangling
+  "tidyr"        # Reshaping data
+)
+install.packages(pkgs)
+```
+
+---
+
+## ggplot2 template
+
+```r
+library(ggplot2)
+
+ggplot(data = <DATA>, mapping = aes(<MAPPINGS>)) +
+  <GEOM_FUNCTION>(
+    mapping  = aes(<MAPPINGS>),
+    stat     = <STAT>,
+    position = <POSITION>   # "identity","stack","dodge","fill","jitter"
+  ) +
+  <SCALE_FUNCTION>   +
+  <COORDINATE_FUNCTION> +
+  <FACET_FUNCTION> +
+  <THEME_FUNCTION>
+```
+
+---
+
+## Aesthetics
+
+| Aesthetic | Maps to | Use |
+|-----------|---------|-----|
+| `x`, `y` | Axis position | All geoms |
+| `colour` | Stroke / point colour | Points, lines, box outlines |
+| `fill` | Fill colour | Bars, boxes, areas, densities |
+| `size` | Point size / line width | Points, lines |
+| `shape` | Point shape (0–24) | Points |
+| `alpha` | Transparency (0–1) | All geoms |
+| `linetype` | Line style (1–6) | Lines, borders |
+| `label` | Text string | `geom_text`, `geom_label` |
+| `group` | Grouping (no visual) | Lines, polygons |
+
+---
+
+## Geoms — complete list
+
+### One variable
+
+| Geom | Chart | Key args |
+|------|-------|----------|
+| `geom_bar()` | Bar (count rows) | `stat="count"` |
+| `geom_col()` | Bar (use y values) | `fill`, `width` |
+| `geom_histogram()` | Histogram | `bins`, `binwidth` |
+| `geom_density()` | Kernel density | `adjust`, `alpha` |
+| `geom_dotplot()` | Dot plot | `binwidth` |
+| `geom_freqpoly()` | Frequency polygon | `binwidth` |
+| `geom_rug()` | Marginal rug | `sides = "b"` |
+
+### Two variables
+
+| Geom | Chart | Key args |
+|------|-------|----------|
+| `geom_point()` | Scatter | `size`, `shape`, `alpha` |
+| `geom_jitter()` | Jittered scatter | `width`, `height` |
+| `geom_line()` | Line (sorted x) | `linewidth`, `linetype` |
+| `geom_path()` | Line (data order) | `linewidth` |
+| `geom_step()` | Step line | `direction="hv"` |
+| `geom_smooth()` | Trend line | `method`, `se` |
+| `geom_area()` | Area chart | `fill`, `alpha` |
+| `geom_ribbon()` | Band | `ymin`, `ymax`, `alpha` |
+| `geom_boxplot()` | Box plot | `notch`, `outlier.shape` |
+| `geom_violin()` | Violin | `trim`, `scale` |
+| `geom_errorbar()` | Error bars | `ymin`, `ymax`, `width` |
+| `geom_tile()` | Heatmap tiles | `fill` |
+
+### Reference / annotation
+
+| Geom | Purpose | Key args |
+|------|---------|----------|
+| `geom_hline()` | Horizontal line | `yintercept` |
+| `geom_vline()` | Vertical line | `xintercept` |
+| `geom_abline()` | Diagonal line | `slope`, `intercept` |
+| `geom_segment()` | Line segment | `x`,`y`,`xend`,`yend`,`arrow` |
+| `geom_curve()` | Curved segment | `curvature`, `arrow` |
+| `geom_text()` | Text labels | `label`, `nudge_y` |
+| `geom_label()` | Text + box | `label`, `fill` |
+| `annotate()` | Ad-hoc shapes | `"text"`,`"rect"`,`"segment"` |
+| `geom_polygon()` | Filled polygon | `fill`, `colour` |
+
+### From extension packages
+
+| Package | Geom | Purpose |
+|---------|------|---------|
+| `ggrepel` | `geom_text_repel()` | Non-overlapping text |
+| `ggrepel` | `geom_label_repel()` | Non-overlapping labels |
+| `ggtext` | `geom_richtext()` | HTML/Markdown annotations |
+| `ggridges` | `geom_density_ridges()` | Ridge / joy plots |
+| `ggbeeswarm` | `geom_beeswarm()` | Beeswarm scatter |
+| `ggsignif` | `geom_signif()` | Significance brackets |
+
+---
+
+## Scales
+
+### Axis scales
+
+```r
+scale_x_continuous(breaks, labels, limits, expand, trans)
+scale_y_continuous(labels = scales::comma)
+scale_x_log10()          # log10 X
+scale_y_log10()          # log10 Y
+scale_x_reverse()        # reverse X axis
+scale_x_date(date_labels = "%Y-%m", date_breaks = "1 year")
+scale_x_discrete(limits = c("A","B","C"))
+```
+
+### Colour & fill — discrete
+
+```r
+scale_colour_manual(values = c("#e84855","#2d6be4","#12a36a"))
+scale_fill_brewer(palette = "Set2")        # ColorBrewer palettes
+scale_colour_viridis_d()                   # viridis discrete
+scale_colour_grey(start = 0.2, end = 0.8) # greyscale
+```
+
+### Colour & fill — continuous
+
+```r
+scale_colour_gradient(low = "white", high = "darkred")
+scale_colour_gradient2(low = "blue", mid = "white", high = "red", midpoint = 0)
+scale_fill_viridis_c(option = "plasma")
+scale_colour_distiller(palette = "RdBu")
+```
+
+### Axis label formatting
+
+```r
+library(scales)
+scale_y_continuous(labels = comma)                         # 1,000,000
+scale_y_continuous(labels = percent_format(accuracy = 1)) # 45%
+scale_x_continuous(labels = dollar)                        # $1,000
+scale_x_date(labels = date_format("%b %Y"))
+```
+
+---
+
+## Labels
+
+```r
+labs(
+  title    = "Main title",
+  subtitle = "Subtitle",
+  caption  = "Source: …",
+  tag      = "Fig. 1",
+  x        = "X axis", y = "Y axis",
+  colour   = "Legend title"   # or fill =, shape =, size =
+)
+ggtitle("Title", subtitle = "Sub")
+xlab("X label");  ylab("Y label")
+```
+
+---
+
+## Faceting
+
+```r
+facet_wrap(~ var)
+facet_wrap(~ var, nrow = 2, ncol = 3)
+facet_wrap(~ var, scales = "free")       # or "free_x","free_y"
+facet_wrap(~ var, strip.position = "bottom")
+
+facet_grid(rows ~ cols)
+facet_grid(rows = vars(r), cols = vars(c))
+facet_grid(rows ~ cols, scales = "free", space = "free")
+facet_grid(. ~ var)    # columns only
+```
+
+---
+
+## Coordinates
+
+```r
+coord_cartesian(xlim = c(0,10), ylim = c(0,50), expand = FALSE)
+coord_flip()                  # swap x and y
+coord_polar(theta = "y")      # pie chart
+coord_trans(y = "log10")      # visual transform
+coord_fixed(ratio = 1)        # equal unit length
+scale_x_reverse()             # reverse x
+scale_y_reverse()             # reverse y
+```
+
+---
+
+## Built-in themes
+
+```r
+theme_grey()       theme_bw()        theme_linedraw()
+theme_light()      theme_dark()      theme_minimal()
+theme_classic()    theme_void()
+# All accept base_size = 12
+```
+
+---
+
+## theme() — key arguments
+
+```r
+theme(
+  # Text
+  plot.title       = element_text(face="bold", size=16, hjust=0),
+  plot.subtitle    = element_text(colour="grey50"),
+  plot.caption     = element_text(hjust=1, size=9),
+  axis.title       = element_text(size=11),
+  axis.text        = element_text(size=10),
+  axis.text.x      = element_text(angle=45, hjust=1),
+  legend.title     = element_text(face="bold"),
+  strip.text       = element_text(face="bold"),
+
+  # Rectangles
+  plot.background  = element_rect(fill="white"),
+  panel.background = element_rect(fill="#f5f5f5"),
+  panel.border     = element_rect(fill="transparent", colour="grey80"),
+  legend.background= element_rect(fill="white"),
+  strip.background = element_blank(),
+
+  # Lines
+  panel.grid.major = element_line(colour="grey90"),
+  panel.grid.minor = element_blank(),
+  axis.line        = element_line(colour="grey30"),
+  axis.ticks       = element_blank(),
+
+  # Positioning
+  legend.position  = "top",   # "top","bottom","left","right","none",c(x,y)
+  legend.direction = "horizontal",
+  legend.key.size  = unit(0.8, "cm"),
+  plot.margin      = margin(16, 16, 16, 16),
+  panel.spacing    = unit(1, "lines"),
+  plot.title.position = "plot"
+)
+```
+
+### element functions
+
+```r
+element_text(family, face, colour, size, hjust, vjust, angle, margin)
+element_line(colour, linewidth, linetype)
+element_rect(fill, colour, linewidth, linetype)
+element_blank()   # remove element
+```
+
+---
+
+## Combining plots
+
+```r
+library(patchwork)
+p1 + p2                    # side by side
+p1 / p2                    # stacked
+(p1 | p2) / p3             # nested
+p1 + p2 + plot_layout(ncol = 2)
+p1 + p2 & theme_minimal()  # apply to all
+p1 + p2 + plot_annotation(title = "Title", tag_levels = "A")
+wrap_plots(list_of_plots, ncol = 2)
+plot_spacer()               # empty gap
+
+library(gridExtra)
+grid.arrange(p1, p2, ncol = 2)
+grid.arrange(p1, p2, p3, layout_matrix = matrix(c(1,1,2,3), ncol=2, byrow=TRUE))
+
+library(cowplot)
+plot_grid(p1, p2, labels = "AUTO", align = "hv", rel_widths = c(2,1))
+```
+
+---
+
+## Save plots
+
+```r
+ggsave("plot.png",  width=8,  height=5, dpi=300)
+ggsave("plot.pdf",  plot=p,   width=10, height=7)
+ggsave("plot.svg",  device="svg")
+ggsave("plot.tiff", dpi=300)
+ggsave("plot.png",  width=3200, height=2400, units="px")
+# units: "in","cm","mm","px"
+```
+
+---
+
+## Useful helper packages
+
+| Package | Purpose | Key functions |
+|---------|---------|---------------|
+| `dplyr` | Data wrangling | `filter()`, `mutate()`, `group_by()`, `summarise()` |
+| `tidyr` | Reshaping | `pivot_longer()`, `pivot_wider()` |
+| `forcats` | Factor handling | `fct_reorder()`, `fct_rev()`, `fct_lump()` |
+| `lubridate` | Date/time | `ymd()`, `floor_date()`, `month()` |
+| `scales` | Formatting | `comma`, `percent_format()`, `dollar` |
+| `ggrepel` | Smart labels | `geom_text_repel()`, `geom_label_repel()` |
+| `ggtext` | Rich text | `element_markdown()`, `geom_richtext()` |
+| `ggridges` | Ridge plots | `geom_density_ridges()` |
+| `ggsignif` | Significance | `geom_signif()` |
+| `plotly` | Interactive | `ggplotly()` |
+| `ggiraph` | Interactive ggplot2 | `girafe()` |
+
+---
+
+## Common patterns
+
+### Complete styled scatter
+
+```r
+ggplot(mtcars, aes(x = wt, y = mpg, colour = factor(cyl))) +
+  geom_point(size = 3, alpha = 0.85) +
+  geom_smooth(method = "lm", se = FALSE, linewidth = 0.8) +
+  scale_colour_manual(values = c("4"="#e84855","6"="#2d6be4","8"="#12a36a"),
+                      name = "Cylinders") +
+  labs(title    = "Vehicle Weight vs Fuel Economy",
+       subtitle = "mtcars dataset — 1974 Motor Trend",
+       caption  = "Source: Henderson & Velleman (1981)",
+       x = "Weight (1,000 lbs)", y = "Miles per Gallon") +
+  theme_minimal(base_size = 13) +
+  theme(legend.position  = "top",
+        plot.title       = element_text(face = "bold"),
+        panel.grid.minor = element_blank())
+```
+
+### Reusable custom theme
+
+```r
+my_theme <- theme_minimal(base_size = 13) +
+  theme(
+    plot.title       = element_text(face = "bold", size = 15),
+    plot.subtitle    = element_text(colour = "#6b6760", margin = margin(b=10)),
+    panel.grid.minor = element_blank(),
+    panel.grid.major = element_line(colour = "#ede8df"),
+    legend.position  = "top",
+    plot.margin      = margin(16, 16, 16, 16)
+  )
+
+ggplot(mtcars, aes(x = wt, y = mpg)) +
+  geom_point() + labs(title = "My plot") + my_theme
+```
+
+### Faceted with highlight
+
+```r
+ggplot(mtcars, aes(x = wt, y = mpg, colour = factor(cyl))) +
+  geom_point(data = transform(mtcars, cyl = NULL), colour = "grey85", size=2) +
+  geom_point(size = 2.5) +
+  facet_wrap(~ factor(cyl), labeller = label_both) +
+  scale_colour_manual(values = c("4"="#e84855","6"="#2d6be4","8"="#12a36a")) +
+  theme_minimal() +
+  theme(legend.position = "none", strip.text = element_text(face = "bold"))
+```
+
+---
+
+## RStudio shortcuts
+
+| Action | Shortcut |
+|--------|----------|
+| Insert `<-` | `Alt + -` |
+| Insert `\|>` (pipe) | `Ctrl + Shift + M` |
+| Run current line | `Ctrl + Enter` |
+| Run all | `Ctrl + Shift + Enter` |
+| Comment / uncomment | `Ctrl + Shift + C` |
+| New script | `Ctrl + Shift + N` |
+| Format code | `Ctrl + Shift + A` |

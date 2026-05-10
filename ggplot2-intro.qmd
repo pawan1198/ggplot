@@ -1,0 +1,300 @@
+---
+title: "ggplot2 — Introduction & Grammar of Graphics"
+subtitle: "Layered plot construction, aesthetics, scales, faceting, and themes"
+description: "Learn the Grammar of Graphics framework that powers ggplot2 — understand data, aesthetics, geoms, scales, facets, coordinates and themes."
+---
+
+## What is ggplot2?
+
+ggplot2 is a powerful, open-source data visualization library for R developed by **Hadley Wickham**. It is based on the **Grammar of Graphics** — a systematic framework for describing any statistical graphic as a combination of layers.
+
+One of ggplot2's defining strengths is **layered plot construction**: start with data, map aesthetics, add geometric objects, then refine with scales, facets, and themes — each `+` call adds a new layer.
+
+```r
+install.packages("ggplot2")
+library(ggplot2)
+```
+
+---
+
+## Basic Template
+
+```r
+ggplot(data = <DATA>, mapping = aes(<MAPPINGS>)) +
+  <GEOM_FUNCTION>(
+    mapping  = aes(<MAPPINGS>),
+    stat     = <STAT>,
+    position = <POSITION>
+  ) +
+  <COORDINATE_FUNCTION> +
+  <FACET_FUNCTION> +
+  <SCALE_FUNCTION> +
+  <THEME_FUNCTION>
+```
+
+Minimal working example:
+
+```r
+library(ggplot2)
+
+ggplot(mtcars, aes(x = mpg, y = wt)) +
+  geom_point()
+```
+
+---
+
+## The 7 Layers of Grammar of Graphics
+
+| Layer | Purpose | Example |
+|-------|---------|---------|
+| **1. Data** | The data frame to visualize | `ggplot(data = mtcars)` |
+| **2. Aesthetics** | Map variables to visual properties | `aes(x = wt, y = mpg, colour = factor(cyl))` |
+| **3. Geometries** | Shape used to represent data | `geom_point()`, `geom_line()`, `geom_bar()` |
+| **4. Facets** | Split into sub-panels | `facet_wrap(~ cyl)` |
+| **5. Statistics** | Statistical transformation | `stat_smooth()`, `stat_bin()` |
+| **6. Coordinates** | Coordinate system | `coord_flip()`, `coord_polar()` |
+| **7. Themes** | Non-data visual appearance | `theme_minimal()`, `theme(...)` |
+
+---
+
+## Aesthetics (aes)
+
+The `aes()` function maps data variables to visual properties. There are two kinds:
+
+- **Mapped** (inside `aes()`) — value varies by data
+- **Fixed** (outside `aes()`) — constant for all data points
+
+```r
+# MAPPED — colour changes per group
+ggplot(mtcars, aes(x = mpg, y = wt, colour = factor(cyl))) +
+  geom_point()
+
+# FIXED — all points are steelblue, size 3
+ggplot(mtcars, aes(x = mpg, y = wt)) +
+  geom_point(colour = "steelblue", size = 3, alpha = 0.7)
+
+# BOTH — shape mapped to data, colour fixed
+ggplot(mtcars, aes(x = mpg, y = wt, shape = factor(cyl))) +
+  geom_point(colour = "tomato", size = 3)
+```
+
+### Aesthetic reference
+
+| Aesthetic | Maps to | Example |
+|-----------|---------|---------|
+| `x` | Horizontal axis position | `aes(x = weight)` |
+| `y` | Vertical axis position | `aes(y = height)` |
+| `colour` | Outline / point colour | `aes(colour = species)` |
+| `fill` | Fill colour (bars, areas) | `aes(fill = group)` |
+| `size` | Point size / line width | `aes(size = population)` |
+| `shape` | Point shape (0–24) | `aes(shape = type)` |
+| `alpha` | Transparency (0–1) | `aes(alpha = confidence)` |
+| `linetype` | Solid / dashed / dotted | `aes(linetype = group)` |
+| `label` | Text labels | `aes(label = name)` |
+| `group` | Grouping without visual encoding | `aes(group = id)` |
+
+---
+
+## Building a Plot Step by Step
+
+```r
+library(ggplot2)
+
+# Step 1: data + aesthetics
+ggplot(mtcars, aes(x = wt, y = mpg))
+
+# Step 2: add geometry
+ggplot(mtcars, aes(x = wt, y = mpg)) +
+  geom_point()
+
+# Step 3: map colour to a third variable
+ggplot(mtcars, aes(x = wt, y = mpg, colour = factor(cyl))) +
+  geom_point(size = 3)
+
+# Step 4: add a smooth trend line
+ggplot(mtcars, aes(x = wt, y = mpg, colour = factor(cyl))) +
+  geom_point(size = 3) +
+  geom_smooth(method = "lm", se = FALSE)
+
+# Step 5: labels
+ggplot(mtcars, aes(x = wt, y = mpg, colour = factor(cyl))) +
+  geom_point(size = 3) +
+  geom_smooth(method = "lm", se = FALSE) +
+  labs(title = "Weight vs MPG", colour = "Cylinders",
+       x = "Weight (1,000 lbs)", y = "Miles per Gallon")
+
+# Step 6: theme
+ggplot(mtcars, aes(x = wt, y = mpg, colour = factor(cyl))) +
+  geom_point(size = 3) +
+  geom_smooth(method = "lm", se = FALSE) +
+  labs(title = "Weight vs MPG", colour = "Cylinders",
+       x = "Weight (1,000 lbs)", y = "Miles per Gallon") +
+  theme_minimal(base_size = 13) +
+  theme(legend.position = "top",
+        plot.title = element_text(face = "bold"))
+```
+
+---
+
+## Scales
+
+Scales control how data values map to visual properties.
+
+```r
+# Axis limits
+scale_x_continuous(limits = c(0, 50), breaks = seq(0, 50, by = 10))
+scale_y_log10()
+scale_x_date(date_labels = "%Y-%m")
+scale_x_reverse()
+
+# Colour & fill — continuous
+scale_colour_gradient(low = "white", high = "darkred")
+scale_fill_gradient2(low = "blue", mid = "white", high = "red", midpoint = 0)
+
+# Colour & fill — discrete
+scale_colour_manual(values = c("#e84855", "#2d6be4", "#12a36a"))
+scale_fill_brewer(palette = "Set2")
+scale_colour_viridis_d()          # colorblind-friendly
+
+# Axis labels
+scale_y_continuous(labels = scales::percent_format())
+scale_y_continuous(labels = scales::comma)
+scale_x_continuous(labels = scales::dollar)
+```
+
+---
+
+## Faceting
+
+Faceting splits data into multiple sub-panels.
+
+```r
+library(ggplot2)
+
+# facet_wrap — one variable
+ggplot(mtcars, aes(x = mpg, y = wt)) +
+  geom_point(colour = "steelblue", size = 2) +
+  facet_wrap(~ gear)
+
+# Custom rows / columns
+ggplot(mtcars, aes(x = mpg, y = wt)) +
+  geom_point() +
+  facet_wrap(~ cyl, nrow = 1)
+
+# Free scales per panel
+ggplot(mtcars, aes(x = mpg, y = wt)) +
+  geom_point() +
+  facet_wrap(~ cyl, scales = "free")
+
+# facet_grid — two variables
+ggplot(mtcars, aes(x = mpg, y = wt)) +
+  geom_point() +
+  facet_grid(am ~ cyl)            # rows ~ columns
+
+# Only column facets
+ggplot(mtcars, aes(x = mpg, y = wt)) +
+  geom_point() +
+  facet_grid(. ~ cyl)
+```
+
+---
+
+## Key ggplot2 Functions
+
+```r
+# Labels
+labs(title = , subtitle = , caption = , x = , y = , colour = , fill = , tag = )
+ggtitle("Title", subtitle = "Subtitle")
+xlab("X axis")  ;  ylab("Y axis")
+
+# Coordinates
+coord_flip()                    # swap x and y
+coord_polar(theta = "y")        # pie / radar charts
+coord_cartesian(xlim = c(0,5))  # zoom without dropping data
+coord_fixed()                   # equal unit lengths on both axes
+
+# Annotations
+annotate("text",  x = 2, y = 3, label = "Note")
+annotate("rect",  xmin = 1, xmax = 2, ymin = 0, ymax = 5, alpha = 0.1)
+annotate("segment", x = 1, y = 1, xend = 3, yend = 3, arrow = arrow())
+
+# Theme shortcuts
+theme_grey()       # default
+theme_bw()         # black & white
+theme_minimal()    # no background
+theme_classic()    # axes only, no grid
+theme_dark()       # dark panel
+theme_void()       # blank canvas
+
+# Set global theme
+old <- theme_set(theme_minimal())
+theme_set(old)     # restore
+
+# Save
+ggsave("plot.png", width = 8, height = 5, dpi = 300)
+```
+
+---
+
+## The theme() Function
+
+The `theme()` function overrides any non-data visual element:
+
+```r
+ggplot(mtcars, aes(x = wt, y = mpg)) +
+  geom_point() +
+  theme(
+    # Text elements
+    plot.title        = element_text(face = "bold", size = 16, hjust = 0.5),
+    plot.subtitle     = element_text(size = 12, colour = "grey50"),
+    plot.caption      = element_text(size = 9, hjust = 1),
+    axis.title        = element_text(size = 11),
+    axis.text         = element_text(size = 10),
+    axis.text.x       = element_text(angle = 45, hjust = 1),
+
+    # Panel
+    panel.background  = element_rect(fill = "#f0f4f8"),
+    panel.grid.major  = element_line(colour = "#dce3ec", linewidth = 0.4),
+    panel.grid.minor  = element_blank(),
+    panel.border      = element_rect(colour = "black", fill = NA),
+
+    # Legend
+    legend.position   = "top",
+    legend.title      = element_text(face = "bold"),
+    legend.background = element_rect(fill = "white"),
+
+    # Margins
+    plot.margin       = margin(t = 20, r = 20, b = 20, l = 20)
+  )
+```
+
+### theme() element functions
+
+| Function | Used for |
+|----------|----------|
+| `element_text(face, size, colour, hjust, vjust, angle)` | Text elements |
+| `element_line(colour, linewidth, linetype)` | Lines & grid |
+| `element_rect(fill, colour, linewidth)` | Backgrounds & borders |
+| `element_blank()` | Remove an element |
+
+---
+
+::: {.callout-tip}
+## Tip — save & store your theme
+
+Create a custom theme object once and reuse it across all your plots:
+
+```r
+my_theme <- theme_minimal(base_size = 13) +
+  theme(
+    plot.title    = element_text(face = "bold"),
+    panel.grid.minor = element_blank(),
+    legend.position  = "top"
+  )
+
+# Apply to any plot
+ggplot(mtcars, aes(x = wt, y = mpg)) +
+  geom_point() +
+  my_theme
+```
+:::

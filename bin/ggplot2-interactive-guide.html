@@ -1,0 +1,2182 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ggplot2 Complete Interactive Guide</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Mono:ital,wght@0,400;0,500;1,400&family=Fraunces:ital,wght@0,300;0,600;0,800;1,300;1,600&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0d0f14;
+    --surface: #13161e;
+    --surface2: #1a1e2a;
+    --border: #252a38;
+    --accent: #7c6aff;
+    --accent2: #ff6b6b;
+    --accent3: #52d9a0;
+    --accent4: #f5c842;
+    --text: #e8eaf0;
+    --text-muted: #8892a4;
+    --code-bg: #0a0c12;
+    --sidebar-w: 280px;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 15px;
+    line-height: 1.7;
+    display: flex;
+    min-height: 100vh;
+  }
+
+  /* ── Sidebar ── */
+  #sidebar {
+    width: var(--sidebar-w);
+    background: var(--surface);
+    border-right: 1px solid var(--border);
+    position: fixed;
+    top: 0; left: 0; bottom: 0;
+    overflow-y: auto;
+    z-index: 100;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .sidebar-header {
+    padding: 28px 24px 20px;
+    border-bottom: 1px solid var(--border);
+    background: linear-gradient(135deg, #1a1e2a 0%, #111420 100%);
+  }
+
+  .sidebar-logo {
+    font-family: 'Fraunces', serif;
+    font-size: 22px;
+    font-weight: 800;
+    color: #fff;
+    letter-spacing: -0.5px;
+    line-height: 1.2;
+  }
+
+  .sidebar-logo span { color: var(--accent); }
+
+  .sidebar-subtitle {
+    font-size: 11px;
+    color: var(--text-muted);
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    margin-top: 4px;
+  }
+
+  .search-box {
+    margin: 16px;
+    position: relative;
+  }
+
+  .search-box input {
+    width: 100%;
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 9px 14px 9px 36px;
+    color: var(--text);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 13px;
+    outline: none;
+    transition: border-color .2s;
+  }
+
+  .search-box input:focus { border-color: var(--accent); }
+  .search-box input::placeholder { color: var(--text-muted); }
+
+  .search-box svg {
+    position: absolute; left: 11px; top: 50%;
+    transform: translateY(-50%);
+    color: var(--text-muted);
+  }
+
+  .nav-section { padding: 8px 0; }
+
+  .nav-section-title {
+    padding: 6px 24px;
+    font-size: 10px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    font-weight: 500;
+  }
+
+  .nav-link {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 9px 24px;
+    color: var(--text-muted);
+    text-decoration: none;
+    font-size: 13.5px;
+    transition: all .15s;
+    cursor: pointer;
+    border-left: 3px solid transparent;
+  }
+
+  .nav-link:hover { color: var(--text); background: var(--surface2); }
+  .nav-link.active { color: var(--accent); border-left-color: var(--accent); background: rgba(124,106,255,.08); }
+
+  .nav-dot {
+    width: 6px; height: 6px;
+    border-radius: 50%;
+    background: var(--border);
+    flex-shrink: 0;
+    transition: background .15s;
+  }
+
+  .nav-link.active .nav-dot { background: var(--accent); }
+
+  /* ── Main ── */
+  #main {
+    margin-left: var(--sidebar-w);
+    flex: 1;
+    max-width: 900px;
+    padding: 60px 56px;
+  }
+
+  /* ── Sections ── */
+  .section {
+    display: none;
+    animation: fadeIn .3s ease;
+  }
+
+  .section.active { display: block; }
+
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(8px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  /* ── Typography ── */
+  h1 {
+    font-family: 'Fraunces', serif;
+    font-size: 42px;
+    font-weight: 800;
+    line-height: 1.1;
+    color: #fff;
+    margin-bottom: 12px;
+    letter-spacing: -1px;
+  }
+
+  h1 em { font-style: italic; color: var(--accent); }
+
+  .page-desc {
+    color: var(--text-muted);
+    font-size: 16px;
+    max-width: 600px;
+    margin-bottom: 48px;
+    line-height: 1.6;
+  }
+
+  h2 {
+    font-family: 'Fraunces', serif;
+    font-size: 26px;
+    font-weight: 600;
+    color: #fff;
+    margin: 52px 0 16px;
+    letter-spacing: -0.3px;
+    padding-bottom: 12px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  h3 {
+    font-size: 17px;
+    font-weight: 500;
+    color: var(--text);
+    margin: 28px 0 10px;
+  }
+
+  p { color: #bdc5d4; margin-bottom: 14px; }
+
+  /* ── Code blocks ── */
+  .code-block {
+    background: var(--code-bg);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    margin: 20px 0;
+    overflow: hidden;
+  }
+
+  .code-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px 16px;
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
+  }
+
+  .code-lang {
+    font-size: 11px;
+    color: var(--accent);
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    font-family: 'DM Mono', monospace;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .code-lang::before {
+    content: 'R';
+    background: var(--accent);
+    color: #fff;
+    padding: 1px 6px;
+    border-radius: 4px;
+    font-size: 10px;
+    font-weight: 500;
+  }
+
+  .copy-btn {
+    background: none;
+    border: 1px solid var(--border);
+    color: var(--text-muted);
+    padding: 4px 12px;
+    border-radius: 6px;
+    font-size: 11px;
+    cursor: pointer;
+    font-family: 'DM Sans', sans-serif;
+    transition: all .15s;
+  }
+
+  .copy-btn:hover { border-color: var(--accent3); color: var(--accent3); }
+  .copy-btn.copied { border-color: var(--accent3); color: var(--accent3); }
+
+  pre {
+    padding: 20px 22px;
+    overflow-x: auto;
+    font-family: 'DM Mono', monospace;
+    font-size: 13.5px;
+    line-height: 1.7;
+  }
+
+  /* Syntax colors */
+  .kw  { color: #c792ea; }     /* keywords */
+  .fn  { color: #82aaff; }     /* functions */
+  .str { color: #c3e88d; }     /* strings */
+  .num { color: #f78c6c; }     /* numbers */
+  .cm  { color: #546e7a; }     /* comments */
+  .ar  { color: #ffcb6b; }     /* arguments */
+
+  /* ── Info boxes ── */
+  .info-box {
+    border-radius: 10px;
+    padding: 16px 20px;
+    margin: 20px 0;
+    display: flex;
+    gap: 14px;
+    align-items: flex-start;
+  }
+
+  .info-box.tip  { background: rgba(82,217,160,.08); border: 1px solid rgba(82,217,160,.25); }
+  .info-box.warn { background: rgba(245,200,66,.08); border: 1px solid rgba(245,200,66,.25); }
+  .info-box.note { background: rgba(124,106,255,.08); border: 1px solid rgba(124,106,255,.25); }
+
+  .info-icon { font-size: 18px; flex-shrink: 0; line-height: 1.5; }
+  .info-content p { color: #bdc5d4; margin: 0; font-size: 14px; }
+  .info-content strong { color: #fff; }
+
+  /* ── Concept cards ── */
+  .concept-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+    gap: 16px;
+    margin: 24px 0;
+  }
+
+  .concept-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 20px;
+    transition: border-color .2s, transform .2s;
+    cursor: default;
+  }
+
+  .concept-card:hover { border-color: var(--accent); transform: translateY(-2px); }
+
+  .concept-icon { font-size: 24px; margin-bottom: 10px; }
+
+  .concept-card h4 {
+    font-size: 14px;
+    font-weight: 500;
+    color: #fff;
+    margin-bottom: 6px;
+  }
+
+  .concept-card p { font-size: 13px; color: var(--text-muted); margin: 0; }
+
+  /* ── Function table ── */
+  .fn-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 20px 0;
+    font-size: 14px;
+  }
+
+  .fn-table th {
+    background: var(--surface);
+    padding: 11px 16px;
+    text-align: left;
+    font-size: 11px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    border-bottom: 1px solid var(--border);
+  }
+
+  .fn-table td {
+    padding: 12px 16px;
+    border-bottom: 1px solid var(--border);
+    color: #bdc5d4;
+    vertical-align: top;
+  }
+
+  .fn-table tr:hover td { background: var(--surface2); }
+
+  .fn-table code {
+    font-family: 'DM Mono', monospace;
+    color: var(--accent2);
+    background: rgba(255,107,107,.1);
+    padding: 2px 6px;
+    border-radius: 4px;
+    font-size: 12.5px;
+  }
+
+  /* ── Tabs ── */
+  .tab-bar {
+    display: flex;
+    gap: 4px;
+    margin: 24px 0 0;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .tab-btn {
+    background: none;
+    border: none;
+    color: var(--text-muted);
+    padding: 10px 18px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 13.5px;
+    cursor: pointer;
+    border-bottom: 2px solid transparent;
+    margin-bottom: -1px;
+    transition: all .15s;
+  }
+
+  .tab-btn:hover { color: var(--text); }
+  .tab-btn.active { color: var(--accent); border-bottom-color: var(--accent); }
+
+  .tab-content { padding-top: 24px; display: none; }
+  .tab-content.active { display: block; }
+
+  /* ── Inline code ── */
+  code {
+    font-family: 'DM Mono', monospace;
+    background: var(--surface2);
+    color: var(--accent2);
+    padding: 2px 7px;
+    border-radius: 5px;
+    font-size: 13px;
+  }
+
+  /* ── Layer anatomy visual ── */
+  .layer-viz {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 28px;
+    margin: 24px 0;
+  }
+
+  .layer-row {
+    display: flex;
+    align-items: center;
+    padding: 10px 14px;
+    border-radius: 8px;
+    margin-bottom: 8px;
+    gap: 16px;
+    transition: background .15s;
+  }
+
+  .layer-row:hover { background: var(--surface2); }
+
+  .layer-num {
+    width: 28px; height: 28px;
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 12px;
+    font-weight: 600;
+    flex-shrink: 0;
+  }
+
+  .layer-name {
+    font-family: 'DM Mono', monospace;
+    font-size: 14px;
+    flex: 1;
+  }
+
+  .layer-desc { font-size: 13px; color: var(--text-muted); }
+
+  /* ── Progress bar ── */
+  .progress-bar {
+    height: 3px;
+    background: var(--border);
+    border-radius: 99px;
+    margin: 8px 0 24px;
+    overflow: hidden;
+  }
+
+  .progress-fill {
+    height: 100%;
+    border-radius: 99px;
+    background: linear-gradient(90deg, var(--accent), var(--accent2));
+    transition: width .4s ease;
+  }
+
+  /* ── Theme showcase ── */
+  .theme-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+    gap: 12px;
+    margin: 20px 0;
+  }
+
+  .theme-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 16px;
+    text-align: center;
+    transition: border-color .2s;
+  }
+
+  .theme-card:hover { border-color: var(--accent4); }
+
+  .theme-preview {
+    width: 100%;
+    height: 80px;
+    border-radius: 6px;
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 20px;
+  }
+
+  .theme-name {
+    font-family: 'DM Mono', monospace;
+    font-size: 12px;
+    color: var(--accent4);
+  }
+
+  .theme-desc { font-size: 11px; color: var(--text-muted); margin-top: 4px; }
+
+  /* ── Quiz ── */
+  .quiz-box {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 24px;
+    margin: 24px 0;
+  }
+
+  .quiz-q { font-weight: 500; color: #fff; margin-bottom: 16px; }
+  .quiz-options { display: flex; flex-direction: column; gap: 10px; }
+
+  .quiz-opt {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 12px 16px;
+    cursor: pointer;
+    color: #bdc5d4;
+    font-size: 14px;
+    transition: all .15s;
+    text-align: left;
+  }
+
+  .quiz-opt:hover { border-color: var(--accent); color: var(--text); }
+  .quiz-opt.correct { background: rgba(82,217,160,.1); border-color: var(--accent3); color: var(--accent3); }
+  .quiz-opt.wrong   { background: rgba(255,107,107,.1); border-color: var(--accent2); color: var(--accent2); }
+
+  .quiz-feedback { margin-top: 14px; padding: 12px; border-radius: 8px; font-size: 14px; display: none; }
+
+  /* ── Cheatsheet ── */
+  .cheat-section { margin: 24px 0; }
+  .cheat-title {
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    color: var(--accent4);
+    margin-bottom: 12px;
+  }
+
+  .cheat-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+  }
+
+  .cheat-item {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 10px 14px;
+    display: flex;
+    gap: 12px;
+    align-items: center;
+  }
+
+  .cheat-item code { font-size: 12px; background: var(--code-bg); white-space: nowrap; }
+  .cheat-item span { font-size: 12px; color: var(--text-muted); }
+
+  /* ── Scroll spy active ── */
+  .nav-group {
+    padding: 6px 0;
+    border-bottom: 1px solid var(--border);
+  }
+
+  /* ── Responsive ── */
+  @media (max-width: 900px) {
+    #sidebar { transform: translateX(-100%); }
+    #main { margin-left: 0; padding: 32px 24px; }
+    h1 { font-size: 30px; }
+  }
+
+  ul, ol { padding-left: 22px; color: #bdc5d4; }
+  li { margin-bottom: 6px; }
+
+  .badge {
+    display: inline-block;
+    padding: 2px 10px;
+    border-radius: 99px;
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: .5px;
+  }
+
+  .badge-new  { background: rgba(82,217,160,.15); color: var(--accent3); }
+  .badge-adv  { background: rgba(255,107,107,.15); color: var(--accent2); }
+  .badge-core { background: rgba(124,106,255,.15); color: var(--accent); }
+
+  .hero-tags { display: flex; gap: 8px; margin-bottom: 48px; flex-wrap: wrap; }
+
+  /* Animate sidebar links */
+  .nav-link { position: relative; overflow: hidden; }
+
+  hr { border: none; border-top: 1px solid var(--border); margin: 32px 0; }
+
+  .callout {
+    border-left: 3px solid var(--accent);
+    padding: 14px 20px;
+    background: rgba(124,106,255,.05);
+    border-radius: 0 8px 8px 0;
+    margin: 20px 0;
+  }
+
+  .callout p { margin: 0; font-size: 14px; }
+</style>
+</head>
+<body>
+
+<!-- ===== SIDEBAR ===== -->
+<nav id="sidebar">
+  <div class="sidebar-header">
+    <div class="sidebar-logo">gg<span>plot2</span></div>
+    <div class="sidebar-subtitle">Complete Interactive Guide</div>
+  </div>
+
+  <div class="search-box">
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+    <input type="text" id="searchInput" placeholder="Search topics…" oninput="filterNav(this.value)">
+  </div>
+
+  <div id="navList">
+    <div class="nav-group">
+      <div class="nav-section-title">Getting Started</div>
+      <div class="nav-link active" onclick="showSection('intro')" data-search="introduction overview ggplot2 basics grammar graphics">
+        <span class="nav-dot"></span> Introduction
+      </div>
+      <div class="nav-link" onclick="showSection('install')" data-search="install setup r rstudio packages">
+        <span class="nav-dot"></span> Installation & Setup
+      </div>
+      <div class="nav-link" onclick="showSection('grammar')" data-search="grammar of graphics layers aes geom">
+        <span class="nav-dot"></span> Grammar of Graphics
+      </div>
+    </div>
+
+    <div class="nav-group">
+      <div class="nav-section-title">Core Concepts</div>
+      <div class="nav-link" onclick="showSection('aesthetics')" data-search="aesthetics aes color fill size shape">
+        <span class="nav-dot"></span> Aesthetics (aes)
+      </div>
+      <div class="nav-link" onclick="showSection('geoms')" data-search="geom layers point line bar area histogram density">
+        <span class="nav-dot"></span> Geom Functions
+      </div>
+      <div class="nav-link" onclick="showSection('titles')" data-search="title subtitle caption tag labs ggtitle">
+        <span class="nav-dot"></span> Titles & Labels
+      </div>
+      <div class="nav-link" onclick="showSection('themes')" data-search="themes theme_bw theme_dark theme_minimal ggthemes">
+        <span class="nav-dot"></span> Themes
+      </div>
+    </div>
+
+    <div class="nav-group">
+      <div class="nav-section-title">Customization</div>
+      <div class="nav-link" onclick="showSection('background')" data-search="background color panel plot border">
+        <span class="nav-dot"></span> Background & Colors
+      </div>
+      <div class="nav-link" onclick="showSection('grid')" data-search="grid gridlines major minor breaks panel">
+        <span class="nav-dot"></span> Grid Lines
+      </div>
+      <div class="nav-link" onclick="showSection('legends')" data-search="legend position title labels keys">
+        <span class="nav-dot"></span> Legends
+      </div>
+      <div class="nav-link" onclick="showSection('annotations')" data-search="annotations text labels geom_text geom_label ggrepel arrows">
+        <span class="nav-dot"></span> Annotations
+      </div>
+      <div class="nav-link" onclick="showSection('lines')" data-search="reference lines vline hline abline segment curve arrow">
+        <span class="nav-dot"></span> Lines & Arrows
+      </div>
+    </div>
+
+    <div class="nav-group">
+      <div class="nav-section-title">Advanced</div>
+      <div class="nav-link" onclick="showSection('faceting')" data-search="faceting facet_wrap facet_grid panels multi-panel">
+        <span class="nav-dot"></span> Faceting
+      </div>
+      <div class="nav-link" onclick="showSection('coordinates')" data-search="coordinates cartesian polar flip map coord_trans">
+        <span class="nav-dot"></span> Coordinate Systems
+      </div>
+      <div class="nav-link" onclick="showSection('combining')" data-search="combining patchwork cowplot gridExtra multiple plots">
+        <span class="nav-dot"></span> Combining Plots
+      </div>
+      <div class="nav-link" onclick="showSection('barplots')" data-search="barplot bar chart stacked grouped geom_bar">
+        <span class="nav-dot"></span> Bar Charts
+      </div>
+    </div>
+
+    <div class="nav-group">
+      <div class="nav-section-title">Reference</div>
+      <div class="nav-link" onclick="showSection('cheatsheet')" data-search="cheatsheet reference quick quick-reference">
+        <span class="nav-dot"></span> Cheat Sheet
+      </div>
+      <div class="nav-link" onclick="showSection('quiz')" data-search="quiz practice test knowledge">
+        <span class="nav-dot"></span> Practice Quiz
+      </div>
+    </div>
+  </div>
+</nav>
+
+<!-- ===== MAIN CONTENT ===== -->
+<main id="main">
+
+<!-- ── INTRO ── -->
+<section id="intro" class="section active">
+  <h1><em>ggplot2</em> Interactive Guide</h1>
+  <div class="hero-tags">
+    <span class="badge badge-core">Core</span>
+    <span class="badge badge-new">Updated 2024</span>
+    <span class="badge badge-adv">Advanced Topics</span>
+  </div>
+  <p class="page-desc">A complete, hands-on reference for data visualization in R using ggplot2. Covers everything from the grammar of graphics to advanced plot composition and annotation.</p>
+
+  <div class="concept-grid">
+    <div class="concept-card" onclick="showSection('grammar')">
+      <div class="concept-icon">📐</div>
+      <h4>Grammar of Graphics</h4>
+      <p>Learn the layered system that powers all ggplot2 visualizations.</p>
+    </div>
+    <div class="concept-card" onclick="showSection('geoms')">
+      <div class="concept-icon">📊</div>
+      <h4>30+ Geom Functions</h4>
+      <p>From scatter plots to violin plots — every geom explained with code.</p>
+    </div>
+    <div class="concept-card" onclick="showSection('themes')">
+      <div class="concept-icon">🎨</div>
+      <h4>Themes & Styling</h4>
+      <p>Built-in themes plus ggthemes and hrbrthemes extension packages.</p>
+    </div>
+    <div class="concept-card" onclick="showSection('faceting')">
+      <div class="concept-icon">⊞</div>
+      <h4>Faceting</h4>
+      <p>Create multi-panel plots with facet_wrap and facet_grid.</p>
+    </div>
+    <div class="concept-card" onclick="showSection('combining')">
+      <div class="concept-icon">🧩</div>
+      <h4>Combining Plots</h4>
+      <p>patchwork, cowplot, and gridExtra for complex layouts.</p>
+    </div>
+    <div class="concept-card" onclick="showSection('cheatsheet')">
+      <div class="concept-icon">⚡</div>
+      <h4>Quick Reference</h4>
+      <p>All key functions in a single searchable cheat sheet.</p>
+    </div>
+  </div>
+
+  <h2>What is ggplot2?</h2>
+  <p>ggplot2 is an R package created by Hadley Wickham based on Leland Wilkinson's <em>Grammar of Graphics</em>. It provides a coherent system for describing and building graphs declaratively. Instead of telling R <em>how</em> to draw a plot step-by-step, you describe <em>what</em> data to use, <em>how</em> to map it to visual properties, and <em>what</em> geometric shapes to use.</p>
+
+  <p>Every ggplot2 plot is built from the same few components: <strong>data</strong>, a set of aesthetic <strong>mappings</strong>, and at least one <strong>layer</strong>. Additional components like scales, coordinate systems, and themes refine the appearance.</p>
+
+  <div class="code-block">
+    <div class="code-header">
+      <span class="code-lang">Basic ggplot2 template</span>
+      <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+    </div>
+    <pre><span class="cm"># Install (once)</span>
+<span class="fn">install.packages</span>(<span class="str">"ggplot2"</span>)
+
+<span class="cm"># Load</span>
+<span class="fn">library</span>(ggplot2)
+
+<span class="cm"># The minimal template</span>
+<span class="fn">ggplot</span>(<ar>data</ar> = &lt;DATA&gt;, <span class="ar">aes</span>(&lt;MAPPINGS&gt;)) +
+  &lt;GEOM_FUNCTION&gt;()</pre>
+  </div>
+
+  <div class="info-box tip">
+    <span class="info-icon">💡</span>
+    <div class="info-content">
+      <p><strong>Tip:</strong> ggplot2 is part of the tidyverse. You can load all tidyverse packages at once with <code>library(tidyverse)</code> which includes ggplot2, dplyr, tidyr, and more.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ── INSTALL ── -->
+<section id="install" class="section">
+  <h1>Installation <em>&</em> Setup</h1>
+  <p class="page-desc">Get R, RStudio, and ggplot2 running on any platform.</p>
+
+  <div class="tab-bar">
+    <button class="tab-btn active" onclick="switchTab(this, 'tab-linux')">🐧 Linux</button>
+    <button class="tab-btn" onclick="switchTab(this, 'tab-windows')">🪟 Windows</button>
+    <button class="tab-btn" onclick="switchTab(this, 'tab-mac')">🍎 macOS</button>
+  </div>
+
+  <div id="tab-linux" class="tab-content active">
+    <h3>Debian / Ubuntu / Linux Mint</h3>
+    <div class="code-block">
+      <div class="code-header"><span class="code-lang">bash</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
+      <pre><span class="cm"># Install R base</span>
+sudo apt-get install r-base
+
+<span class="cm"># Install RStudio (download .deb first from rstudio.com)</span>
+sudo apt install -f ./rstudio-2024.x.x-amd64.deb</pre>
+    </div>
+  </div>
+
+  <div id="tab-windows" class="tab-content">
+    <h3>Windows Installation</h3>
+    <ol>
+      <li>Download R from <a href="https://cran.r-project.org" style="color:var(--accent)">cran.r-project.org</a></li>
+      <li>Run the <code>.exe</code> installer and follow prompts</li>
+      <li>Download RStudio from <a href="https://rstudio.com/products/rstudio/download" style="color:var(--accent)">rstudio.com</a></li>
+      <li>Run the RStudio installer</li>
+    </ol>
+  </div>
+
+  <div id="tab-mac" class="tab-content">
+    <h3>macOS Installation</h3>
+    <ol>
+      <li>Download the <code>.pkg</code> from <a href="https://cran.r-project.org" style="color:var(--accent)">cran.r-project.org</a></li>
+      <li>Double-click and follow the installer</li>
+      <li>Download RStudio <code>.dmg</code> and drag to Applications</li>
+    </ol>
+    <div class="code-block">
+      <div class="code-header"><span class="code-lang">bash (Homebrew)</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
+      <pre>brew install --cask r
+brew install --cask rstudio</pre>
+    </div>
+  </div>
+
+  <h2>Installing Packages</h2>
+  <div class="code-block">
+    <div class="code-header"><span class="code-lang">r</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
+    <pre><span class="cm"># Install ggplot2 standalone</span>
+<span class="fn">install.packages</span>(<span class="str">"ggplot2"</span>)
+
+<span class="cm"># Or install the full tidyverse</span>
+<span class="fn">install.packages</span>(<span class="str">"tidyverse"</span>)
+
+<span class="cm"># Useful companion packages</span>
+<span class="fn">install.packages</span>(<span class="fn">c</span>(<span class="str">"ggrepel"</span>, <span class="str">"ggtext"</span>, <span class="str">"patchwork"</span>,
+                   <span class="str">"ggthemes"</span>, <span class="str">"hrbrthemes"</span>, <span class="str">"cowplot"</span>,
+                   <span class="str">"gridExtra"</span>, <span class="str">"scales"</span>))</pre>
+  </div>
+
+  <h2>Working Directory</h2>
+  <div class="code-block">
+    <div class="code-header"><span class="code-lang">r</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
+    <pre><span class="cm"># Check current working directory</span>
+<span class="fn">getwd</span>()
+
+<span class="cm"># Change working directory</span>
+<span class="fn">setwd</span>(<span class="str">"~/my-project"</span>)
+
+<span class="cm"># Save a plot to file</span>
+<span class="fn">ggsave</span>(<span class="str">"my_plot.png"</span>, <span class="ar">width</span> = <span class="num">8</span>, <span class="ar">height</span> = <span class="num">5</span>, <span class="ar">dpi</span> = <span class="num">300</span>)</pre>
+  </div>
+</section>
+
+<!-- ── GRAMMAR ── -->
+<section id="grammar" class="section">
+  <h1>Grammar of <em>Graphics</em></h1>
+  <p class="page-desc">Every ggplot2 plot is built from layered components. Understanding the grammar unlocks the full power of the package.</p>
+
+  <div class="layer-viz">
+    <div class="layer-row">
+      <div class="layer-num" style="background:rgba(124,106,255,.2);color:var(--accent)">1</div>
+      <div class="layer-name" style="color:var(--accent)">Data</div>
+      <div class="layer-desc">The raw data frame that drives the plot</div>
+    </div>
+    <div class="layer-row">
+      <div class="layer-num" style="background:rgba(82,217,160,.2);color:var(--accent3)">2</div>
+      <div class="layer-name" style="color:var(--accent3)">Aesthetics (aes)</div>
+      <div class="layer-desc">Mapping data variables to visual properties (x, y, color, size, shape…)</div>
+    </div>
+    <div class="layer-row">
+      <div class="layer-num" style="background:rgba(255,107,107,.2);color:var(--accent2)">3</div>
+      <div class="layer-name" style="color:var(--accent2)">Geom</div>
+      <div class="layer-desc">The geometric object representing data (point, line, bar, area…)</div>
+    </div>
+    <div class="layer-row">
+      <div class="layer-num" style="background:rgba(245,200,66,.2);color:var(--accent4)">4</div>
+      <div class="layer-name" style="color:var(--accent4)">Stat</div>
+      <div class="layer-desc">Statistical transformation applied before drawing (identity, count, density…)</div>
+    </div>
+    <div class="layer-row">
+      <div class="layer-num" style="background:rgba(255,255,255,.1);color:#fff">5</div>
+      <div class="layer-name">Scale</div>
+      <div class="layer-desc">Controls how data values map to aesthetic values; also manages legends</div>
+    </div>
+    <div class="layer-row">
+      <div class="layer-num" style="background:rgba(255,255,255,.1);color:#fff">6</div>
+      <div class="layer-name">Coordinate System</div>
+      <div class="layer-desc">The space where data is drawn: Cartesian, polar, flipped, map…</div>
+    </div>
+    <div class="layer-row">
+      <div class="layer-num" style="background:rgba(255,255,255,.1);color:#fff">7</div>
+      <div class="layer-name">Facet</div>
+      <div class="layer-desc">Splits data into small multiples (panels) by a categorical variable</div>
+    </div>
+    <div class="layer-row">
+      <div class="layer-num" style="background:rgba(255,255,255,.1);color:#fff">8</div>
+      <div class="layer-name">Theme</div>
+      <div class="layer-desc">Controls all non-data visual elements: fonts, backgrounds, grid lines…</div>
+    </div>
+  </div>
+
+  <h2>Building a Plot Step-by-Step</h2>
+  <div class="code-block">
+    <div class="code-header"><span class="code-lang">r – Layer by layer</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
+    <pre><span class="fn">library</span>(ggplot2)
+
+<span class="cm"># Step 1: Data + aesthetic mapping</span>
+<span class="fn">ggplot</span>(mtcars, <span class="fn">aes</span>(<span class="ar">x</span> = wt, <span class="ar">y</span> = mpg))
+
+<span class="cm"># Step 2: Add a geometric layer</span>
+<span class="fn">ggplot</span>(mtcars, <span class="fn">aes</span>(<span class="ar">x</span> = wt, <span class="ar">y</span> = mpg)) +
+  <span class="fn">geom_point</span>()
+
+<span class="cm"># Step 3: Map another variable to color</span>
+<span class="fn">ggplot</span>(mtcars, <span class="fn">aes</span>(<span class="ar">x</span> = wt, <span class="ar">y</span> = mpg, <span class="ar">color</span> = factor(cyl))) +
+  <span class="fn">geom_point</span>(<span class="ar">size</span> = <span class="num">3</span>)
+
+<span class="cm"># Step 4: Add a smooth trend line</span>
+<span class="fn">ggplot</span>(mtcars, <span class="fn">aes</span>(<span class="ar">x</span> = wt, <span class="ar">y</span> = mpg, <span class="ar">color</span> = factor(cyl))) +
+  <span class="fn">geom_point</span>(<span class="ar">size</span> = <span class="num">3</span>) +
+  <span class="fn">geom_smooth</span>(<span class="ar">method</span> = <span class="str">"lm"</span>, <span class="ar">se</span> = <span class="kw">FALSE</span>)
+
+<span class="cm"># Step 5: Apply a clean theme</span>
+<span class="fn">ggplot</span>(mtcars, <span class="fn">aes</span>(<span class="ar">x</span> = wt, <span class="ar">y</span> = mpg, <span class="ar">color</span> = factor(cyl))) +
+  <span class="fn">geom_point</span>(<span class="ar">size</span> = <span class="num">3</span>) +
+  <span class="fn">geom_smooth</span>(<span class="ar">method</span> = <span class="str">"lm"</span>, <span class="ar">se</span> = <span class="kw">FALSE</span>) +
+  <span class="fn">labs</span>(<span class="ar">title</span> = <span class="str">"Weight vs Fuel Efficiency"</span>,
+       <span class="ar">x</span> = <span class="str">"Weight (1000 lbs)"</span>, <span class="ar">y</span> = <span class="str">"Miles per Gallon"</span>,
+       <span class="ar">color</span> = <span class="str">"Cylinders"</span>) +
+  <span class="fn">theme_minimal</span>()</pre>
+  </div>
+
+  <div class="info-box note">
+    <span class="info-icon">📌</span>
+    <div class="info-content">
+      <p><strong>Key insight:</strong> Layers are added with <code>+</code>. Each layer can override aesthetics from the base <code>ggplot()</code> call. Aesthetics set inside <code>aes()</code> are mapped from data; those set outside <code>aes()</code> are fixed constants.</p>
+    </div>
+  </div>
+
+  <h2>aes() vs. Fixed Properties</h2>
+  <div class="code-block">
+    <div class="code-header"><span class="code-lang">r</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
+    <pre><span class="cm"># MAPPED: color depends on a data variable</span>
+<span class="fn">geom_point</span>(<span class="fn">aes</span>(<span class="ar">color</span> = species))
+
+<span class="cm"># FIXED: every point is red (value, not variable)</span>
+<span class="fn">geom_point</span>(<span class="ar">color</span> = <span class="str">"red"</span>)
+
+<span class="cm"># MIXED: fill mapped to data, alpha fixed</span>
+<span class="fn">geom_bar</span>(<span class="fn">aes</span>(<span class="ar">fill</span> = category), <span class="ar">alpha</span> = <span class="num">0.8</span>)</pre>
+  </div>
+</section>
+
+<!-- ── AESTHETICS ── -->
+<section id="aesthetics" class="section">
+  <h1>Aesthetics <em>(aes)</em></h1>
+  <p class="page-desc">Aesthetic mappings link data variables to visual properties. They are the core of how ggplot2 encodes information.</p>
+
+  <table class="fn-table">
+    <tr><th>Aesthetic</th><th>Description</th><th>Common Values</th></tr>
+    <tr><td><code>x</code>, <code>y</code></td><td>Position on axes</td><td>Numeric or date columns</td></tr>
+    <tr><td><code>color</code></td><td>Border / line color</td><td>Factor or numeric variable</td></tr>
+    <tr><td><code>fill</code></td><td>Fill color (bars, areas, boxes)</td><td>Factor or numeric variable</td></tr>
+    <tr><td><code>size</code></td><td>Point size or line width</td><td>Numeric variable</td></tr>
+    <tr><td><code>shape</code></td><td>Point shape (0–25)</td><td>Factor variable</td></tr>
+    <tr><td><code>alpha</code></td><td>Transparency (0–1)</td><td>Numeric variable</td></tr>
+    <tr><td><code>linetype</code></td><td>Line type (solid, dashed…)</td><td>Factor variable</td></tr>
+    <tr><td><code>label</code></td><td>Text label for geom_text/label</td><td>Character variable</td></tr>
+    <tr><td><code>group</code></td><td>Grouping for stat functions</td><td>Factor variable</td></tr>
+  </table>
+
+  <h2>Complete aes() Examples</h2>
+  <div class="code-block">
+    <div class="code-header"><span class="code-lang">r</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
+    <pre><span class="fn">library</span>(ggplot2)
+
+<span class="cm"># Scatter plot with multiple mapped aesthetics</span>
+<span class="fn">ggplot</span>(iris, <span class="fn">aes</span>(<span class="ar">x</span> = Sepal.Length,
+                  <span class="ar">y</span> = Sepal.Width,
+                  <span class="ar">color</span> = Species,
+                  <span class="ar">shape</span> = Species,
+                  <span class="ar">size</span> = Petal.Length,
+                  <span class="ar">alpha</span> = Petal.Width)) +
+  <span class="fn">geom_point</span>() +
+  <span class="fn">theme_minimal</span>()
+
+<span class="cm"># Size and alpha as fixed values</span>
+<span class="fn">ggplot</span>(iris, <span class="fn">aes</span>(<span class="ar">x</span> = Sepal.Length, <span class="ar">y</span> = Sepal.Width)) +
+  <span class="fn">geom_point</span>(<span class="ar">color</span> = <span class="str">"steelblue"</span>, <span class="ar">size</span> = <span class="num">3</span>, <span class="ar">alpha</span> = <span class="num">0.6</span>)</pre>
+  </div>
+
+  <div class="info-box warn">
+    <span class="info-icon">⚠️</span>
+    <div class="info-content">
+      <p><strong>Common mistake:</strong> Putting a color value inside <code>aes()</code>, e.g. <code>aes(color = "red")</code>, will create a legend with a single value "red" — it won't color points red. Use <code>geom_point(color = "red")</code> instead.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ── GEOMS ── -->
+<section id="geoms" class="section">
+  <h1>Geom <em>Functions</em></h1>
+  <p class="page-desc">Geoms determine how data is drawn. Each geom corresponds to a type of geometric object on the plot.</p>
+
+  <table class="fn-table">
+    <tr><th>Geom</th><th>Use case</th><th>Key arguments</th></tr>
+    <tr><td><code>geom_point()</code></td><td>Scatter plots</td><td>size, shape, color, alpha</td></tr>
+    <tr><td><code>geom_line()</code></td><td>Line charts</td><td>linetype, color, lwd</td></tr>
+    <tr><td><code>geom_smooth()</code></td><td>Smoothed trend line</td><td>method, se, color</td></tr>
+    <tr><td><code>geom_bar()</code></td><td>Bar charts (counts)</td><td>stat, fill, color</td></tr>
+    <tr><td><code>geom_col()</code></td><td>Bar charts (values)</td><td>fill, color, width</td></tr>
+    <tr><td><code>geom_histogram()</code></td><td>Distribution of one variable</td><td>bins, binwidth, fill</td></tr>
+    <tr><td><code>geom_density()</code></td><td>Smooth density estimate</td><td>fill, alpha, bw</td></tr>
+    <tr><td><code>geom_boxplot()</code></td><td>Distribution summary</td><td>fill, color, outlier.*</td></tr>
+    <tr><td><code>geom_violin()</code></td><td>Distribution shape</td><td>fill, trim, scale</td></tr>
+    <tr><td><code>geom_area()</code></td><td>Area under a line</td><td>fill, alpha, color</td></tr>
+    <tr><td><code>geom_ribbon()</code></td><td>Confidence bands</td><td>ymin, ymax, fill</td></tr>
+    <tr><td><code>geom_text()</code></td><td>Text annotations</td><td>label, size, color</td></tr>
+    <tr><td><code>geom_label()</code></td><td>Labels with backgrounds</td><td>label, fill, color</td></tr>
+    <tr><td><code>geom_tile()</code></td><td>Heatmaps</td><td>fill, color, width</td></tr>
+    <tr><td><code>geom_contour()</code></td><td>Contour lines</td><td>bins, color</td></tr>
+    <tr><td><code>geom_segment()</code></td><td>Line segments / arrows</td><td>x, y, xend, yend, arrow</td></tr>
+    <tr><td><code>geom_polygon()</code></td><td>Filled polygons / maps</td><td>fill, color, group</td></tr>
+    <tr><td><code>geom_jitter()</code></td><td>Scatter with jitter</td><td>width, height, seed</td></tr>
+    <tr><td><code>geom_errorbar()</code></td><td>Error bars</td><td>ymin, ymax, width</td></tr>
+    <tr><td><code>geom_crossbar()</code></td><td>Box with central line</td><td>ymin, ymax, middle</td></tr>
+  </table>
+
+  <h2>Code Examples</h2>
+  <div class="tab-bar">
+    <button class="tab-btn active" onclick="switchTab(this,'geom-scatter')">Scatter</button>
+    <button class="tab-btn" onclick="switchTab(this,'geom-hist')">Histogram</button>
+    <button class="tab-btn" onclick="switchTab(this,'geom-box')">Boxplot</button>
+    <button class="tab-btn" onclick="switchTab(this,'geom-line')">Line</button>
+    <button class="tab-btn" onclick="switchTab(this,'geom-tile')">Heatmap</button>
+  </div>
+
+  <div id="geom-scatter" class="tab-content active">
+    <div class="code-block">
+      <div class="code-header"><span class="code-lang">r</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
+      <pre><span class="fn">ggplot</span>(iris, <span class="fn">aes</span>(<span class="ar">x</span> = Sepal.Length, <span class="ar">y</span> = Sepal.Width, <span class="ar">color</span> = Species)) +
+  <span class="fn">geom_point</span>(<span class="ar">size</span> = <span class="num">3</span>, <span class="ar">alpha</span> = <span class="num">0.75</span>) +
+  <span class="fn">geom_smooth</span>(<span class="ar">method</span> = <span class="str">"lm"</span>, <span class="ar">se</span> = <span class="kw">TRUE</span>, <span class="ar">alpha</span> = <span class="num">0.1</span>) +
+  <span class="fn">labs</span>(<span class="ar">title</span> = <span class="str">"Sepal Dimensions by Species"</span>) +
+  <span class="fn">theme_minimal</span>()</pre>
+    </div>
+  </div>
+
+  <div id="geom-hist" class="tab-content">
+    <div class="code-block">
+      <div class="code-header"><span class="code-lang">r</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
+      <pre><span class="fn">ggplot</span>(iris, <span class="fn">aes</span>(<span class="ar">x</span> = Sepal.Length, <span class="ar">fill</span> = Species)) +
+  <span class="fn">geom_histogram</span>(<span class="ar">bins</span> = <span class="num">30</span>, <span class="ar">alpha</span> = <span class="num">0.6</span>, <span class="ar">position</span> = <span class="str">"identity"</span>) +
+  <span class="fn">labs</span>(<span class="ar">title</span> = <span class="str">"Sepal Length Distribution"</span>) +
+  <span class="fn">theme_bw</span>()</pre>
+    </div>
+  </div>
+
+  <div id="geom-box" class="tab-content">
+    <div class="code-block">
+      <div class="code-header"><span class="code-lang">r</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
+      <pre><span class="fn">ggplot</span>(iris, <span class="fn">aes</span>(<span class="ar">x</span> = Species, <span class="ar">y</span> = Sepal.Length, <span class="ar">fill</span> = Species)) +
+  <span class="fn">geom_boxplot</span>(<span class="ar">outlier.color</span> = <span class="str">"red"</span>, <span class="ar">outlier.shape</span> = <span class="num">8</span>) +
+  <span class="fn">geom_jitter</span>(<span class="ar">width</span> = <span class="num">0.15</span>, <span class="ar">alpha</span> = <span class="num">0.4</span>) +
+  <span class="fn">theme_classic</span>() +
+  <span class="fn">theme</span>(<span class="ar">legend.position</span> = <span class="str">"none"</span>)</pre>
+    </div>
+  </div>
+
+  <div id="geom-line" class="tab-content">
+    <div class="code-block">
+      <div class="code-header"><span class="code-lang">r</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
+      <pre><span class="fn">ggplot</span>(economics, <span class="fn">aes</span>(<span class="ar">x</span> = date, <span class="ar">y</span> = unemploy)) +
+  <span class="fn">geom_line</span>(<span class="ar">color</span> = <span class="str">"#7c6aff"</span>, <span class="ar">lwd</span> = <span class="num">0.9</span>) +
+  <span class="fn">geom_area</span>(<span class="ar">fill</span> = <span class="fn">rgb</span>(<span class="num">0</span>, <span class="num">0.5</span>, <span class="num">1</span>, <span class="ar">alpha</span> = <span class="num">0.15</span>)) +
+  <span class="fn">labs</span>(<span class="ar">title</span> = <span class="str">"US Unemployment Over Time"</span>,
+       <span class="ar">x</span> = <span class="kw">NULL</span>, <span class="ar">y</span> = <span class="str">"Unemployed (thousands)"</span>) +
+  <span class="fn">theme_minimal</span>()</pre>
+    </div>
+  </div>
+
+  <div id="geom-tile" class="tab-content">
+    <div class="code-block">
+      <div class="code-header"><span class="code-lang">r</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
+      <pre><span class="cm"># Correlation heatmap</span>
+cor_data <- <span class="fn">as.data.frame</span>(<span class="fn">as.table</span>(<span class="fn">cor</span>(mtcars)))
+<span class="fn">names</span>(cor_data) <- <span class="fn">c</span>(<span class="str">"Var1"</span>, <span class="str">"Var2"</span>, <span class="str">"value"</span>)
+
+<span class="fn">ggplot</span>(cor_data, <span class="fn">aes</span>(<span class="ar">x</span> = Var1, <span class="ar">y</span> = Var2, <span class="ar">fill</span> = value)) +
+  <span class="fn">geom_tile</span>(<span class="ar">color</span> = <span class="str">"white"</span>) +
+  <span class="fn">scale_fill_gradient2</span>(<span class="ar">low</span> = <span class="str">"#ff6b6b"</span>, <span class="ar">high</span> = <span class="str">"#7c6aff"</span>,
+                        <span class="ar">mid</span> = <span class="str">"white"</span>, <span class="ar">midpoint</span> = <span class="num">0</span>) +
+  <span class="fn">theme_minimal</span>() +
+  <span class="fn">theme</span>(<span class="ar">axis.text.x</span> = <span class="fn">element_text</span>(<span class="ar">angle</span> = <span class="num">45</span>, <span class="ar">hjust</span> = <span class="num">1</span>))</pre>
+    </div>
+  </div>
+</section>
+
+<!-- ── TITLES ── -->
+<section id="titles" class="section">
+  <h1>Titles, Labels <em>&</em> Tags</h1>
+  <p class="page-desc">Every plot should have clear, informative titles and labels. ggplot2 provides multiple ways to add and customize them.</p>
+
+  <h2>Adding Titles</h2>
+
+  <div class="tab-bar">
+    <button class="tab-btn active" onclick="switchTab(this,'t-ggtitle')">ggtitle()</button>
+    <button class="tab-btn" onclick="switchTab(this,'t-labs')">labs()</button>
+    <button class="tab-btn" onclick="switchTab(this,'t-position')">Position</button>
+    <button class="tab-btn" onclick="switchTab(this,'t-style')">Styling</button>
+  </div>
+
+  <div id="t-ggtitle" class="tab-content active">
+    <div class="code-block">
+      <div class="code-header"><span class="code-lang">r</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
+      <pre><span class="fn">ggplot</span>(economics, <span class="fn">aes</span>(date, unemploy)) +
+  <span class="fn">geom_area</span>(<span class="ar">fill</span> = <span class="fn">rgb</span>(<span class="num">0</span>, <span class="num">0.5</span>, <span class="num">1</span>, <span class="ar">alpha</span> = <span class="num">0.5</span>)) +
+  <span class="fn">ggtitle</span>(<span class="str">"Title of the plot"</span>,
+          <span class="ar">subtitle</span> = <span class="str">"Subtitle here"</span>)</pre>
+    </div>
+  </div>
+
+  <div id="t-labs" class="tab-content">
+    <div class="code-block">
+      <div class="code-header"><span class="code-lang">r</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
+      <pre><span class="fn">ggplot</span>(economics, <span class="fn">aes</span>(date, unemploy)) +
+  <span class="fn">geom_area</span>(<span class="ar">fill</span> = <span class="fn">rgb</span>(<span class="num">0</span>, <span class="num">0.5</span>, <span class="num">1</span>, <span class="ar">alpha</span> = <span class="num">0.5</span>)) +
+  <span class="fn">labs</span>(
+    <span class="ar">title</span>    = <span class="str">"US Unemployment"</span>,
+    <span class="ar">subtitle</span> = <span class="str">"1967–2015"</span>,
+    <span class="ar">caption</span>  = <span class="str">"Source: Federal Reserve Economic Data"</span>,
+    <span class="ar">tag</span>      = <span class="str">"Fig. 1"</span>,
+    <span class="ar">x</span>        = <span class="str">"Year"</span>,
+    <span class="ar">y</span>        = <span class="str">"Unemployed (thousands)"</span>
+  )</pre>
+    </div>
+  </div>
+
+  <div id="t-position" class="tab-content">
+    <div class="code-block">
+      <div class="code-header"><span class="code-lang">r</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
+      <pre><span class="cm"># Title aligned to entire plot (not just panel)</span>
+<span class="fn">theme</span>(<span class="ar">plot.title.position</span> = <span class="str">"plot"</span>)    <span class="cm"># "panel" is default</span>
+
+<span class="cm"># Caption position and alignment</span>
+<span class="fn">theme</span>(<span class="ar">plot.caption.position</span> = <span class="str">"plot"</span>,
+      <span class="ar">plot.caption</span> = <span class="fn">element_text</span>(<span class="ar">hjust</span> = <span class="num">0</span>)) <span class="cm"># left-align caption</span>
+
+<span class="cm"># Tag position options:</span>
+<span class="cm"># "topleft","top","topright","left","right","bottomleft","bottom","bottomright"</span>
+<span class="fn">theme</span>(<span class="ar">plot.tag.position</span> = <span class="str">"bottomright"</span>)</pre>
+    </div>
+  </div>
+
+  <div id="t-style" class="tab-content">
+    <div class="code-block">
+      <div class="code-header"><span class="code-lang">r – Full title styling</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
+      <pre><span class="fn">ggplot</span>(economics, <span class="fn">aes</span>(date, unemploy)) +
+  <span class="fn">geom_area</span>(<span class="ar">fill</span> = <span class="fn">rgb</span>(<span class="num">0</span>, <span class="num">0.5</span>, <span class="num">1</span>, <span class="ar">alpha</span> = <span class="num">0.5</span>)) +
+  <span class="fn">labs</span>(<span class="ar">title</span> = <span class="str">"Title"</span>, <span class="ar">subtitle</span> = <span class="str">"Subtitle"</span>,
+       <span class="ar">caption</span> = <span class="str">"Caption"</span>, <span class="ar">tag</span> = <span class="str">"Fig. 1"</span>) +
+  <span class="fn">theme</span>(
+    <span class="ar">plot.title</span>    = <span class="fn">element_text</span>(
+      <span class="ar">family</span>      = <span class="str">"serif"</span>,
+      <span class="ar">face</span>        = <span class="str">"bold"</span>,
+      <span class="ar">color</span>       = <span class="num">4</span>,
+      <span class="ar">size</span>        = <span class="num">16</span>,
+      <span class="ar">hjust</span>       = <span class="num">0</span>,
+      <span class="ar">margin</span>      = <span class="fn">margin</span>(<span class="num">0</span>, <span class="num">0</span>, <span class="num">8</span>, <span class="num">0</span>)
+    ),
+    <span class="ar">plot.subtitle</span> = <span class="fn">element_text</span>(<span class="ar">hjust</span> = <span class="num">0</span>, <span class="ar">color</span> = <span class="str">"gray40"</span>),
+    <span class="ar">plot.caption</span>  = <span class="fn">element_text</span>(<span class="ar">hjust</span> = <span class="num">0</span>, <span class="ar">face</span> = <span class="str">"italic"</span>),
+    <span class="ar">plot.tag</span>      = <span class="fn">element_text</span>(<span class="ar">face</span> = <span class="str">"bold"</span>)
+  )</pre>
+    </div>
+  </div>
+</section>
+
+<!-- ── THEMES ── -->
+<section id="themes" class="section">
+  <h1>Themes <em>& Styling</em></h1>
+  <p class="page-desc">Themes control all non-data ink: backgrounds, grid lines, text, axis labels, legend appearance. ggplot2 has 8 built-in themes plus powerful extension packages.</p>
+
+  <h2>Built-in ggplot2 Themes</h2>
+
+  <div class="theme-grid">
+    <div class="theme-card">
+      <div class="theme-preview" style="background:#f0f0f0;border:1px solid #ccc">
+        <div style="width:70%;height:60%;background:white;border:none;position:relative;display:flex;align-items:center;justify-content:center">
+          <div style="position:absolute;inset:0;background:repeating-linear-gradient(0deg,transparent,transparent 14px,rgba(255,255,255,0.8) 14px,rgba(255,255,255,0.8) 15px)"></div>
+          <div style="width:80%;height:3px;background:#888;position:relative;z-index:1"></div>
+        </div>
+      </div>
+      <div class="theme-name">theme_grey()</div>
+      <div class="theme-desc">Default – grey bg, white grid</div>
+    </div>
+    <div class="theme-card">
+      <div class="theme-preview" style="background:white;border:1px solid #555">🟤</div>
+      <div class="theme-name">theme_bw()</div>
+      <div class="theme-desc">Black & white, clean panels</div>
+    </div>
+    <div class="theme-card">
+      <div class="theme-preview" style="background:#f8f8f8;border:1px solid #aaa">📏</div>
+      <div class="theme-name">theme_linedraw()</div>
+      <div class="theme-desc">Black lines on white only</div>
+    </div>
+    <div class="theme-card">
+      <div class="theme-preview" style="background:#fafafa;border:1px solid #ddd">☁️</div>
+      <div class="theme-name">theme_light()</div>
+      <div class="theme-desc">Light grey lines and axes</div>
+    </div>
+    <div class="theme-card">
+      <div class="theme-preview" style="background:#3a3a3a">🌑</div>
+      <div class="theme-name">theme_dark()</div>
+      <div class="theme-desc">Dark panel background</div>
+    </div>
+    <div class="theme-card">
+      <div class="theme-preview" style="background:white">✨</div>
+      <div class="theme-name">theme_minimal()</div>
+      <div class="theme-desc">No background annotations</div>
+    </div>
+    <div class="theme-card">
+      <div class="theme-preview" style="background:white;border:1px solid #eee">📦</div>
+      <div class="theme-name">theme_classic()</div>
+      <div class="theme-desc">No gridlines, publication-ready</div>
+    </div>
+    <div class="theme-card">
+      <div class="theme-preview" style="background:white">⬜</div>
+      <div class="theme-name">theme_void()</div>
+      <div class="theme-desc">Completely empty canvas</div>
+    </div>
+  </div>
+
+  <div class="code-block">
+    <div class="code-header"><span class="code-lang">r</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
+    <pre><span class="fn">library</span>(ggplot2)
+p <- <span class="fn">ggplot</span>(iris, <span class="fn">aes</span>(<span class="ar">x</span>=Sepal.Length, <span class="ar">y</span>=Sepal.Width, <span class="ar">fill</span>=Species)) +
+       <span class="fn">geom_bar</span>(<span class="ar">stat</span>=<span class="str">"identity"</span>, <span class="ar">position</span>=<span class="str">"stack"</span>) +
+       <span class="fn">facet_wrap</span>(~Species)
+
+p + <span class="fn">theme_bw</span>(<span class="ar">base_size</span> = <span class="num">14</span>)    <span class="cm"># Increase all text sizes</span>
+p + <span class="fn">theme_dark</span>()
+p + <span class="fn">theme_classic</span>()
+p + <span class="fn">theme_minimal</span>()</pre>
+  </div>
+
+  <h2>ggthemes Package</h2>
+  <div class="code-block">
+    <div class="code-header"><span class="code-lang">r</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
+    <pre><span class="fn">library</span>(ggthemes)
+
+p + <span class="fn">theme_economist</span>()        <span class="cm"># The Economist magazine style</span>
+p + <span class="fn">theme_fivethirtyeight</span>()   <span class="cm"># FiveThirtyEight data journalism</span>
+p + <span class="fn">theme_few</span>()               <span class="cm"># Stephen Few's guidelines</span>
+p + <span class="fn">theme_wsj</span>()               <span class="cm"># Wall Street Journal</span>
+p + <span class="fn">theme_solarized</span>()         <span class="cm"># Solarized color scheme</span>
+p + <span class="fn">theme_stata</span>()             <span class="cm"># Stata default style</span>
+p + <span class="fn">theme_excel_new</span>()         <span class="cm"># Modern Excel-like</span>
+p + <span class="fn">theme_gdocs</span>()             <span class="cm"># Google Docs style</span></pre>
+  </div>
+
+  <h2>hrbrthemes Package</h2>
+  <div class="code-block">
+    <div class="code-header"><span class="code-lang">r</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
+    <pre><span class="fn">library</span>(hrbrthemes)
+
+p + <span class="fn">theme_ipsum</span>()             <span class="cm"># Arial Narrow, clean & minimal</span>
+p + <span class="fn">theme_ipsum_rc</span>()          <span class="cm"># Roboto Condensed variant</span>
+p + <span class="fn">theme_ipsum_pub</span>()         <span class="cm"># Publishing-focused</span>
+p + <span class="fn">theme_ft_rc</span>()             <span class="cm"># Financial Times style</span></pre>
+  </div>
+
+  <h2>Custom theme() Modifications</h2>
+  <div class="code-block">
+    <div class="code-header"><span class="code-lang">r</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
+    <pre><span class="fn">ggplot</span>(mtcars, <span class="fn">aes</span>(<span class="ar">x</span> = hp, <span class="ar">y</span> = mpg)) +
+  <span class="fn">geom_point</span>() +
+  <span class="fn">theme_minimal</span>() +
+  <span class="fn">theme</span>(
+    <span class="ar">text</span>              = <span class="fn">element_text</span>(<span class="ar">family</span> = <span class="str">"serif"</span>),
+    <span class="ar">axis.title</span>        = <span class="fn">element_text</span>(<span class="ar">size</span> = <span class="num">13</span>, <span class="ar">face</span> = <span class="str">"bold"</span>),
+    <span class="ar">axis.text</span>         = <span class="fn">element_text</span>(<span class="ar">size</span> = <span class="num">11</span>),
+    <span class="ar">panel.background</span>  = <span class="fn">element_rect</span>(<span class="ar">fill</span> = <span class="str">"#fafafa"</span>),
+    <span class="ar">panel.grid.major</span>  = <span class="fn">element_line</span>(<span class="ar">color</span> = <span class="str">"#e0e0e0"</span>),
+    <span class="ar">panel.grid.minor</span>  = <span class="fn">element_blank</span>(),
+    <span class="ar">legend.position</span>   = <span class="str">"bottom"</span>,
+    <span class="ar">legend.title</span>      = <span class="fn">element_blank</span>()
+  )</pre>
+  </div>
+
+  <div class="callout">
+    <p>💡 <strong>Create a reusable theme:</strong> Save your custom theme settings in a variable and add it to any plot: <code>my_theme &lt;- theme(…)</code> then <code>p + my_theme</code></p>
+  </div>
+</section>
+
+<!-- ── BACKGROUND ── -->
+<section id="background" class="section">
+  <h1>Background <em>& Colors</em></h1>
+  <p class="page-desc">Control the visual atmosphere of your plots by customizing panel and plot backgrounds, borders, and colors.</p>
+
+  <h2>Panel Background</h2>
+  <div class="code-block">
+    <div class="code-header"><span class="code-lang">r</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
+    <pre><span class="fn">ggplot</span>(mtcars, <span class="fn">aes</span>(<span class="ar">x</span> = mpg, <span class="ar">y</span> = cyl)) +
+  <span class="fn">geom_point</span>() +
+  <span class="fn">theme</span>(<span class="ar">panel.background</span> = <span class="fn">element_rect</span>(<span class="ar">fill</span> = <span class="str">"#e8f4fc"</span>))</pre>
+  </div>
+
+  <h2>Panel Border</h2>
+  <div class="code-block">
+    <div class="code-header"><span class="code-lang">r</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
+    <pre><span class="fn">ggplot</span>(mtcars, <span class="fn">aes</span>(<span class="ar">x</span> = mpg, <span class="ar">y</span> = cyl)) +
+  <span class="fn">geom_point</span>() +
+  <span class="fn">theme_bw</span>() +
+  <span class="fn">theme</span>(<span class="ar">panel.border</span> = <span class="fn">element_rect</span>(<span class="ar">fill</span> = <span class="str">"transparent"</span>,
+                                    <span class="ar">color</span> = <span class="str">"steelblue"</span>,
+                                    <span class="ar">linewidth</span> = <span class="num">2</span>))</pre>
+  </div>
+
+  <h2>Plot Background & Border</h2>
+  <div class="code-block">
+    <div class="code-header"><span class="code-lang">r</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
+    <pre><span class="fn">ggplot</span>(mtcars, <span class="fn">aes</span>(<span class="ar">x</span> = mpg, <span class="ar">y</span> = cyl)) +
+  <span class="fn">geom_point</span>() +
+  <span class="fn">theme</span>(
+    <span class="ar">plot.background</span> = <span class="fn">element_rect</span>(
+      <span class="ar">fill</span>  = <span class="str">"#f5f5f5"</span>,   <span class="cm"># background color</span>
+      <span class="ar">color</span> = <span class="str">"black"</span>,    <span class="cm"># border color</span>
+      <span class="ar">linewidth</span> = <span class="num">1.5</span>    <span class="cm"># border width</span>
+    )
+  )</pre>
+  </div>
+
+  <h2>Margins</h2>
+  <div class="code-block">
+    <div class="code-header"><span class="code-lang">r</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
+    <pre><span class="cm"># Mnemonic: "TRBL" = Top, Right, Bottom, Left = "Trouble"</span>
+<span class="fn">theme</span>(<span class="ar">plot.margin</span> = <span class="fn">margin</span>(<span class="ar">t</span> = <span class="num">20</span>,  <span class="cm"># Top</span>
+                            <span class="ar">r</span> = <span class="num">50</span>,  <span class="cm"># Right</span>
+                            <span class="ar">b</span> = <span class="num">40</span>,  <span class="cm"># Bottom</span>
+                            <span class="ar">l</span> = <span class="num">10</span>)) <span class="cm"># Left (in points)</span>
+
+<span class="cm"># In centimeters</span>
+<span class="fn">theme</span>(<span class="ar">plot.margin</span> = <span class="fn">margin</span>(<span class="num">1</span>, <span class="num">1</span>, <span class="num">2</span>, <span class="num">1</span>, <span class="ar">unit</span> = <span class="str">"cm"</span>))
+
+<span class="cm"># Remove margins</span>
+<span class="fn">theme</span>(<span class="ar">plot.margin</span> = <span class="fn">margin</span>(<span class="num">0</span>, <span class="num">0</span>, <span class="num">0</span>, <span class="num">0</span>))</pre>
+  </div>
+</section>
+
+<!-- ── GRID ── -->
+<section id="grid" class="section">
+  <h1>Grid Lines <em>& Breaks</em></h1>
+  <p class="page-desc">Customize or remove the major and minor grid lines, and control where axis breaks appear.</p>
+
+  <h2>Grid Customization</h2>
+  <div class="code-block">
+    <div class="code-header"><span class="code-lang">r</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
+    <pre><span class="fn">library</span>(ggplot2)
+
+<span class="cm"># Customize all grid lines</span>
+<span class="fn">ggplot</span>(mtcars, <span class="fn">aes</span>(<span class="ar">x</span> = hp, <span class="ar">y</span> = mpg)) +
+  <span class="fn">geom_point</span>() +
+  <span class="fn">theme</span>(<span class="ar">panel.grid</span> = <span class="fn">element_line</span>(<span class="ar">color</span> = <span class="str">"#8ccde3"</span>,
+                                    <span class="ar">linewidth</span> = <span class="num">0.75</span>,
+                                    <span class="ar">linetype</span> = <span class="num">2</span>))
+
+<span class="cm"># Customize major grid only</span>
+<span class="fn">theme</span>(<span class="ar">panel.grid.major</span> = <span class="fn">element_line</span>(<span class="ar">color</span> = <span class="str">"#dddddd"</span>, <span class="ar">linewidth</span> = <span class="num">0.5</span>))
+
+<span class="cm"># Customize major X (vertical lines) only</span>
+<span class="fn">theme</span>(<span class="ar">panel.grid.major.x</span> = <span class="fn">element_line</span>(<span class="ar">color</span> = <span class="str">"red"</span>, <span class="ar">linetype</span> = <span class="num">2</span>))
+
+<span class="cm"># Remove all grids</span>
+<span class="fn">theme</span>(<span class="ar">panel.grid</span> = <span class="fn">element_blank</span>())
+
+<span class="cm"># Remove minor grid only</span>
+<span class="fn">theme</span>(<span class="ar">panel.grid.minor</span> = <span class="fn">element_blank</span>())</pre>
+  </div>
+
+  <h2>Axis Breaks & Breaks</h2>
+  <div class="code-block">
+    <div class="code-header"><span class="code-lang">r</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
+    <pre><span class="cm"># Custom breaks on Y-axis (continuous)</span>
+<span class="fn">ggplot</span>(mtcars, <span class="fn">aes</span>(<span class="ar">x</span> = hp, <span class="ar">y</span> = mpg)) +
+  <span class="fn">geom_point</span>() +
+  <span class="fn">scale_y_continuous</span>(<span class="ar">breaks</span> = <span class="fn">seq</span>(<span class="num">10</span>, <span class="num">35</span>, <span class="ar">by</span> = <span class="num">5</span>))
+
+<span class="cm"># Custom breaks with minor breaks on X-axis</span>
+<span class="fn">ggplot</span>(mtcars, <span class="fn">aes</span>(<span class="ar">x</span> = hp, <span class="ar">y</span> = mpg)) +
+  <span class="fn">geom_point</span>() +
+  <span class="fn">scale_x_continuous</span>(<span class="ar">breaks</span>       = <span class="fn">seq</span>(<span class="num">50</span>, <span class="num">350</span>, <span class="ar">by</span> = <span class="num">50</span>),
+                      <span class="ar">minor_breaks</span> = <span class="fn">seq</span>(<span class="num">50</span>, <span class="num">350</span>, <span class="ar">by</span> = <span class="num">10</span>),
+                      <span class="ar">n.breaks</span>     = <span class="num">8</span>)</pre>
+  </div>
+</section>
+
+<!-- ── LEGENDS ── -->
+<section id="legends" class="section">
+  <h1>Legend <em>Customization</em></h1>
+  <p class="page-desc">Legends are created automatically when you map a variable to color, fill, shape, size, or alpha. Here's how to control every aspect of them.</p>
+
+  <h2>Adding a Legend</h2>
+  <div class="code-block">
+    <div class="code-header"><span class="code-lang">r</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
+    <pre><span class="cm"># Auto legend: map variable to color or fill</span>
+<span class="fn">ggplot</span>(df, <span class="fn">aes</span>(<span class="ar">x</span> = x, <span class="ar">fill</span> = group)) +
+  <span class="fn">geom_density</span>(<span class="ar">alpha</span> = <span class="num">0.5</span>)</pre>
+  </div>
+
+  <h2>Legend Title</h2>
+  <div class="code-block">
+    <div class="code-header"><span class="code-lang">r – Three approaches</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
+    <pre><span class="cm"># Option 1: guides()</span>
+<span class="fn">guides</span>(<span class="ar">fill</span> = <span class="fn">guide_legend</span>(<span class="ar">title</span> = <span class="str">"Group"</span>))
+
+<span class="cm"># Option 2: labs()</span>
+<span class="fn">labs</span>(<span class="ar">fill</span> = <span class="str">"Group"</span>)
+
+<span class="cm"># Option 3: scale function</span>
+<span class="fn">scale_fill_discrete</span>(<span class="ar">name</span> = <span class="str">"Group"</span>)
+
+<span class="cm"># Remove title entirely</span>
+<span class="fn">theme</span>(<span class="ar">legend.title</span> = <span class="fn">element_blank</span>())</pre>
+  </div>
+
+  <h2>Legend Position</h2>
+  <div class="code-block">
+    <div class="code-header"><span class="code-lang">r</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
+    <pre><span class="cm"># Standard positions: "top", "bottom", "left", "right", "none"</span>
+<span class="fn">theme</span>(<span class="ar">legend.position</span> = <span class="str">"top"</span>)
+
+<span class="cm"># Inside the plot (coordinates 0–1)</span>
+<span class="fn">theme</span>(<span class="ar">legend.position</span> = <span class="fn">c</span>(<span class="num">0.85</span>, <span class="num">0.15</span>),        <span class="cm"># bottom-right corner</span>
+      <span class="ar">legend.background</span> = <span class="fn">element_rect</span>(<span class="ar">fill</span> = <span class="str">"white"</span>,
+                                          <span class="ar">color</span> = <span class="str">"grey70"</span>))
+
+<span class="cm"># Horizontal legend (useful for "bottom")</span>
+<span class="fn">theme</span>(<span class="ar">legend.position</span>  = <span class="str">"bottom"</span>,
+      <span class="ar">legend.direction</span> = <span class="str">"horizontal"</span>)</pre>
+  </div>
+
+  <h2>Legend Appearance</h2>
+  <div class="code-block">
+    <div class="code-header"><span class="code-lang">r</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
+    <pre><span class="fn">theme</span>(
+  <span class="ar">legend.title</span>     = <span class="fn">element_text</span>(<span class="ar">face</span> = <span class="str">"bold"</span>, <span class="ar">size</span> = <span class="num">12</span>),
+  <span class="ar">legend.text</span>      = <span class="fn">element_text</span>(<span class="ar">size</span> = <span class="num">11</span>),
+  <span class="ar">legend.key.size</span>  = <span class="fn">unit</span>(<span class="num">1</span>, <span class="str">"cm"</span>),
+  <span class="ar">legend.background</span>= <span class="fn">element_rect</span>(<span class="ar">fill</span> = <span class="str">"lightblue"</span>, <span class="ar">colour</span> = <span class="num">1</span>),
+  <span class="ar">legend.margin</span>    = <span class="fn">margin</span>(<span class="num">8</span>, <span class="num">8</span>, <span class="num">8</span>, <span class="num">8</span>)
+)
+
+<span class="cm"># Change symbol size in scatter plot legend</span>
+<span class="fn">guides</span>(<span class="ar">color</span> = <span class="fn">guide_legend</span>(<span class="ar">override.aes</span> = <span class="fn">list</span>(<span class="ar">size</span> = <span class="num">5</span>)))</pre>
+  </div>
+
+  <h2>Removing Legends</h2>
+  <div class="code-block">
+    <div class="code-header"><span class="code-lang">r</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
+    <pre><span class="cm"># Remove all legends</span>
+<span class="fn">theme</span>(<span class="ar">legend.position</span> = <span class="str">"none"</span>)
+
+<span class="cm"># Remove only the fill legend (keep color)</span>
+<span class="fn">guides</span>(<span class="ar">fill</span> = <span class="str">"none"</span>)
+
+<span class="cm"># Per-geom: hide from legend</span>
+<span class="fn">geom_point</span>(<span class="ar">show.legend</span> = <span class="kw">FALSE</span>)</pre>
+  </div>
+</section>
+
+<!-- ── ANNOTATIONS ── -->
+<section id="annotations" class="section">
+  <h1>Text <em>& Annotations</em></h1>
+  <p class="page-desc">Add descriptive text, labels, and rich formatted annotations directly onto your plots.</p>
+
+  <h2>geom_text() – Raw Text</h2>
+  <div class="code-block">
+    <div class="code-header"><span class="code-lang">r</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
+    <pre><span class="fn">ggplot</span>(mtcars, <span class="fn">aes</span>(<span class="ar">x</span> = wt, <span class="ar">y</span> = mpg)) +
+  <span class="fn">geom_point</span>() +
+  <span class="fn">geom_text</span>(<span class="fn">aes</span>(<span class="ar">label</span> = rownames(mtcars)),
+            <span class="ar">size</span> = <span class="num">3</span>, <span class="ar">vjust</span> = -<span class="num">0.8</span>)  <span class="cm"># offset above point</span></pre>
+  </div>
+
+  <h2>geom_label() – Boxed Labels</h2>
+  <div class="code-block">
+    <div class="code-header"><span class="code-lang">r</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
+    <pre><span class="fn">ggplot</span>(mtcars, <span class="fn">aes</span>(<span class="ar">x</span> = wt, <span class="ar">y</span> = mpg)) +
+  <span class="fn">geom_point</span>() +
+  <span class="fn">geom_label</span>(<span class="fn">aes</span>(<span class="ar">label</span> = rownames(mtcars)),
+             <span class="ar">size</span> = <span class="num">2.5</span>, <span class="ar">fill</span> = <span class="str">"#fffde7"</span>, <span class="ar">color</span> = <span class="str">"#333"</span>)</pre>
+  </div>
+
+  <h2>ggrepel – Avoid Overlapping</h2>
+  <div class="code-block">
+    <div class="code-header"><span class="code-lang">r</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
+    <pre><span class="fn">library</span>(ggrepel)
+
+<span class="fn">ggplot</span>(mtcars, <span class="fn">aes</span>(<span class="ar">x</span> = wt, <span class="ar">y</span> = mpg)) +
+  <span class="fn">geom_point</span>(<span class="ar">color</span> = <span class="str">"steelblue"</span>) +
+  <span class="fn">geom_text_repel</span>(<span class="fn">aes</span>(<span class="ar">label</span> = rownames(mtcars)),
+                  <span class="ar">size</span> = <span class="num">2.5</span>, <span class="ar">max.overlaps</span> = <span class="num">20</span>)
+
+<span class="cm"># Or with label boxes</span>
+<span class="fn">geom_label_repel</span>(<span class="fn">aes</span>(<span class="ar">label</span> = rownames(mtcars)), <span class="ar">size</span> = <span class="num">2.5</span>)</pre>
+  </div>
+
+  <h2>ggtext – Rich Text with HTML / Markdown</h2>
+  <div class="code-block">
+    <div class="code-header"><span class="code-lang">r</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
+    <pre><span class="fn">library</span>(ggtext)
+
+<span class="cm"># Inline HTML/Markdown in geom_richtext</span>
+lab <- <span class="str">"**Bold** and &lt;span style='color:red'&gt;colored&lt;/span&gt; text"</span>
+
+<span class="fn">ggplot</span>(mtcars, <span class="fn">aes</span>(<span class="ar">x</span> = wt, <span class="ar">y</span> = mpg)) +
+  <span class="fn">geom_point</span>() +
+  <span class="fn">geom_richtext</span>(<span class="fn">aes</span>(<span class="ar">x</span> = <span class="num">4</span>, <span class="ar">y</span> = <span class="num">30</span>, <span class="ar">label</span> = lab),
+                <span class="ar">fill</span> = <span class="str">"white"</span>)
+
+<span class="cm"># HTML in title/axis with element_markdown</span>
+<span class="fn">theme</span>(<span class="ar">plot.title</span> = <span class="fn">element_markdown</span>(),
+      <span class="ar">axis.title.x</span> = <span class="fn">element_markdown</span>()) +
+<span class="fn">labs</span>(<span class="ar">title</span> = <span class="str">"Weight vs &lt;span style='color:red'&gt;MPG&lt;/span&gt;"</span>)</pre>
+  </div>
+
+  <div class="info-box tip">
+    <span class="info-icon">💡</span>
+    <div class="info-content"><p><strong>Use ggrepel</strong> whenever you're labeling many points — it automatically resolves overlaps with connecting lines to the data points.</p></div>
+  </div>
+</section>
+
+<!-- ── LINES ── -->
+<section id="lines" class="section">
+  <h1>Lines, Segments <em>& Arrows</em></h1>
+  <p class="page-desc">Add reference lines, drawn segments, curves, and annotated arrows to highlight patterns in your data.</p>
+
+  <h2>Reference Lines</h2>
+  <div class="code-block">
+    <div class="code-header"><span class="code-lang">r</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
+    <pre><span class="fn">set.seed</span>(<span class="num">1</span>)
+df <- <span class="fn">data.frame</span>(<span class="ar">x</span> = <span class="fn">rnorm</span>(<span class="num">100</span>), <span class="ar">y</span> = <span class="fn">rnorm</span>(<span class="num">100</span>))
+
+<span class="fn">ggplot</span>(df, <span class="fn">aes</span>(<span class="ar">x</span> = x, <span class="ar">y</span> = y)) +
+  <span class="fn">geom_point</span>() +
+  <span class="cm"># Vertical line at x = 0</span>
+  <span class="fn">geom_vline</span>(<span class="ar">xintercept</span> = <span class="num">0</span>, <span class="ar">linetype</span> = <span class="num">2</span>, <span class="ar">color</span> = <span class="str">"red"</span>) +
+  <span class="cm"># Horizontal line at y = 0</span>
+  <span class="fn">geom_hline</span>(<span class="ar">yintercept</span> = <span class="num">0</span>, <span class="ar">linetype</span> = <span class="num">3</span>, <span class="ar">color</span> = <span class="str">"blue"</span>) +
+  <span class="cm"># Diagonal line: y = intercept + slope * x</span>
+  <span class="fn">geom_abline</span>(<span class="ar">intercept</span> = <span class="num">0</span>, <span class="ar">slope</span> = <span class="num">0.5</span>, <span class="ar">color</span> = <span class="str">"green"</span>)</pre>
+  </div>
+
+  <h2>Segments & Arrows</h2>
+  <div class="code-block">
+    <div class="code-header"><span class="code-lang">r</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
+    <pre><span class="fn">ggplot</span>(df, <span class="fn">aes</span>(<span class="ar">x</span> = x, <span class="ar">y</span> = y)) +
+  <span class="fn">geom_point</span>() +
+  <span class="cm"># Plain segment</span>
+  <span class="fn">geom_segment</span>(<span class="ar">x</span> = -<span class="num">2</span>, <span class="ar">y</span> = <span class="num">1</span>, <span class="ar">xend</span> = <span class="num">0</span>, <span class="ar">yend</span> = <span class="num">0</span>,
+               <span class="ar">color</span> = <span class="str">"orange"</span>, <span class="ar">lwd</span> = <span class="num">1.2</span>) +
+  <span class="cm"># Arrow annotation</span>
+  <span class="fn">geom_segment</span>(<span class="ar">x</span> = <span class="num">1</span>, <span class="ar">y</span> = <span class="num">2</span>, <span class="ar">xend</span> = <span class="num">0.2</span>, <span class="ar">yend</span> = <span class="num">0.5</span>,
+               <span class="ar">color</span> = <span class="str">"purple"</span>,
+               <span class="ar">arrow</span> = <span class="fn">arrow</span>(<span class="ar">length</span> = <span class="fn">unit</span>(<span class="num">0.3</span>, <span class="str">"cm"</span>),
+                              <span class="ar">type</span> = <span class="str">"closed"</span>))</pre>
+  </div>
+
+  <h2>Curves</h2>
+  <div class="code-block">
+    <div class="code-header"><span class="code-lang">r</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
+    <pre><span class="fn">ggplot</span>(df, <span class="fn">aes</span>(<span class="ar">x</span> = x, <span class="ar">y</span> = y)) +
+  <span class="fn">geom_point</span>() +
+  <span class="fn">geom_curve</span>(<span class="ar">x</span> = -<span class="num">2</span>, <span class="ar">y</span> = <span class="num">1</span>, <span class="ar">xend</span> = <span class="num">1</span>, <span class="ar">yend</span> = -<span class="num">1</span>,
+             <span class="ar">curvature</span> = -<span class="num">0.3</span>,  <span class="cm"># Negative = left-handed curve</span>
+             <span class="ar">color</span> = <span class="str">"steelblue"</span>,
+             <span class="ar">arrow</span> = <span class="fn">arrow</span>(<span class="ar">length</span> = <span class="fn">unit</span>(<span class="num">0.3</span>, <span class="str">"cm"</span>)))</pre>
+  </div>
+
+  <div class="info-box note">
+    <span class="info-icon">📌</span>
+    <div class="info-content"><p>For <code>geom_vline</code> and <code>geom_hline</code>, you can pass a vector to draw multiple lines at once: <code>geom_vline(xintercept = c(-1, 0, 1))</code></p></div>
+  </div>
+</section>
+
+<!-- ── FACETING ── -->
+<section id="faceting" class="section">
+  <h1>Faceting <em>& Multi-Panel</em></h1>
+  <p class="page-desc">Faceting splits a plot into multiple panels — one per group — making it easy to compare distributions and trends across subsets.</p>
+
+  <h2>facet_wrap() – One Variable</h2>
+  <div class="code-block">
+    <div class="code-header"><span class="code-lang">r</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
+    <pre><span class="fn">ggplot</span>(iris, <span class="fn">aes</span>(<span class="ar">x</span> = Sepal.Length, <span class="ar">y</span> = Sepal.Width, <span class="ar">color</span> = Species)) +
+  <span class="fn">geom_point</span>(<span class="ar">show.legend</span> = <span class="kw">FALSE</span>) +
+  <span class="fn">facet_wrap</span>(~Species,
+             <span class="ar">nrow</span> = <span class="num">1</span>,             <span class="cm"># Force 1 row</span>
+             <span class="ar">scales</span> = <span class="str">"free"</span>,      <span class="cm"># Each panel has its own scale</span>
+             <span class="ar">strip.position</span> = <span class="str">"bottom"</span>)  <span class="cm"># Labels below</span></pre>
+  </div>
+
+  <h2>facet_grid() – Two Variables</h2>
+  <div class="code-block">
+    <div class="code-header"><span class="code-lang">r</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
+    <pre><span class="fn">ggplot</span>(diamonds, <span class="fn">aes</span>(<span class="ar">x</span> = carat, <span class="ar">y</span> = price)) +
+  <span class="fn">geom_point</span>(<span class="ar">alpha</span> = <span class="num">0.2</span>, <span class="ar">size</span> = <span class="num">0.5</span>) +
+  <span class="fn">facet_grid</span>(cut ~ color,      <span class="cm"># rows=cut, cols=color</span>
+             <span class="ar">scales</span> = <span class="str">"free_x"</span>)
+
+<span class="cm"># Alternative syntax with vars()</span>
+<span class="fn">facet_grid</span>(<span class="ar">rows</span> = <span class="fn">vars</span>(cut), <span class="ar">cols</span> = <span class="fn">vars</span>(color))</pre>
+  </div>
+
+  <h2>Highlight Groups Behind Panels</h2>
+  <div class="code-block">
+    <div class="code-header"><span class="code-lang">r</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
+    <pre><span class="fn">ggplot</span>(iris, <span class="fn">aes</span>(<span class="ar">x</span> = Sepal.Length, <span class="ar">y</span> = Sepal.Width, <span class="ar">color</span> = Species)) +
+  <span class="cm"># Grey background: all data without Species variable</span>
+  <span class="fn">geom_point</span>(<span class="ar">data</span> = <span class="fn">transform</span>(iris, Species = <span class="kw">NULL</span>),
+             <span class="ar">colour</span> = <span class="str">"grey80"</span>, <span class="ar">size</span> = <span class="num">2</span>) +
+  <span class="cm"># Colored foreground: current group</span>
+  <span class="fn">geom_point</span>(<span class="ar">show.legend</span> = <span class="kw">FALSE</span>, <span class="ar">size</span> = <span class="num">2</span>) +
+  <span class="fn">facet_wrap</span>(~Species)</pre>
+  </div>
+
+  <h2>Customizing Strips</h2>
+  <div class="code-block">
+    <div class="code-header"><span class="code-lang">r</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
+    <pre><span class="fn">ggplot</span>(iris, <span class="fn">aes</span>(<span class="ar">x</span> = Sepal.Length, <span class="ar">y</span> = Sepal.Width)) +
+  <span class="fn">geom_point</span>() +
+  <span class="fn">facet_wrap</span>(~Species) +
+  <span class="fn">theme</span>(
+    <span class="ar">strip.text</span>       = <span class="fn">element_text</span>(<span class="ar">face</span> = <span class="str">"bold"</span>, <span class="ar">color</span> = <span class="str">"white"</span>, <span class="ar">size</span> = <span class="num">13</span>),
+    <span class="ar">strip.background</span> = <span class="fn">element_rect</span>(<span class="ar">fill</span> = <span class="str">"#3d5afe"</span>,
+                                     <span class="ar">color</span> = <span class="str">"#1a237e"</span>, <span class="ar">linewidth</span> = <span class="num">1</span>),
+    <span class="ar">panel.spacing</span>    = <span class="fn">unit</span>(<span class="num">8</span>, <span class="str">"pt"</span>),         <span class="cm"># Space between panels</span>
+    <span class="ar">panel.border</span>     = <span class="fn">element_rect</span>(<span class="ar">fill</span> = <span class="str">"transparent"</span>,
+                                     <span class="ar">color</span> = <span class="str">"#ccc"</span>)
+  )</pre>
+  </div>
+</section>
+
+<!-- ── COORDINATES ── -->
+<section id="coordinates" class="section">
+  <h1>Coordinate <em>Systems</em></h1>
+  <p class="page-desc">Coordinate systems control how data coordinates are translated to the plane of the plot. ggplot2 offers linear and non-linear options.</p>
+
+  <table class="fn-table">
+    <tr><th>Function</th><th>Use Case</th></tr>
+    <tr><td><code>coord_cartesian()</code></td><td>Zoom without removing data (use <em>instead of</em> scale limits)</td></tr>
+    <tr><td><code>coord_fixed()</code></td><td>Equal aspect ratio on x and y axes</td></tr>
+    <tr><td><code>coord_flip()</code></td><td>Rotate x and y axes (e.g. horizontal bar charts)</td></tr>
+    <tr><td><code>coord_trans()</code></td><td>Transform axes post-stat (log, sqrt…)</td></tr>
+    <tr><td><code>coord_polar()</code></td><td>Polar coordinates (pie charts, wind roses)</td></tr>
+    <tr><td><code>coord_map()</code></td><td>Map projections (Mercator, orthographic…)</td></tr>
+    <tr><td><code>coord_quickmap()</code></td><td>Quick aspect-ratio fix for maps</td></tr>
+  </table>
+
+  <h2>Code Examples</h2>
+  <div class="tab-bar">
+    <button class="tab-btn active" onclick="switchTab(this,'c-zoom')">Zoom</button>
+    <button class="tab-btn" onclick="switchTab(this,'c-flip')">Flip</button>
+    <button class="tab-btn" onclick="switchTab(this,'c-polar')">Polar</button>
+    <button class="tab-btn" onclick="switchTab(this,'c-trans')">Transform</button>
+  </div>
+
+  <div id="c-zoom" class="tab-content active">
+    <div class="code-block">
+      <div class="code-header"><span class="code-lang">r – Zoom without dropping data</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
+      <pre><span class="fn">p</span> <- <span class="fn">ggplot</span>(df, <span class="fn">aes</span>(<span class="ar">x</span> = x, <span class="ar">y</span> = y)) + <span class="fn">geom_point</span>() + <span class="fn">geom_smooth</span>()
+
+<span class="cm"># BAD: drops points, refits smooth</span>
+p + <span class="fn">scale_x_continuous</span>(<span class="ar">limits</span> = <span class="fn">c</span>(-<span class="num">1</span>, <span class="num">1</span>))
+
+<span class="cm"># GOOD: only zooms view, keeps full smooth</span>
+p + <span class="fn">coord_cartesian</span>(<span class="ar">xlim</span> = <span class="fn">c</span>(-<span class="num">1</span>, <span class="num">1</span>), <span class="ar">ylim</span> = <span class="fn">c</span>(-<span class="num">2</span>, <span class="num">2</span>))</pre>
+    </div>
+  </div>
+
+  <div id="c-flip" class="tab-content">
+    <div class="code-block">
+      <div class="code-header"><span class="code-lang">r – Flip axes</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
+      <pre><span class="cm"># Horizontal bar chart</span>
+<span class="fn">ggplot</span>(df, <span class="fn">aes</span>(<span class="ar">x</span> = group, <span class="ar">y</span> = value, <span class="ar">fill</span> = group)) +
+  <span class="fn">geom_bar</span>(<span class="ar">stat</span> = <span class="str">"identity"</span>) +
+  <span class="fn">coord_flip</span>() +
+  <span class="fn">theme</span>(<span class="ar">legend.position</span> = <span class="str">"none"</span>)
+
+<span class="cm"># Horizontal boxplot</span>
+<span class="fn">ggplot</span>(iris, <span class="fn">aes</span>(<span class="ar">x</span> = Species, <span class="ar">y</span> = Sepal.Length)) +
+  <span class="fn">geom_boxplot</span>() + <span class="fn">coord_flip</span>()</pre>
+    </div>
+  </div>
+
+  <div id="c-polar" class="tab-content">
+    <div class="code-block">
+      <div class="code-header"><span class="code-lang">r – Polar / Pie</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
+      <pre><span class="cm"># Pie chart (stacked bar in polar coords)</span>
+pie_df <- <span class="fn">data.frame</span>(<span class="ar">group</span> = <span class="str">c</span>(<span class="str">"A"</span>,<span class="str">"B"</span>,<span class="str">"C"</span>), <span class="ar">val</span> = <span class="fn">c</span>(<span class="num">35</span>, <span class="num">45</span>, <span class="num">20</span>))
+
+<span class="fn">ggplot</span>(pie_df, <span class="fn">aes</span>(<span class="ar">x</span> = <span class="str">""</span>, <span class="ar">y</span> = val, <span class="ar">fill</span> = group)) +
+  <span class="fn">geom_bar</span>(<span class="ar">stat</span> = <span class="str">"identity"</span>, <span class="ar">width</span> = <span class="num">1</span>) +
+  <span class="fn">coord_polar</span>(<span class="ar">theta</span> = <span class="str">"y"</span>) +   <span class="cm"># angle = y variable</span>
+  <span class="fn">theme_void</span>()</pre>
+    </div>
+  </div>
+
+  <div id="c-trans" class="tab-content">
+    <div class="code-block">
+      <div class="code-header"><span class="code-lang">r – Axis transformation</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
+      <pre><span class="cm"># Log transform AFTER stat computation</span>
+<span class="fn">ggplot</span>(diamonds, <span class="fn">aes</span>(<span class="ar">x</span> = carat, <span class="ar">y</span> = price)) +
+  <span class="fn">geom_point</span>(<span class="ar">alpha</span> = <span class="num">0.1</span>) +
+  <span class="fn">geom_smooth</span>(<span class="ar">method</span> = <span class="str">"lm"</span>) +
+  <span class="fn">coord_trans</span>(<span class="ar">x</span> = <span class="str">"log10"</span>, <span class="ar">y</span> = <span class="str">"log10"</span>)
+
+<span class="cm"># Vs. transform BEFORE stat (different result!)</span>
+<span class="fn">scale_x_log10</span>()
+<span class="fn">scale_y_log10</span>()</pre>
+    </div>
+  </div>
+</section>
+
+<!-- ── COMBINING ── -->
+<section id="combining" class="section">
+  <h1>Combining <em>Plots</em></h1>
+  <p class="page-desc">Arrange multiple ggplot2 objects into composite figures using patchwork, cowplot, or gridExtra.</p>
+
+  <h2>patchwork – The Easiest Way</h2>
+  <div class="code-block">
+    <div class="code-header"><span class="code-lang">r – patchwork operators</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
+    <pre><span class="fn">library</span>(patchwork)
+
+<span class="cm"># Side by side</span>
+p1 + p2
+
+<span class="cm"># In a row (always 1 row)</span>
+p1 | p2 | p3
+
+<span class="cm"># Stacked (always 1 column)</span>
+p1 / p2
+
+<span class="cm"># Complex nested layout</span>
+(p1 | p2) / p3        <span class="cm"># 2 on top, 1 spanning bottom</span>
+p1 | (p2 / p3)        <span class="cm"># 1 on left, 2 stacked on right</span>
+
+<span class="cm"># Apply a theme to ALL plots</span>
+p1 + p2 + p3 & <span class="fn">theme_classic</span>()</pre>
+  </div>
+
+  <div class="code-block">
+    <div class="code-header"><span class="code-lang">r – Layout control & annotation</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
+    <pre><span class="cm"># Custom design: numbers = plot positions, # = empty space</span>
+design <- <span class="str">"
+  11#
+  234
+"</span>
+
+p1 + p2 + p3 + p4 +
+  <span class="fn">plot_layout</span>(<span class="ar">design</span> = design,
+              <span class="ar">widths</span> = <span class="fn">c</span>(<span class="num">1</span>, <span class="num">1</span>, <span class="num">0.5</span>))
+
+<span class="cm"># Add overall title and plot labels</span>
+p1 + p2 +
+  <span class="fn">plot_annotation</span>(
+    <span class="ar">title</span>      = <span class="str">"Combined Figure"</span>,
+    <span class="ar">subtitle</span>   = <span class="str">"Two distributions"</span>,
+    <span class="ar">tag_levels</span> = <span class="str">"A"</span>,    <span class="cm"># "A","B" — or "1","a","I","i"</span>
+    <span class="ar">tag_prefix</span> = <span class="str">"Fig. "</span>
+  )</pre>
+  </div>
+
+  <h2>cowplot</h2>
+  <div class="code-block">
+    <div class="code-header"><span class="code-lang">r</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
+    <pre><span class="fn">library</span>(cowplot)
+
+<span class="fn">plot_grid</span>(p1, p2, p3, p4,
+          <span class="ar">ncol</span>           = <span class="num">2</span>,
+          <span class="ar">align</span>          = <span class="str">"hv"</span>,      <span class="cm"># align axes</span>
+          <span class="ar">labels</span>         = <span class="str">"AUTO"</span>,   <span class="cm"># A, B, C, D</span>
+          <span class="ar">label_fontface</span> = <span class="str">"bold"</span>,
+          <span class="ar">label_colour</span>   = <span class="str">"#444"</span>)
+
+<span class="cm"># Nested layouts</span>
+<span class="fn">plot_grid</span>(p1, <span class="fn">plot_grid</span>(p2, p3, <span class="ar">ncol</span> = <span class="num">2</span>), <span class="ar">nrow</span> = <span class="num">2</span>)</pre>
+  </div>
+
+  <h2>gridExtra</h2>
+  <div class="code-block">
+    <div class="code-header"><span class="code-lang">r</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
+    <pre><span class="fn">library</span>(gridExtra)
+
+<span class="fn">grid.arrange</span>(p1, p2, p3, p4,
+             <span class="ar">ncol</span>   = <span class="num">2</span>,
+             <span class="ar">widths</span> = <span class="fn">c</span>(<span class="num">2</span>, <span class="num">1</span>),
+             <span class="ar">top</span>    = <span class="str">"Main Title"</span>,
+             <span class="ar">bottom</span> = <span class="str">"Source: …"</span>)
+
+<span class="cm"># Custom matrix layout</span>
+layout <- <span class="fn">matrix</span>(<span class="fn">c</span>(<span class="num">1</span>, <span class="num">1</span>, <span class="num">2</span>, <span class="num">3</span>), <span class="ar">ncol</span> = <span class="num">2</span>, <span class="ar">byrow</span> = <span class="kw">TRUE</span>)
+<span class="fn">grid.arrange</span>(p1, p2, p3, <span class="ar">layout_matrix</span> = layout)
+
+<span class="cm"># Add a table alongside a plot</span>
+tab <- <span class="fn">tableGrob</span>(<span class="fn">head</span>(mtcars[, <span class="num">1</span>:<span class="num">4</span>]))
+<span class="fn">grid.arrange</span>(p1, tab, <span class="ar">ncol</span> = <span class="num">2</span>)</pre>
+  </div>
+</section>
+
+<!-- ── BARPLOTS ── -->
+<section id="barplots" class="section">
+  <h1>Bar Charts <em>& geom_bar</em></h1>
+  <p class="page-desc">Bar charts are among the most common visualizations. ggplot2 offers flexible options for vertical, horizontal, stacked, 100%-stacked, and grouped bars.</p>
+
+  <div class="tab-bar">
+    <button class="tab-btn active" onclick="switchTab(this,'b-basic')">Basic</button>
+    <button class="tab-btn" onclick="switchTab(this,'b-stacked')">Stacked</button>
+    <button class="tab-btn" onclick="switchTab(this,'b-filled')">100% Filled</button>
+    <button class="tab-btn" onclick="switchTab(this,'b-grouped')">Grouped</button>
+    <button class="tab-btn" onclick="switchTab(this,'b-horizontal')">Horizontal</button>
+  </div>
+
+  <div id="b-basic" class="tab-content active">
+    <div class="code-block">
+      <div class="code-header"><span class="code-lang">r – Simple bar chart</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
+      <pre>df1 <- <span class="fn">data.frame</span>(<span class="ar">values</span> = <span class="fn">c</span>(<span class="num">5</span>, <span class="num">2</span>, <span class="num">7</span>, <span class="num">2</span>),
+                   <span class="ar">group</span>  = LETTERS[<span class="num">1</span>:<span class="num">4</span>])
+
+<span class="fn">ggplot</span>(df1, <span class="fn">aes</span>(<span class="ar">x</span> = group, <span class="ar">y</span> = values, <span class="ar">fill</span> = group)) +
+  <span class="fn">geom_bar</span>(<span class="ar">stat</span> = <span class="str">"identity"</span>, <span class="ar">width</span> = <span class="num">0.6</span>) +
+  <span class="fn">scale_fill_brewer</span>(<span class="ar">palette</span> = <span class="str">"Set2"</span>) +
+  <span class="fn">theme_minimal</span>() +
+  <span class="fn">theme</span>(<span class="ar">legend.position</span> = <span class="str">"none"</span>)</pre>
+    </div>
+  </div>
+
+  <div id="b-stacked" class="tab-content">
+    <div class="code-block">
+      <div class="code-header"><span class="code-lang">r – Stacked bar chart</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
+      <pre>df2 <- <span class="fn">data.frame</span>(
+  <span class="ar">values</span>    = <span class="fn">c</span>(<span class="num">3</span>, <span class="num">2</span>, <span class="num">6</span>, <span class="num">3</span>, <span class="num">4</span>, <span class="num">3</span>, <span class="num">8</span>, <span class="num">2</span>),
+  <span class="ar">maingroup</span> = <span class="fn">rep</span>(LETTERS[<span class="num">1</span>:<span class="num">4</span>], <span class="ar">each</span> = <span class="num">2</span>),
+  <span class="ar">subgroup</span>  = letters[<span class="num">1</span>:<span class="num">2</span>]
+)
+
+<span class="fn">ggplot</span>(df2, <span class="fn">aes</span>(<span class="ar">x</span> = maingroup, <span class="ar">y</span> = values, <span class="ar">fill</span> = subgroup)) +
+  <span class="fn">geom_bar</span>(<span class="ar">stat</span> = <span class="str">"identity"</span>, <span class="ar">position</span> = <span class="str">"stack"</span>)</pre>
+    </div>
+  </div>
+
+  <div id="b-filled" class="tab-content">
+    <div class="code-block">
+      <div class="code-header"><span class="code-lang">r – 100% stacked (filled)</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
+      <pre><span class="fn">library</span>(scales)
+
+<span class="fn">ggplot</span>(df2, <span class="fn">aes</span>(<span class="ar">x</span> = maingroup, <span class="ar">y</span> = values, <span class="ar">fill</span> = subgroup)) +
+  <span class="fn">geom_bar</span>(<span class="ar">stat</span> = <span class="str">"identity"</span>, <span class="ar">position</span> = <span class="str">"fill"</span>) +
+  <span class="fn">scale_y_continuous</span>(<span class="ar">labels</span> = <span class="fn">percent_format</span>()) +
+  <span class="fn">labs</span>(<span class="ar">y</span> = <span class="str">"Percentage"</span>)</pre>
+    </div>
+  </div>
+
+  <div id="b-grouped" class="tab-content">
+    <div class="code-block">
+      <div class="code-header"><span class="code-lang">r – Grouped (dodged) bar chart</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
+      <pre><span class="fn">ggplot</span>(df2, <span class="fn">aes</span>(<span class="ar">x</span> = maingroup, <span class="ar">y</span> = values, <span class="ar">fill</span> = subgroup)) +
+  <span class="fn">geom_bar</span>(<span class="ar">stat</span> = <span class="str">"identity"</span>, <span class="ar">position</span> = <span class="str">"dodge"</span>,
+           <span class="ar">width</span> = <span class="num">0.7</span>) +
+  <span class="fn">scale_fill_manual</span>(<span class="ar">values</span> = <span class="fn">c</span>(<span class="str">"#7c6aff"</span>, <span class="str">"#ff6b6b"</span>)) +
+  <span class="fn">theme_minimal</span>()</pre>
+    </div>
+  </div>
+
+  <div id="b-horizontal" class="tab-content">
+    <div class="code-block">
+      <div class="code-header"><span class="code-lang">r – Horizontal with value labels</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
+      <pre><span class="fn">ggplot</span>(df1, <span class="fn">aes</span>(<span class="ar">x</span> = <span class="fn">reorder</span>(group, values), <span class="ar">y</span> = values, <span class="ar">fill</span> = group)) +
+  <span class="fn">geom_bar</span>(<span class="ar">stat</span> = <span class="str">"identity"</span>) +
+  <span class="fn">geom_text</span>(<span class="fn">aes</span>(<span class="ar">label</span> = values), <span class="ar">hjust</span> = -<span class="num">0.3</span>, <span class="ar">size</span> = <span class="num">4</span>) +
+  <span class="fn">coord_flip</span>() +
+  <span class="fn">theme_minimal</span>() +
+  <span class="fn">theme</span>(<span class="ar">legend.position</span> = <span class="str">"none"</span>)</pre>
+    </div>
+  </div>
+</section>
+
+<!-- ── CHEATSHEET ── -->
+<section id="cheatsheet" class="section">
+  <h1>Quick Reference <em>Cheat Sheet</em></h1>
+  <p class="page-desc">All essential ggplot2 functions at a glance. Use Ctrl+F to search within this page.</p>
+
+  <div class="cheat-section">
+    <div class="cheat-title">🔧 Setup & Data</div>
+    <div class="cheat-grid">
+      <div class="cheat-item"><code>ggplot(data, aes(…))</code><span>Initialize plot</span></div>
+      <div class="cheat-item"><code>aes(x, y, color, fill)</code><span>Map aesthetics</span></div>
+      <div class="cheat-item"><code>ggsave("file.png")</code><span>Save to file</span></div>
+      <div class="cheat-item"><code>last_plot()</code><span>Retrieve last plot</span></div>
+    </div>
+  </div>
+
+  <div class="cheat-section">
+    <div class="cheat-title">📊 Geoms</div>
+    <div class="cheat-grid">
+      <div class="cheat-item"><code>geom_point()</code><span>Scatter plot</span></div>
+      <div class="cheat-item"><code>geom_line()</code><span>Line chart</span></div>
+      <div class="cheat-item"><code>geom_bar(stat="identity")</code><span>Bar chart</span></div>
+      <div class="cheat-item"><code>geom_col()</code><span>Bar chart (values)</span></div>
+      <div class="cheat-item"><code>geom_histogram(bins=30)</code><span>Histogram</span></div>
+      <div class="cheat-item"><code>geom_density()</code><span>Density curve</span></div>
+      <div class="cheat-item"><code>geom_boxplot()</code><span>Box & whisker</span></div>
+      <div class="cheat-item"><code>geom_violin()</code><span>Violin plot</span></div>
+      <div class="cheat-item"><code>geom_area()</code><span>Area chart</span></div>
+      <div class="cheat-item"><code>geom_smooth()</code><span>Trend line</span></div>
+      <div class="cheat-item"><code>geom_jitter()</code><span>Jittered scatter</span></div>
+      <div class="cheat-item"><code>geom_tile()</code><span>Heatmap tiles</span></div>
+      <div class="cheat-item"><code>geom_text(aes(label=))</code><span>Text labels</span></div>
+      <div class="cheat-item"><code>geom_label()</code><span>Box labels</span></div>
+      <div class="cheat-item"><code>geom_segment()</code><span>Line segment</span></div>
+      <div class="cheat-item"><code>geom_vline(xintercept=)</code><span>Vertical line</span></div>
+      <div class="cheat-item"><code>geom_hline(yintercept=)</code><span>Horizontal line</span></div>
+      <div class="cheat-item"><code>geom_abline(slope=,int=)</code><span>Diagonal line</span></div>
+    </div>
+  </div>
+
+  <div class="cheat-section">
+    <div class="cheat-title">🎨 Labels & Text</div>
+    <div class="cheat-grid">
+      <div class="cheat-item"><code>labs(title=,x=,y=)</code><span>All labels</span></div>
+      <div class="cheat-item"><code>ggtitle("title","sub")</code><span>Title + subtitle</span></div>
+      <div class="cheat-item"><code>xlab() / ylab()</code><span>Axis labels</span></div>
+      <div class="cheat-item"><code>annotate("text",x,y,label=)</code><span>Manual annotation</span></div>
+    </div>
+  </div>
+
+  <div class="cheat-section">
+    <div class="cheat-title">🖼 Scales</div>
+    <div class="cheat-grid">
+      <div class="cheat-item"><code>scale_x_continuous()</code><span>Continuous X axis</span></div>
+      <div class="cheat-item"><code>scale_x_log10()</code><span>Log10 X axis</span></div>
+      <div class="cheat-item"><code>scale_x_date()</code><span>Date X axis</span></div>
+      <div class="cheat-item"><code>scale_color_brewer()</code><span>ColorBrewer palette</span></div>
+      <div class="cheat-item"><code>scale_fill_manual(values=)</code><span>Custom fill colors</span></div>
+      <div class="cheat-item"><code>scale_color_gradient()</code><span>Continuous color gradient</span></div>
+      <div class="cheat-item"><code>scale_color_gradient2()</code><span>Diverging gradient</span></div>
+      <div class="cheat-item"><code>scale_size_continuous()</code><span>Size scale</span></div>
+    </div>
+  </div>
+
+  <div class="cheat-section">
+    <div class="cheat-title">📐 Facets & Coordinates</div>
+    <div class="cheat-grid">
+      <div class="cheat-item"><code>facet_wrap(~var)</code><span>Single-variable panels</span></div>
+      <div class="cheat-item"><code>facet_grid(r~c)</code><span>Two-variable grid</span></div>
+      <div class="cheat-item"><code>coord_cartesian(xlim=)</code><span>Zoom without dropping</span></div>
+      <div class="cheat-item"><code>coord_flip()</code><span>Rotate axes</span></div>
+      <div class="cheat-item"><code>coord_polar(theta="y")</code><span>Polar / pie chart</span></div>
+      <div class="cheat-item"><code>coord_fixed(ratio=1)</code><span>Equal aspect ratio</span></div>
+    </div>
+  </div>
+
+  <div class="cheat-section">
+    <div class="cheat-title">🎭 Themes</div>
+    <div class="cheat-grid">
+      <div class="cheat-item"><code>theme_minimal()</code><span>Clean, no bg annotations</span></div>
+      <div class="cheat-item"><code>theme_bw()</code><span>Black & white</span></div>
+      <div class="cheat-item"><code>theme_classic()</code><span>No gridlines</span></div>
+      <div class="cheat-item"><code>theme_void()</code><span>Empty canvas</span></div>
+      <div class="cheat-item"><code>theme(legend.position=)</code><span>Legend position</span></div>
+      <div class="cheat-item"><code>theme(panel.grid=element_blank())</code><span>Remove grids</span></div>
+      <div class="cheat-item"><code>element_text(size=,face=)</code><span>Style text</span></div>
+      <div class="cheat-item"><code>element_rect(fill=,color=)</code><span>Style rectangles</span></div>
+      <div class="cheat-item"><code>element_line(color=,lwd=)</code><span>Style lines</span></div>
+      <div class="cheat-item"><code>element_blank()</code><span>Remove element</span></div>
+    </div>
+  </div>
+
+  <div class="cheat-section">
+    <div class="cheat-title">🧩 Combining</div>
+    <div class="cheat-grid">
+      <div class="cheat-item"><code>p1 + p2</code><span>patchwork: combine</span></div>
+      <div class="cheat-item"><code>p1 | p2 | p3</code><span>patchwork: row</span></div>
+      <div class="cheat-item"><code>p1 / p2</code><span>patchwork: stack</span></div>
+      <div class="cheat-item"><code>p1 + p2 & theme_bw()</code><span>Apply to all</span></div>
+      <div class="cheat-item"><code>plot_annotation(title=)</code><span>Combined title</span></div>
+      <div class="cheat-item"><code>plot_layout(ncol=2)</code><span>Control layout</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- ── QUIZ ── -->
+<section id="quiz" class="section">
+  <h1>Practice <em>Quiz</em></h1>
+  <p class="page-desc">Test your ggplot2 knowledge with these questions. Click an answer to see if you're correct.</p>
+
+  <div id="quizProgress" style="margin-bottom:32px">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
+      <span style="font-size:13px;color:var(--text-muted)">Progress</span>
+      <span id="scoreText" style="font-size:13px;color:var(--accent3)">0 / 8 correct</span>
+    </div>
+    <div class="progress-bar"><div class="progress-fill" id="progressFill" style="width:0%"></div></div>
+  </div>
+
+  <div class="quiz-box" id="q1">
+    <div class="quiz-q">1. Which function should you use to zoom into a plot without removing data points from statistical calculations?</div>
+    <div class="quiz-options">
+      <button class="quiz-opt" onclick="answer(this,'q1',false)">scale_x_continuous(limits = …)</button>
+      <button class="quiz-opt" onclick="answer(this,'q1',true)">coord_cartesian(xlim = …)</button>
+      <button class="quiz-opt" onclick="answer(this,'q1',false)">xlim(…)</button>
+      <button class="quiz-opt" onclick="answer(this,'q1',false)">filter() the data first</button>
+    </div>
+    <div class="quiz-feedback" id="fb-q1"></div>
+  </div>
+
+  <div class="quiz-box" id="q2">
+    <div class="quiz-q">2. What is the correct way to set ALL points to blue in a scatter plot?</div>
+    <div class="quiz-options">
+      <button class="quiz-opt" onclick="answer(this,'q2',false)">geom_point(aes(color = "blue"))</button>
+      <button class="quiz-opt" onclick="answer(this,'q2',true)">geom_point(color = "blue")</button>
+      <button class="quiz-opt" onclick="answer(this,'q2',false)">ggplot(aes(color = "blue"))</button>
+      <button class="quiz-opt" onclick="answer(this,'q2',false)">geom_point() + scale_color("blue")</button>
+    </div>
+    <div class="quiz-feedback" id="fb-q2"></div>
+  </div>
+
+  <div class="quiz-box" id="q3">
+    <div class="quiz-q">3. Which patchwork operator places two plots side by side in a single row?</div>
+    <div class="quiz-options">
+      <button class="quiz-opt" onclick="answer(this,'q3',false)">p1 / p2</button>
+      <button class="quiz-opt" onclick="answer(this,'q3',false)">p1 + p2</button>
+      <button class="quiz-opt" onclick="answer(this,'q3',true)">p1 | p2</button>
+      <button class="quiz-opt" onclick="answer(this,'q3',false)">p1 & p2</button>
+    </div>
+    <div class="quiz-feedback" id="fb-q3"></div>
+  </div>
+
+  <div class="quiz-box" id="q4">
+    <div class="quiz-q">4. How do you remove all grid lines from a ggplot2 plot?</div>
+    <div class="quiz-options">
+      <button class="quiz-opt" onclick="answer(this,'q4',false)">theme(grid = FALSE)</button>
+      <button class="quiz-opt" onclick="answer(this,'q4',false)">remove_grid()</button>
+      <button class="quiz-opt" onclick="answer(this,'q4',true)">theme(panel.grid = element_blank())</button>
+      <button class="quiz-opt" onclick="answer(this,'q4',false)">geom_grid(show = FALSE)</button>
+    </div>
+    <div class="quiz-feedback" id="fb-q4"></div>
+  </div>
+
+  <div class="quiz-box" id="q5">
+    <div class="quiz-q">5. Which function creates multi-panel plots from ONE categorical variable?</div>
+    <div class="quiz-options">
+      <button class="quiz-opt" onclick="answer(this,'q5',false)">facet_grid()</button>
+      <button class="quiz-opt" onclick="answer(this,'q5',true)">facet_wrap()</button>
+      <button class="quiz-opt" onclick="answer(this,'q5',false)">facet_split()</button>
+      <button class="quiz-opt" onclick="answer(this,'q5',false)">panel_wrap()</button>
+    </div>
+    <div class="quiz-feedback" id="fb-q5"></div>
+  </div>
+
+  <div class="quiz-box" id="q6">
+    <div class="quiz-q">6. What does the <code>position = "dodge"</code> argument do in geom_bar()?</div>
+    <div class="quiz-options">
+      <button class="quiz-opt" onclick="answer(this,'q6',false)">Scales bars to 100%</button>
+      <button class="quiz-opt" onclick="answer(this,'q6',false)">Stacks bars on top of each other</button>
+      <button class="quiz-opt" onclick="answer(this,'q6',true)">Places bars side by side (grouped)</button>
+      <button class="quiz-opt" onclick="answer(this,'q6',false)">Removes bar borders</button>
+    </div>
+    <div class="quiz-feedback" id="fb-q6"></div>
+  </div>
+
+  <div class="quiz-box" id="q7">
+    <div class="quiz-q">7. What package provides geom_text_repel() to avoid label overlaps?</div>
+    <div class="quiz-options">
+      <button class="quiz-opt" onclick="answer(this,'q7',false)">ggtext</button>
+      <button class="quiz-opt" onclick="answer(this,'q7',false)">ggthemes</button>
+      <button class="quiz-opt" onclick="answer(this,'q7',true)">ggrepel</button>
+      <button class="quiz-opt" onclick="answer(this,'q7',false)">patchwork</button>
+    </div>
+    <div class="quiz-feedback" id="fb-q7"></div>
+  </div>
+
+  <div class="quiz-box" id="q8">
+    <div class="quiz-q">8. In the grammar of graphics, what does the <strong>stat</strong> layer control?</div>
+    <div class="quiz-options">
+      <button class="quiz-opt" onclick="answer(this,'q8',false)">The visual style and theme</button>
+      <button class="quiz-opt" onclick="answer(this,'q8',true)">Statistical transformation applied before drawing</button>
+      <button class="quiz-opt" onclick="answer(this,'q8',false)">The coordinate system</span></button>
+      <button class="quiz-opt" onclick="answer(this,'q8',false)">The axis labels</button>
+    </div>
+    <div class="quiz-feedback" id="fb-q8"></div>
+  </div>
+
+  <div style="text-align:center;margin-top:32px">
+    <button onclick="resetQuiz()" style="background:var(--surface2);border:1px solid var(--border);color:var(--text);padding:12px 28px;border-radius:8px;font-family:'DM Sans',sans-serif;font-size:14px;cursor:pointer;transition:all .15s" onmouseover="this.style.borderColor='var(--accent)'" onmouseout="this.style.borderColor='var(--border)'">↺ Reset Quiz</button>
+  </div>
+</section>
+
+</main>
+
+<script>
+// ── Section switching ──
+function showSection(id) {
+  document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+  document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  document.querySelectorAll('.nav-link').forEach(l => {
+    if(l.getAttribute('onclick')?.includes(`'${id}'`)) l.classList.add('active');
+  });
+  window.scrollTo(0,0);
+}
+
+// ── Tab switching ──
+function switchTab(btn, targetId) {
+  const bar = btn.closest('.tab-bar');
+  bar.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  // Find sibling tab-contents
+  const container = bar.nextElementSibling;
+  // Get all siblings until next tab-bar or end of parent
+  let el = bar.nextElementSibling;
+  while(el && el.classList.contains('tab-content')) {
+    el.classList.remove('active');
+    el = el.nextElementSibling;
+  }
+  const target = document.getElementById(targetId);
+  if(target) target.classList.add('active');
+}
+
+// ── Copy code ──
+function copyCode(btn) {
+  const pre = btn.closest('.code-block').querySelector('pre');
+  const text = pre.innerText;
+  navigator.clipboard.writeText(text).then(() => {
+    btn.textContent = 'Copied!';
+    btn.classList.add('copied');
+    setTimeout(() => { btn.textContent = 'Copy'; btn.classList.remove('copied'); }, 2000);
+  });
+}
+
+// ── Search nav ──
+function filterNav(q) {
+  const term = q.toLowerCase();
+  document.querySelectorAll('.nav-link').forEach(link => {
+    const search = link.dataset.search || '';
+    const text = link.textContent.toLowerCase();
+    link.style.display = (term === '' || text.includes(term) || search.includes(term)) ? '' : 'none';
+  });
+}
+
+// ── Quiz ──
+let score = 0;
+let answered = {};
+const feedbacks = {
+  'q1': 'Correct! <code>coord_cartesian()</code> zooms without dropping data. <code>scale_x_continuous(limits=)</code> removes data outside range, which affects smooths and other stats.',
+  'q2': 'Correct! Fixed aesthetics (constants) go <em>outside</em> <code>aes()</code>. Inside <code>aes()</code> means "map this data variable to color".',
+  'q3': 'Correct! <code>|</code> always forces plots into a single row. <code>+</code> tries to make a square layout. <code>/</code> stacks into a column.',
+  'q4': 'Correct! <code>element_blank()</code> removes any theme element. Use it for major, minor, or all grids individually.',
+  'q5': 'Correct! <code>facet_wrap(~var)</code> creates a ribbon of panels for one variable with configurable rows/columns. <code>facet_grid()</code> needs two variables.',
+  'q6': 'Correct! <code>position = "dodge"</code> places bars next to each other (grouped). <code>"stack"</code> = stacked, <code>"fill"</code> = 100% stacked.',
+  'q7': 'Correct! ggrepel provides <code>geom_text_repel()</code> and <code>geom_label_repel()</code>. ggtext is for rich HTML/Markdown formatting.',
+  'q8': 'Correct! Stats transform data before drawing: <code>stat_count</code> counts rows, <code>stat_density</code> estimates density, <code>stat_identity</code> uses values as-is.',
+};
+
+function answer(btn, qId, correct) {
+  if(answered[qId]) return;
+  answered[qId] = true;
+  const opts = btn.closest('.quiz-options').querySelectorAll('.quiz-opt');
+  opts.forEach(o => o.disabled = true);
+  if(correct) {
+    btn.classList.add('correct');
+    score++;
+  } else {
+    btn.classList.add('wrong');
+    opts.forEach(o => { if(!o.classList.contains('wrong') && o !== btn) {
+      // Reveal correct
+    }});
+  }
+  const fb = document.getElementById(`fb-${qId}`);
+  fb.style.display = 'block';
+  fb.style.background = correct ? 'rgba(82,217,160,.1)' : 'rgba(255,107,107,.1)';
+  fb.style.color = correct ? 'var(--accent3)' : 'var(--accent2)';
+  fb.innerHTML = (correct ? '✓ ' : '✗ ') + feedbacks[qId];
+  updateProgress();
+}
+
+function updateProgress() {
+  const total = 8;
+  document.getElementById('scoreText').textContent = `${score} / ${total} correct`;
+  document.getElementById('progressFill').style.width = `${(Object.keys(answered).length / total) * 100}%`;
+}
+
+function resetQuiz() {
+  score = 0;
+  answered = {};
+  document.querySelectorAll('.quiz-opt').forEach(o => {
+    o.disabled = false;
+    o.classList.remove('correct','wrong');
+  });
+  document.querySelectorAll('.quiz-feedback').forEach(f => f.style.display = 'none');
+  updateProgress();
+}
+</script>
+</body>
+</html>

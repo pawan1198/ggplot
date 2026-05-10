@@ -1,0 +1,251 @@
+---
+title: "Coordinate Systems"
+subtitle: "coord_cartesian, coord_flip, coord_polar, coord_trans, coord_fixed, coord_map"
+description: "Control ggplot2 coordinate systems — zoom without clipping, flip axes, create pie/radar charts with polar coordinates, transform scales, and fix aspect ratios."
+---
+
+## Overview
+
+Coordinate functions change **how** the plot space is set up — they affect the axes themselves, not the data.
+
+| Function | Purpose |
+|----------|---------|
+| `coord_cartesian()` | Zoom without dropping data |
+| `coord_flip()` | Swap x and y axes |
+| `coord_polar()` | Polar / pie / radar charts |
+| `coord_trans()` | Transform the coordinate system |
+| `coord_fixed()` | Fix aspect ratio |
+| `coord_equal()` | Equal units on both axes |
+| `coord_map()` | Map projections |
+
+---
+
+## `coord_cartesian()` — zoom without clipping
+
+`coord_cartesian()` zooms into a region **without removing** data outside the view (unlike `xlim()` / `ylim()` which remove data and affect statistical calculations).
+
+```r
+library(ggplot2)
+
+p <- ggplot(mtcars, aes(x = wt, y = mpg)) +
+  geom_point() +
+  geom_smooth(method = "lm")
+
+# Full plot
+p
+
+# Zoom in on x: 2–4, y: 15–30  (data outside still used for smooth)
+p + coord_cartesian(xlim = c(2, 4), ylim = c(15, 30))
+
+# Compare — xlim() REMOVES data; affects the smooth line
+p + xlim(2, 4) + ylim(15, 30)
+```
+
+::: {.callout-important}
+## `coord_cartesian()` vs `xlim()` / `ylim()`
+`coord_cartesian()` **zooms** — all data is still used for statistical layers like `geom_smooth()`.  
+`xlim()` / `ylim()` **filter** — data outside the range is dropped, which can distort stat layers.
+:::
+
+```r
+# Expand ratio (add padding around data)
+p + coord_cartesian(expand = FALSE)          # remove padding
+p + coord_cartesian(xlim = c(1.5, 5.5),
+                    ylim = c(10, 35),
+                    expand = FALSE)          # tight zoom, no padding
+```
+
+---
+
+## `coord_flip()` — swap axes
+
+Useful for horizontal bar charts, boxplots, and any chart where switching x/y improves readability.
+
+```r
+library(ggplot2)
+
+# Vertical bar chart (default)
+ggplot(mtcars, aes(x = factor(cyl))) +
+  geom_bar()
+
+# Horizontal bar chart with coord_flip
+ggplot(mtcars, aes(x = factor(cyl))) +
+  geom_bar() +
+  coord_flip()
+
+# Horizontal sorted bar chart
+ggplot(mtcars, aes(x = reorder(rownames(mtcars), mpg), y = mpg)) +
+  geom_col(fill = "steelblue") +
+  coord_flip() +
+  labs(x = NULL, y = "Miles per Gallon",
+       title = "Fuel Economy by Car Model")
+
+# Horizontal boxplot
+ggplot(mtcars, aes(x = factor(cyl), y = mpg, fill = factor(cyl))) +
+  geom_boxplot() +
+  coord_flip() +
+  theme(legend.position = "none")
+
+# Modern alternative: swap aes() directly (ggplot2 ≥ 3.3)
+ggplot(mtcars, aes(y = factor(cyl))) +
+  geom_bar()
+```
+
+---
+
+## `coord_polar()` — pie / radar charts
+
+`coord_polar()` maps one of the axes to the angle and the other to the radius.
+
+```r
+library(ggplot2)
+
+# Pie chart (theta = "y" maps y to angle)
+ggplot(mtcars, aes(x = factor(1), fill = factor(cyl))) +
+  geom_bar(width = 1) +
+  coord_polar(theta = "y") +
+  theme_void() +
+  labs(fill = "Cylinders",
+       title = "Cylinder distribution in mtcars")
+
+# Coxcomb / Rose chart (theta = "x")
+ggplot(mtcars, aes(x = factor(cyl), fill = factor(cyl))) +
+  geom_bar(width = 1, colour = "white") +
+  coord_polar(theta = "x") +
+  theme_minimal() +
+  labs(title = "Coxcomb chart by cylinder count")
+
+# Radar / spider chart (with line geom)
+# For proper radar charts use the fmsb or ggradar packages
+# Quick approximation:
+ggplot(mtcars[1, ], aes(x = "mpg", y = mpg)) +
+  geom_col(fill = "steelblue", width = 0.8) +
+  coord_polar() +
+  theme_minimal()
+```
+
+---
+
+## `coord_trans()` — transform coordinates
+
+Transforms the **visual** coordinate space (unlike `scale_*_log10()` which transforms the data before plotting).
+
+```r
+library(ggplot2)
+
+p <- ggplot(mtcars, aes(x = wt, y = mpg)) + geom_point()
+
+# Log10 Y axis
+p + coord_trans(y = "log10")
+
+# Square root on both axes
+p + coord_trans(x = "sqrt", y = "sqrt")
+
+# Log on X, reverse Y
+p + coord_trans(x = "log10") + scale_y_reverse()
+
+# Compare: scale_y_log10 (transforms data) vs coord_trans (transforms display)
+p + scale_y_log10()                    # stat layers use log-transformed data
+p + coord_trans(y = "log10")          # stat layers use original data
+```
+
+---
+
+## `coord_fixed()` — fixed aspect ratio
+
+Forces a fixed ratio between x and y units. Default `ratio = 1` means one unit on x equals one unit on y.
+
+```r
+library(ggplot2)
+
+p <- ggplot(mtcars, aes(x = wt, y = qsec)) + geom_point()
+
+# Default (free aspect ratio)
+p
+
+# 1:1 aspect ratio — one unit on y = one unit on x
+p + coord_fixed()
+
+# 2:1 — one unit on y = 2 units on x
+p + coord_fixed(ratio = 2)
+
+# Great for correlation matrices, maps, raster images
+ggplot(faithfuld, aes(waiting, eruptions, fill = density)) +
+  geom_raster() +
+  coord_fixed()
+```
+
+---
+
+## `coord_equal()` — equal units
+
+Similar to `coord_fixed(ratio = 1)`. Useful for geographic data and correlation plots.
+
+```r
+ggplot(mtcars, aes(x = mpg, y = mpg + rnorm(32))) +
+  geom_point() +
+  geom_abline(slope = 1, intercept = 0, colour = "tomato") +
+  coord_equal()
+```
+
+---
+
+## Reversing axes
+
+```r
+library(ggplot2)
+
+# Reverse the Y axis
+ggplot(mtcars, aes(x = wt, y = mpg)) +
+  geom_point() +
+  scale_y_reverse()
+
+# Reverse the X axis
+ggplot(mtcars, aes(x = wt, y = mpg)) +
+  geom_point() +
+  scale_x_reverse()
+
+# Both — with coord_cartesian zoom
+ggplot(mtcars, aes(x = wt, y = mpg)) +
+  geom_point() +
+  scale_y_reverse() +
+  coord_cartesian(ylim = c(35, 10))
+```
+
+---
+
+## Date / time coordinates
+
+```r
+library(ggplot2)
+
+# Zoom into a date range
+ggplot(economics, aes(x = date, y = unemploy)) +
+  geom_line() +
+  coord_cartesian(xlim = as.Date(c("2000-01-01", "2015-01-01")))
+
+# Custom date axis breaks and labels
+ggplot(economics, aes(x = date, y = unemploy)) +
+  geom_line(colour = "steelblue") +
+  scale_x_date(
+    date_breaks  = "5 years",
+    date_labels  = "%Y"
+  ) +
+  labs(x = NULL, y = "Unemployed (thousands)",
+       title = "US Unemployment 1967–2015")
+```
+
+---
+
+## Quick reference
+
+| Function | Key argument | Use case |
+|----------|-------------|----------|
+| `coord_cartesian(xlim, ylim)` | `expand = FALSE` | Safe zoom |
+| `coord_flip()` | — | Horizontal bars, boxplots |
+| `coord_polar(theta)` | `"x"` or `"y"` | Pie / coxcomb |
+| `coord_trans(x, y)` | `"log10"`, `"sqrt"` | Visual transform |
+| `coord_fixed(ratio)` | default `1` | Equal units |
+| `coord_equal()` | — | 1:1 aspect |
+| `scale_x_reverse()` | — | Reverse x axis |
+| `scale_y_reverse()` | — | Reverse y axis |

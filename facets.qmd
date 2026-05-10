@@ -1,0 +1,330 @@
+---
+title: "Faceting in ggplot2"
+subtitle: "facet_wrap() and facet_grid() — multi-panel plots with full strip customisation"
+description: "Create multi-panel Trellis plots in ggplot2 using facet_wrap() and facet_grid(). Covers rows, columns, scales, direction, strip styling, panel spacing, and background highlighting."
+---
+
+## What is faceting?
+
+Faceting splits your data into **sub-panels**, each showing a subset. It's one of ggplot2's most powerful features for comparing patterns across groups.
+
+Two main functions:
+
+| Function | Use when | Variables |
+|----------|----------|-----------|
+| `facet_wrap()` | One grouping variable (can do two) | Wraps panels into a 2-D grid |
+| `facet_grid()` | Two grouping variables | Strict rows × columns matrix |
+
+---
+
+## Sample data
+
+```r
+library(ggplot2)
+
+# Simulate data with 4 groups
+set.seed(4)
+x      <- runif(500)
+y      <- 4 * x^2 + rnorm(length(x), sd = 5)
+group  <- ifelse(x < 0.4, "G1",
+           ifelse(x < 0.6, "G2",
+            ifelse(x < 0.8, "G3", "G4")))
+x      <- x + runif(length(x), -0.5, 0.5)
+df     <- data.frame(x = x, y = y, group = group)
+
+# All data coloured by group — can get crowded
+ggplot(df, aes(x = x, y = y, colour = group)) +
+  geom_point()
+```
+
+---
+
+## `facet_wrap()` — one variable
+
+### Basic
+
+```r
+ggplot(df, aes(x = x, y = y, colour = group)) +
+  geom_point(show.legend = FALSE) +
+  facet_wrap(~ group)
+```
+
+### Control rows / columns
+
+```r
+# Force one row (four panels side by side)
+ggplot(df, aes(x = x, y = y, colour = group)) +
+  geom_point(show.legend = FALSE) +
+  facet_wrap(~ group, nrow = 1)
+
+# Force two columns
+ggplot(df, aes(x = x, y = y, colour = group)) +
+  geom_point(show.legend = FALSE) +
+  facet_wrap(~ group, ncol = 2)
+```
+
+### Free axis scales
+
+```r
+# All panels independent axes
+ggplot(df, aes(x = x, y = y, colour = group)) +
+  geom_point(show.legend = FALSE) +
+  facet_wrap(~ group, scales = "free")
+
+# Free Y only
+ggplot(df, aes(x = x, y = y, colour = group)) +
+  geom_point(show.legend = FALSE) +
+  facet_wrap(~ group, scales = "free_y")
+
+# Free X only
+ggplot(df, aes(x = x, y = y, colour = group)) +
+  geom_point(show.legend = FALSE) +
+  facet_wrap(~ group, scales = "free_x")
+```
+
+### Panel direction
+
+```r
+# Default horizontal fill (left→right, then next row)
+ggplot(df, aes(x = x, y = y, colour = group)) +
+  geom_point(show.legend = FALSE) +
+  facet_wrap(~ group, dir = "h")  # default
+
+# Vertical fill (top→bottom, then next column)
+ggplot(df, aes(x = x, y = y, colour = group)) +
+  geom_point(show.legend = FALSE) +
+  facet_wrap(~ group, dir = "v")
+```
+
+### Strip (label) position
+
+```r
+# Default: top
+ggplot(df, aes(x = x, y = y, colour = group)) +
+  geom_point(show.legend = FALSE) +
+  facet_wrap(~ group, strip.position = "top")    # default
+
+# Bottom strip
+ggplot(df, aes(x = x, y = y, colour = group)) +
+  geom_point(show.legend = FALSE) +
+  facet_wrap(~ group, strip.position = "bottom")
+
+# Left / right
+ggplot(df, aes(x = x, y = y, colour = group)) +
+  geom_point(show.legend = FALSE) +
+  facet_wrap(~ group, strip.position = "left")
+```
+
+### Highlight each group (show all data behind)
+
+A powerful technique: draw all data in grey in every panel, then highlight the relevant group on top.
+
+```r
+ggplot(df, aes(x = x, y = y, colour = group)) +
+  # All data in grey — remove group from this layer
+  geom_point(data = transform(df, group = NULL), colour = "grey85") +
+  # Highlighted group on top
+  geom_point(show.legend = FALSE) +
+  facet_wrap(~ group, strip.position = "bottom")
+```
+
+---
+
+## `facet_grid()` — two variables
+
+```r
+# Simulate second grouping variable
+set.seed(4)
+x      <- runif(500)
+y      <- 4 * x^2 + rnorm(length(x), sd = 5)
+group1 <- ifelse(x < 0.4, "G1", ifelse(x < 0.6, "G2",
+           ifelse(x < 0.8, "G3", "G4")))
+group2 <- ifelse(y < 0.5, "A", "B")
+x      <- x + runif(length(x), -0.5, 0.5)
+df2    <- data.frame(x = x, y = y, group1 = group1, group2 = group2)
+```
+
+### Basic formula syntax
+
+```r
+# group1 ~ group2 → group1 in rows, group2 in columns
+ggplot(df2, aes(x = x, y = y, colour = group1)) +
+  geom_point(show.legend = FALSE) +
+  facet_grid(group1 ~ group2)
+```
+
+### vars() syntax (modern)
+
+```r
+ggplot(df2, aes(x = x, y = y, colour = group1)) +
+  geom_point(show.legend = FALSE) +
+  facet_grid(rows = vars(group1), cols = vars(group2))
+```
+
+### One direction only
+
+```r
+# Only columns (rows free)
+ggplot(df2, aes(x = x, y = y)) +
+  geom_point(show.legend = FALSE) +
+  facet_grid(. ~ group2)
+
+# Only rows (cols free)
+ggplot(df2, aes(x = x, y = y)) +
+  geom_point(show.legend = FALSE) +
+  facet_grid(group1 ~ .)
+```
+
+### Free scales
+
+```r
+ggplot(df2, aes(x = x, y = y, colour = group1)) +
+  geom_point(show.legend = FALSE) +
+  facet_grid(group1 ~ group2, scales = "free")
+
+# Free only Y
+ggplot(df2, aes(x = x, y = y, colour = group1)) +
+  geom_point(show.legend = FALSE) +
+  facet_grid(group1 ~ group2, scales = "free_y")
+```
+
+### Free panel sizes (when scales are free)
+
+```r
+ggplot(df2, aes(x = x, y = y, colour = group1)) +
+  geom_point(show.legend = FALSE) +
+  facet_grid(group1 ~ group2,
+             scales = "free",
+             space  = "free")   # "free", "free_x", "free_y"
+```
+
+---
+
+## Strip customisation
+
+### `facet_wrap` strips
+
+```r
+ggplot(df, aes(x = x, y = y, colour = group)) +
+  geom_point(show.legend = FALSE) +
+  facet_wrap(~ group) +
+  theme(
+    strip.text = element_text(
+      face   = "bold",
+      colour = "white",
+      hjust  = 0,
+      size   = 13
+    ),
+    strip.background = element_rect(
+      fill      = "#2d6be4",
+      linetype  = "solid",
+      colour    = "white",
+      linewidth = 0.8
+    )
+  )
+```
+
+### `facet_grid` strips — x and y independently
+
+```r
+ggplot(df2, aes(x = x, y = y)) +
+  geom_point(show.legend = FALSE) +
+  facet_grid(group1 ~ group2) +
+  theme(
+    strip.text.x = element_text(face = "bold", colour = "white", size = 12),
+    strip.text.y = element_text(face = "bold", colour = "white", size = 12),
+    strip.background.x = element_rect(fill = "#2d6be4"),
+    strip.background.y = element_rect(fill = "#e84855")
+  )
+```
+
+### Remove strip background
+
+```r
+ggplot(df, aes(x = x, y = y, colour = group)) +
+  geom_point(show.legend = FALSE) +
+  facet_wrap(~ group) +
+  theme(strip.background = element_blank(),
+        strip.text = element_text(face = "bold", size = 12, colour = "#0e0f14"))
+```
+
+---
+
+## Panel spacing
+
+```r
+# Increase panel spacing
+ggplot(df, aes(x = x, y = y, colour = group)) +
+  geom_point(show.legend = FALSE) +
+  facet_wrap(~ group) +
+  theme(panel.spacing = unit(1.5, "lines"))
+
+# Different h/v spacing
+ggplot(df, aes(x = x, y = y, colour = group)) +
+  geom_point(show.legend = FALSE) +
+  facet_wrap(~ group) +
+  theme(panel.spacing.x = unit(2, "lines"),
+        panel.spacing.y = unit(0.5, "lines"))
+```
+
+---
+
+## Panel borders per facet
+
+```r
+ggplot(df, aes(x = x, y = y, colour = group)) +
+  geom_point(show.legend = FALSE) +
+  facet_wrap(~ group) +
+  theme(
+    panel.border = element_rect(fill = "transparent",
+                                colour = "grey70",
+                                linewidth = 0.6)
+  )
+```
+
+---
+
+## Full polished example
+
+```r
+library(ggplot2)
+
+ggplot(mtcars, aes(x = wt, y = mpg, colour = factor(cyl))) +
+  geom_point(size = 2.5, alpha = 0.85) +
+  geom_smooth(method = "lm", se = FALSE, linewidth = 0.8) +
+  facet_wrap(~ factor(gear),
+             nrow           = 1,
+             labeller       = labeller(.default = function(x) paste0(x, " gears")),
+             strip.position = "bottom") +
+  scale_colour_manual(
+    values = c("4" = "#e84855", "6" = "#2d6be4", "8" = "#12a36a"),
+    name   = "Cylinders"
+  ) +
+  labs(title    = "Weight vs Fuel Economy by Gear Count",
+       subtitle = "Colour = cylinder count · line = linear trend",
+       x        = "Weight (1,000 lbs)",
+       y        = "Miles per Gallon") +
+  theme_minimal(base_size = 12) +
+  theme(
+    legend.position  = "top",
+    strip.background = element_blank(),
+    strip.text       = element_text(face = "bold", size = 11),
+    panel.border     = element_rect(fill = "transparent", colour = "grey80"),
+    panel.spacing    = unit(1, "lines"),
+    plot.title       = element_text(face = "bold")
+  )
+```
+
+---
+
+## Quick reference
+
+| Argument | Values | Effect |
+|----------|--------|--------|
+| `nrow` / `ncol` | Integer | Force number of rows / columns |
+| `scales` | `"fixed"`, `"free"`, `"free_x"`, `"free_y"` | Axis scale freedom |
+| `dir` | `"h"` (default), `"v"` | Panel fill direction |
+| `strip.position` | `"top"` (default), `"bottom"`, `"left"`, `"right"` | Label position |
+| `space` | `"fixed"`, `"free"`, `"free_x"`, `"free_y"` | Panel size freedom (grid only) |
+| `shrink` | `TRUE`/`FALSE` | Shrink scales to fit stat output |
+| `drop` | `TRUE`/`FALSE` | Drop unused factor levels |

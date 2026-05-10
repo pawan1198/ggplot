@@ -1,0 +1,341 @@
+---
+title: "Combining Plots"
+subtitle: "patchwork, gridExtra, and cowplot — layouts, operators, annotations, and complex grids"
+description: "Combine multiple ggplot2 plots into one figure using patchwork (operators, wrap_plots, plot_layout), gridExtra (grid.arrange, layout_matrix), and cowplot (plot_grid, alignment)."
+---
+
+## Overview
+
+ggplot2 doesn't include a built-in layout function. Three packages fill this gap:
+
+| Package | Function | Style |
+|---------|----------|-------|
+| `patchwork` | `+`, `|`, `/`, `&` operators | Operator-based — most intuitive |
+| `gridExtra` | `grid.arrange()` | Function-based — good for tables |
+| `cowplot` | `plot_grid()` | Function-based — great for publication |
+
+---
+
+## Sample plots
+
+Create four plots to combine throughout this page:
+
+```r
+library(ggplot2)
+
+mtcars -> df
+
+# p1: Box plot
+p1 <- ggplot(df, aes(x = "", y = mpg)) +
+  geom_boxplot(fill = "steelblue", alpha = 0.7) +
+  labs(title = "p1 — Boxplot")
+
+# p2: Normal density curve
+p2 <- ggplot() +
+  stat_function(fun = dnorm, geom = "density",
+                xlim = c(-3, 3), fill = "#f87060", alpha = 0.5) +
+  labs(title = "p2 — Normal density")
+
+# p3: Line chart
+p3 <- ggplot(df, aes(x = mpg, y = disp)) +
+  geom_line(colour = "grey30") +
+  labs(title = "p3 — Line chart")
+
+# p4: Scatter plot
+p4 <- ggplot(df, aes(x = hp, y = wt)) +
+  geom_point(colour = "grey30") +
+  labs(title = "p4 — Scatter")
+
+p1; p2; p3; p4
+```
+
+---
+
+## patchwork
+
+```r
+install.packages("patchwork")
+library(patchwork)
+```
+
+### Basic operators
+
+```r
+# + (or |) — side by side
+p1 + p2
+p1 | p2
+
+# / — stacked (vertical)
+p1 / p2
+
+# 4 plots in auto-layout
+p1 + p2 + p3 + p4
+
+# Complex nesting
+(p1 | p2) / p3           # two on top, one wide at bottom
+p1 | (p2 / p3)            # one at left, two stacked at right
+p1 + ((p2 | p3) / p4)     # nested 3-panel right side
+```
+
+### `plot_layout()` — control layout
+
+```r
+# Set number of columns
+p1 + p2 + p3 + p4 +
+  plot_layout(ncol = 3)
+
+# Relative widths and heights
+p1 + p2 + p3 + p4 +
+  plot_layout(widths = c(2, 1), heights = c(1, 2))
+
+# Custom design string
+# 1,2,3,4 = plot numbers; # = empty space
+p1 + p2 + p3 + p4 +
+  plot_layout(design = "
+    111
+    2#3
+    443
+  ")
+```
+
+### `wrap_plots()` — for lists of plots
+
+```r
+# When you don't know the number of plots at coding time
+wrap_plots(p1, p2, p3, p4,
+           ncol    = 2,
+           nrow    = 2,
+           widths  = c(1, 0.5),
+           heights = c(0.5, 1))
+
+# From a list (e.g. from lapply)
+plot_list <- list(p1, p2, p3, p4)
+wrap_plots(plot_list, ncol = 2)
+```
+
+### `plot_spacer()` — add empty gaps
+
+```r
+p1 + plot_spacer() + p3         # p1 | gap | p3
+
+# Multi-row with spacers
+(p1 + plot_spacer() + p2) /
+(p3 + p4 + plot_spacer())
+```
+
+### `plot_annotation()` — overall title & panel labels
+
+```r
+# Overall title, subtitle, caption
+p1 + ((p2 | p3) / p4) +
+  plot_annotation(
+    title    = "Combined plot title",
+    subtitle = "A subtitle for the whole figure",
+    caption  = "Source: mtcars dataset"
+  )
+
+# Automatic panel labels
+p1 + p2 +
+  plot_annotation(tag_levels = "A")    # A, B, C…
+
+p1 + p2 + p3 + p4 +
+  plot_annotation(tag_levels = "1")    # 1, 2, 3, 4
+
+# Labels with prefix
+p1 + p2 +
+  plot_annotation(tag_levels = "A",
+                  tag_prefix = "Fig. ")   # Fig. A, Fig. B
+
+# Roman numerals
+p1 + p2 +
+  plot_annotation(tag_levels = "i")    # i, ii, iii…
+```
+
+### `&` operator — apply to all panels
+
+```r
+# Set same theme for all plots at once
+p1 + p2 + p3 + p4 & theme_minimal()
+
+# Combined with annotation
+(p1 + p2 + p3 + p4 & theme_minimal()) +
+  plot_annotation(title = "All with theme_minimal")
+```
+
+### Add new layers to a patchwork
+
+```r
+# Adds to the LAST plot in the patchwork
+p2 + p1 + geom_jitter(colour = "tomato")
+
+# Access specific plot by index
+patch <- p2 + p1
+patch[[1]] <- patch[[1]] + theme_bw()
+patch
+```
+
+### Mix ggplot2 with base R plots
+
+```r
+old_par <- par()
+par(mar = c(0, 2, 0, 0), bg = NA)
+p1 + wrap_elements(panel = ~ plot(1:10))
+par(old_par)
+```
+
+### Add a table (with gridExtra)
+
+```r
+library(gridExtra)
+
+tab <- t(round(quantile(mtcars$mpg), 2))
+p1 / tableGrob(tab)
+```
+
+### Add text annotations
+
+```r
+library(grid)
+
+p1 + textGrob("Text at the right")
+wrap_elements(textGrob("Text at the left")) + p1
+```
+
+---
+
+## gridExtra
+
+```r
+install.packages("gridExtra")
+library(gridExtra)
+```
+
+### Basic `grid.arrange()`
+
+```r
+grid.arrange(p2, p3, p1, p4)
+```
+
+### Rows, columns, sizes, side labels
+
+```r
+grid.arrange(p4, p3, p2, p1,
+             nrow    = 2,
+             ncol    = 2,
+             widths  = c(1, 2),
+             heights = c(2, 3),
+             top     = "Top label",
+             bottom  = "Bottom label",
+             left    = "Left label",
+             right   = "Right label")
+```
+
+### Custom layout matrix
+
+```r
+# Numbers refer to the order of plots passed to grid.arrange
+# 1=p2, 2=p3, 3=p1, 4=p4
+layout <- matrix(c(1, 1,
+                   2, 3,
+                   4, 4), ncol = 2, byrow = TRUE)
+
+grid.arrange(p2, p3, p1, p4,
+             layout_matrix = layout)
+```
+
+### Table alongside plots
+
+```r
+tab <- tableGrob(head(mtcars[, 1:4]))
+grid.arrange(p1, tab, ncol = 2)
+```
+
+---
+
+## cowplot
+
+```r
+install.packages("cowplot")
+library(cowplot)
+```
+
+### Basic `plot_grid()`
+
+```r
+plot_grid(p1, p2)
+```
+
+### Alignment
+
+```r
+plot_grid(p1, p2, align = "h")   # horizontal alignment
+plot_grid(p1, p2, align = "v")   # vertical alignment
+plot_grid(p1, p2, align = "hv")  # both
+```
+
+### Rows and columns
+
+```r
+plot_grid(p1, p2, ncol = 1)   # one column (stacked)
+plot_grid(p1, p2, nrow = 2)   # two rows
+```
+
+### Panel labels
+
+```r
+# Custom labels
+plot_grid(p1, p2,
+          labels           = c("A", "B"),
+          label_fontfamily = "serif",
+          label_fontface   = "bold",
+          label_colour     = "#2d6be4")
+
+# Automatic uppercase letters
+plot_grid(p1, p2, p3, p4,
+          labels = "AUTO")
+
+# Automatic lowercase letters
+plot_grid(p1, p2, p3, p4,
+          labels = "auto")
+```
+
+### Relative sizes
+
+```r
+plot_grid(p1, p2, p3, p4,
+          rel_widths  = c(1, 0.5),
+          rel_heights = c(1, 0.5))
+```
+
+### Nested layouts
+
+```r
+# Two plots at the bottom, one wide at the top
+plot_grid(p3, plot_grid(p1, p2), ncol = 1)
+
+# One plot at left, two stacked at right
+plot_grid(p3, plot_grid(p1, p2, ncol = 1))
+```
+
+---
+
+## Package comparison
+
+| Feature | patchwork | gridExtra | cowplot |
+|---------|-----------|-----------|---------|
+| Syntax | Operators (`+`, `|`, `/`) | Function | Function |
+| Learning curve | Very easy | Moderate | Moderate |
+| Custom layouts | `design =` string | `layout_matrix` | Nested calls |
+| Overall title | `plot_annotation()` | `top =` arg | `ggdraw()` |
+| Auto panel labels | `tag_levels =` | Manual | `labels = "AUTO"` |
+| Tables in layout | `tableGrob()` (gridExtra) | `tableGrob()` native | Limited |
+| Axis alignment | Automatic | Manual | `align =` arg |
+| Apply theme to all | `& theme_*()` | Separate | Separate |
+| Best for | General — most readable | Complex grids + tables | Publication figures |
+
+::: {.callout-tip}
+## Which to choose?
+- **New to combining plots?** → Use **patchwork** — the operators are the most intuitive.  
+- **Need tables in the layout?** → Use **gridExtra** with `tableGrob()`.  
+- **Publication figures with strict alignment?** → Use **cowplot** with `align = "hv"`.
+:::

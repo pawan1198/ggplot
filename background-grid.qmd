@@ -1,0 +1,290 @@
+---
+title: "Background & Grid"
+subtitle: "Panel and plot backgrounds, borders, grid lines, breaks, and margins"
+description: "Control panel background, plot background, panel borders, grid major/minor lines, custom breaks, and plot margins in ggplot2."
+---
+
+## Default plot
+
+By default ggplot2 has a **grey panel** and **white grid lines**.
+
+```r
+library(ggplot2)
+
+set.seed(123)
+df <- data.frame(x = 1:220, y = 1:220 + rnorm(220, sd = 50))
+
+ggplot(df, aes(x, y)) +
+  geom_point()
+```
+
+---
+
+## Panel Background Colour
+
+```r
+# Change panel (inner plot area) background
+ggplot(mtcars, aes(x = mpg, y = cyl)) +
+  geom_point() +
+  theme(panel.background = element_rect(fill = "#67c9ff"))
+
+# White panel
+ggplot(mtcars, aes(x = mpg, y = cyl)) +
+  geom_point() +
+  theme(panel.background = element_rect(fill = "white"))
+```
+
+---
+
+## Panel Border
+
+```r
+# Option 1 — panel.border (recommended)
+ggplot(df, aes(x, y)) +
+  geom_point() +
+  theme_bw() +
+  theme(panel.border = element_rect(
+    fill  = "transparent",   # MUST be transparent — hides data otherwise
+    colour = 4,              # border colour (index 4 = blue)
+    linewidth = 2
+  ))
+
+# Option 2 — panel.background colour argument
+ggplot(df, aes(x, y)) +
+  geom_point() +
+  theme_bw() +
+  theme(panel.background = element_rect(colour = 4, linewidth = 2))
+
+# Custom border style
+ggplot(mtcars, aes(wt, mpg)) +
+  geom_point() +
+  theme_minimal() +
+  theme(panel.border = element_rect(
+    fill = "transparent", colour = "#e84855", linewidth = 1.5, linetype = "dashed"
+  ))
+```
+
+---
+
+## Plot Background Colour
+
+The **plot background** is the area outside the panel — the full figure.
+
+```r
+ggplot(mtcars, aes(x = mpg, y = cyl)) +
+  geom_point() +
+  theme(plot.background = element_rect(fill = "grey86"))
+
+# Plot border
+ggplot(df, aes(x, y)) +
+  geom_point() +
+  theme(plot.background = element_rect(
+    colour = "black",
+    linewidth = 2
+  ))
+```
+
+---
+
+## Using Themes for Background
+
+```r
+ggplot(df, aes(x, y)) +
+  geom_point() +
+  theme_dark()      # dark panel background
+
+ggplot(df, aes(x, y)) +
+  geom_point() +
+  theme_minimal()   # white background, no border
+
+ggplot(df, aes(x, y)) +
+  geom_point() +
+  theme_bw()        # white panel, black border
+
+ggplot(df, aes(x, y)) +
+  geom_point() +
+  theme_classic()   # white, no grid
+```
+
+---
+
+## Grid Customisation
+
+### Full grid
+
+```r
+ggplot(mtcars, aes(hp, mpg)) +
+  geom_point() +
+  theme(panel.grid = element_line(
+    colour   = "#8ccde3",
+    linewidth = 0.75,
+    linetype = 2          # 1=solid, 2=dashed, 3=dotted
+  ))
+```
+
+### Major grid
+
+```r
+ggplot(mtcars, aes(hp, mpg)) +
+  geom_point() +
+  theme(panel.grid.major = element_line(
+    colour = "red", linewidth = 0.5, linetype = 2
+  ))
+
+# Only vertical major lines
+ggplot(mtcars, aes(hp, mpg)) +
+  geom_point() +
+  theme(panel.grid.major.x = element_line(colour = "red", linewidth = 0.5, linetype = 2))
+
+# Only horizontal major lines
+ggplot(mtcars, aes(hp, mpg)) +
+  geom_point() +
+  theme(panel.grid.major.y = element_line(colour = "red", linewidth = 0.5, linetype = 2))
+```
+
+### Minor grid
+
+```r
+ggplot(mtcars, aes(hp, mpg)) +
+  geom_point() +
+  theme(panel.grid.minor = element_line(colour = "tomato", linewidth = 0.25))
+
+# Only minor x lines
+ggplot(mtcars, aes(hp, mpg)) +
+  geom_point() +
+  theme(panel.grid.minor.x = element_line(colour = "tomato", linewidth = 0.25))
+
+# Only minor y lines
+ggplot(mtcars, aes(hp, mpg)) +
+  geom_point() +
+  theme(panel.grid.minor.y = element_line(colour = "tomato", linewidth = 0.25))
+```
+
+---
+
+## Custom Grid Breaks
+
+```r
+# Custom Y-axis breaks (every unit 10–35)
+ggplot(mtcars, aes(hp, mpg)) +
+  geom_point() +
+  scale_y_continuous(breaks = seq(10, 35, by = 1))
+
+# Custom X-axis breaks
+ggplot(mtcars, aes(hp, mpg)) +
+  geom_point() +
+  scale_x_continuous(breaks = seq(50, 350, by = 25))
+
+# Major and minor breaks
+ggplot(mtcars, aes(hp, mpg)) +
+  geom_point() +
+  scale_x_continuous(
+    breaks       = seq(50, 350, by = 25),
+    minor_breaks = seq(50, 350, by = 10)
+  )
+
+# Set number of major breaks (approximate)
+ggplot(mtcars, aes(hp, mpg)) +
+  geom_point() +
+  scale_x_continuous(n.breaks = 20)
+```
+
+---
+
+## Removing Grid Lines
+
+```r
+# Remove ALL grids
+ggplot(mtcars, aes(hp, mpg)) +
+  geom_point() +
+  theme(panel.grid = element_blank())
+
+# Remove only major
+ggplot(mtcars, aes(hp, mpg)) +
+  geom_point() +
+  theme(panel.grid.major = element_blank())
+
+# Remove only minor
+ggplot(mtcars, aes(hp, mpg)) +
+  geom_point() +
+  theme(panel.grid.minor = element_blank())
+
+# Common clean style — remove minor, keep major
+ggplot(mtcars, aes(hp, mpg)) +
+  geom_point() +
+  theme_minimal() +
+  theme(panel.grid.minor = element_blank())
+```
+
+---
+
+## Plot Margins
+
+```r
+library(ggplot2)
+
+# Default margins
+ggplot() +
+  stat_function(fun = dnorm, geom = "density",
+                xlim = c(-4, 4), fill = rgb(0, 0, 1, 0.1)) +
+  theme(plot.background = element_rect(colour = 1, linewidth = 1))
+
+# Increase margins (in points — default unit)
+ggplot() +
+  stat_function(fun = dnorm, geom = "density",
+                xlim = c(-4, 4), fill = rgb(0, 0, 1, 0.1)) +
+  theme(
+    plot.background = element_rect(colour = 1, linewidth = 1),
+    plot.margin     = margin(
+      t = 20,   # Top
+      r = 50,   # Right
+      b = 40,   # Bottom
+      l = 10    # Left
+    )
+  )
+
+# In centimetres
+ggplot() +
+  stat_function(fun = dnorm, geom = "density",
+                xlim = c(-4, 4), fill = rgb(0, 0, 1, 0.1)) +
+  theme(
+    plot.margin = margin(t = 1, r = 1, b = 3, l = 2, unit = "cm")
+  )
+
+# Remove margins
+ggplot() +
+  stat_function(fun = dnorm, geom = "density",
+                xlim = c(-4, 4), fill = rgb(0, 0, 1, 0.1)) +
+  theme(
+    plot.margin = margin(0, 0, 0, 0)
+  )
+```
+
+::: {.callout-tip}
+## Remember TRBL
+`margin()` order: **T**op, **R**ight, **B**ottom, **L**eft — the word **TRou BL**e helps remember it.
+:::
+
+---
+
+## Full Custom Background Example
+
+```r
+library(ggplot2)
+
+ggplot(mtcars, aes(x = wt, y = mpg, colour = factor(cyl))) +
+  geom_point(size = 3, alpha = 0.85) +
+  scale_colour_manual(values = c("#e84855", "#2d6be4", "#12a36a")) +
+  labs(title = "Custom Background & Grid", colour = "Cylinders") +
+  theme_minimal() +
+  theme(
+    panel.background  = element_rect(fill = "#f0f4f8", colour = NA),
+    plot.background   = element_rect(fill = "#ffffff", colour = NA),
+    panel.grid.major  = element_line(colour = "#dce3ec", linewidth = 0.4),
+    panel.grid.minor  = element_blank(),
+    panel.border      = element_rect(fill = "transparent", colour = "#c8d0dc"),
+    plot.title        = element_text(face = "bold", size = 14),
+    legend.position   = "top",
+    plot.margin       = margin(16, 16, 16, 16)
+  )
+```
