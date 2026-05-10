@@ -1,0 +1,1653 @@
+[
+  {
+    "objectID": "index.html",
+    "href": "index.html",
+    "title": "Master R & ggplot2 Data Visualization",
+    "section": "",
+    "text": "12+Complete modules\n  150+Code examples\n  30+Geom functions\n  15+Themes covered\n  5Bar chart types",
+    "crumbs": [
+      "Home",
+      "Getting Started",
+      "Overview"
+    ]
+  },
+  {
+    "objectID": "index.html#whats-covered",
+    "href": "index.html#whats-covered",
+    "title": "Master R & ggplot2 Data Visualization",
+    "section": "What’s covered",
+    "text": "What’s covered\n\n\n  \n    01\n    🚀\n    R Guide & Basics\n    Install R & RStudio, working directories, packages, vectors, and data frames.\n  \n\n  \n    02\n    📊\n    ggplot2 Introduction\n    Grammar of graphics, layered construction, aesthetics, scales, and faceting.\n  \n\n  \n    03\n    🔵\n    Geom Functions\n    Every geom from geom_point to geom_violin — with working code examples.\n  \n\n  \n    04\n    🏷️\n    Titles & Labels\n    ggtitle(), labs(), caption, tag, position, and full element_text() styling.\n  \n\n  \n    05\n    🎨\n    Background & Grid\n    Panel & plot background colors, borders, grid lines, breaks, and margins.\n  \n\n  \n    06\n    🗝️\n    Legends\n    Adding, titling, repositioning, customizing, and removing ggplot2 legends.\n  \n\n  \n    07\n    ✍️\n    Text & Annotations\n    geom_text, geom_label, ggrepel, ggtext rich text, segments, curves, arrows.\n  \n\n  \n    08\n    🗂️\n    Faceting\n    facet_wrap() and facet_grid() — rows, scales, strips, panel spacing.\n  \n\n  \n    09\n    🗺️\n    Coordinates\n    coord_cartesian, coord_flip, coord_polar, coord_trans, map projections.\n  \n\n  \n    10\n    ✨\n    Themes & Styling\n    Built-in themes, ggthemes, hrbrthemes, ggdark, mdthemes, ggthemr, ggtech.\n  \n\n  \n    11\n    📈\n    Bar Charts (5 Examples)\n    Base R → ggplot2 → stacked → 100%-filled → grouped bar charts.\n  \n\n  \n    12\n    🧩\n    Combining Plots\n    patchwork operators, gridExtra grid.arrange, and cowplot plot_grid.",
+    "crumbs": [
+      "Home",
+      "Getting Started",
+      "Overview"
+    ]
+  },
+  {
+    "objectID": "index.html#core-packages",
+    "href": "index.html#core-packages",
+    "title": "Master R & ggplot2 Data Visualization",
+    "section": "Core packages",
+    "text": "Core packages\n\n\n\n\n\n\n\n\nPackage\nPurpose\nInstall\n\n\n\n\nggplot2\nCore visualization\ninstall.packages(\"ggplot2\")\n\n\nggthemes\nExtra themes & scales\ninstall.packages(\"ggthemes\")\n\n\nhrbrthemes\nTypography-centric themes\ninstall.packages(\"hrbrthemes\")\n\n\nggdark\nDark mode themes\ninstall.packages(\"ggdark\")\n\n\npatchwork\nCombine multiple plots\ninstall.packages(\"patchwork\")\n\n\nggrepel\nNon-overlapping labels\ninstall.packages(\"ggrepel\")\n\n\nggtext\nMarkdown/HTML in plots\ninstall.packages(\"ggtext\")\n\n\ngridExtra\nGrid layouts\ninstall.packages(\"gridExtra\")\n\n\ncowplot\nPublication-ready layouts\ninstall.packages(\"cowplot\")\n\n\nscales\nAxis formatting helpers\ninstall.packages(\"scales\")",
+    "crumbs": [
+      "Home",
+      "Getting Started",
+      "Overview"
+    ]
+  },
+  {
+    "objectID": "index.html#quick-start",
+    "href": "index.html#quick-start",
+    "title": "Master R & ggplot2 Data Visualization",
+    "section": "Quick-start",
+    "text": "Quick-start\nInstall everything at once:\npkgs &lt;- c(\n  \"ggplot2\", \"ggthemes\", \"hrbrthemes\", \"ggdark\",\n  \"patchwork\", \"ggrepel\", \"ggtext\", \"gridExtra\",\n  \"cowplot\", \"scales\", \"tidyverse\"\n)\ninstall.packages(pkgs)\nYour first ggplot2 plot:\nlibrary(ggplot2)\n\nggplot(mtcars, aes(x = wt, y = mpg, colour = factor(cyl))) +\n  geom_point(size = 3, alpha = 0.85) +\n  geom_smooth(method = \"lm\", se = FALSE, lwd = 0.8) +\n  scale_colour_manual(values = c(\"#e84855\", \"#2d6be4\", \"#12a36a\")) +\n  labs(\n    title    = \"Vehicle Weight vs Fuel Economy\",\n    subtitle = \"Grouped by number of cylinders · mtcars dataset\",\n    x        = \"Weight (1,000 lbs)\",\n    y        = \"Miles per Gallon\",\n    colour   = \"Cylinders\"\n  ) +\n  theme_minimal(base_size = 13) +\n  theme(legend.position = \"top\",\n        plot.title      = element_text(face = \"bold\"))\n\n\n\n\n\n\nTipNavigation tip\n\n\n\nUse the sidebar on the left to jump to any section. Each page has a table of contents on the right for within-page navigation.",
+    "crumbs": [
+      "Home",
+      "Getting Started",
+      "Overview"
+    ]
+  },
+  {
+    "objectID": "bin/ggplot2.html",
+    "href": "bin/ggplot2.html",
+    "title": "ggplot2",
+    "section": "",
+    "text": "ggplot2 is a powerful and widely-used open-source of data visualization library for the R programming language. It is based on the grammar of graphics, a concept developed by Hardly Wickham in his book “The Grammar of Graphics”. It is a general framework for creating statistical graphics. The grammar of graphics provides a flexible and systematic approach to creating complex plots, making it easy to create and customize a wide variety of visualizations.\nOne of the key features of ggplot2 is its ability to create layered plots. Each layer in a ggplot2 plot represents a different aspect of the data, such as points, lines, or bars. Layers can be added or removed from a plot to change its appearance and convey different information.\nFor example, consider a simple scatter plot of height and weight data for a group of individuals. To create this plot using ggplot2, you would first use the “ggplot()” function to create a new plot object, and then use the “aes()” function to define the x and y variables. Next, you would use the “geom_point()” function to add a layer of points to the plot.\nWe can install ggplot2 just by using the command\ninstall.packages(\"ggplot2\")\nThe basic syntax for creating a plot with ggplot2 is:\nggplot(data, aes(x, y)) + geom_*()\nWhere:\nggplot(): The main function used to create a new plot object. It takes a data frame as the first argument and an aesthetic mapping as the second argument.\ndata: It is a data frame containing the data to be plotted, “x” and “y” are the variables to be plotted on the x and y axes, respectively\naes(): Defines the mapping between variables in the data and visual elements of the plot. It takes one or more variables as arguments, and maps them to the x and y axes, as well as other aesthetics such as color, size, and shape.\ngeom_(): geom_ or geom function is the geometric object used to create the plot. geom funtion is a family of functions used to add different types of layers to a plot. These include geom_point() for scatter plots, geom_line() for line plots, geom_bar() for bar charts, and many others.\nThere are many different types of geometric objects that can be used in ggplot2, including:\ngeom_point(): creates a scatter plot geom_line(): creates a line plot geom_bar(): creates a bar chart geom_histogram(): creates a histogram geom_boxplot(): creates a boxplot geom_density(): creates a density plot geom_blank() creates a blank plot\ngeom_boxplot(): creates a Box plot\ngeom_density() creates a Density plot\ngeom_dotplot() creates a Dot plot\ngeom_map() creates a Map plot\ngeom_polygon() creates a Polygons plot\ngeom_ribbon() or geom_area() creates a Ribbons and area plot\ngeom_segment() or geom_curve() creates a Line segments and curves plot\ngeom_smooth() or stat_smooth() creates a Conditional means plot\ngeom_label() or geom_text() creates a Text plot\ngeom_violin() creates a Violin plot\nEach geometric object can be customized with additional arguments, such as the color and size of the points or lines, the fill color of the bars, etc.\nFor example, the following code creates a scatter plot of the “mtcars” data set, with the “mpg” (Miles per Gallon) variable on the x-axis and the “wt” (weight) variable on the y-axis:\n\nlibrary(ggplot2)\n\ndata(mtcars)\n\nggplot(mtcars, aes(x = mpg, y = wt)) +\n  geom_point()\n\nThe above code will create a scatter plot of vs .\nAdditionally, you can customize the appearance of the plot by adding various other layers and elements. For example, you can add a linear regression line to the plot using the “geom_smooth()” function, and change the color and size of the points using the “size” and “color” aesthetics.\n\nggplot(mtcars, aes(x = wt, y = mpg)) +\n  geom_point(size = 2, color = \"blue\") +\n  geom_smooth(method = \"lm\", se = FALSE)\n\nIn this example, the linear regression line is added to the plot using the “geom_smooth()” function, and the points are made smaller and colored blue.\nggplot2 also allows for faceting, which can be used to create multiple plots based on one or more variables in the data.\n\nggplot(mtcars, aes(x = mpg, y = wt)) +\n  geom_point(color = \"blue\", size = 3) +\n  facet_wrap(~ gear)\n\nAnother important aspect of ggplot2 is the ability to easily add various types of scales to a plot. Scales control the mapping between the data and the visual elements of the plot, such as the axis labels and tick marks. ggplot2 provides a variety of scales, including linear, logarithmic, and date scales.\nFor example, to create a bar chart of the number of cylinders for each model of car in the mtcars dataset, we can use the “geom_bar()” function and the “scale_x_discrete()” function to change the x-axis scale from continuous to discrete.\n\nggplot(mtcars, aes(x = factor(cyl))) +\n  geom_bar() +\n  scale_x_discrete(name = \"Number of Cylinders\")\n\nThis code will create a bar chart with the x-axis labeled “Number of Cylinders” and the y-axis labeled “Count”. The bars will be separated by the number of cylinders and the count of the cars with that number of cylinder.\nggplot2 also provides a wide range of options for customizing the appearance of the plot, such as the axis labels, title, legend, etc.\nggplot2 also provides a variety of options for customizing the appearance of the plot, such as the “theme()” function, which can be used to change the font, color, and other elements of the plot.\nggplot2 has a wide variety of functions that can be used to create different types of plots and customize their appearance. Some of the main functions include:\nscale_(): A family of functions used to add and customize scales to a plot. These include scale_x_() and scale_y_() functions for the x and y axes, respectively, as well as scale_color_(), scale_size_*(), and others for other aesthetics.\nfacet_*(): A family of functions used to create faceted plots. These include facet_wrap() and facet_grid(), which divide the plot into multiple smaller plots based on one or more variables.\ntheme(): Allows for customization of the overall appearance of the plot, including the background color and gridlines, font size, axis labels, and more.\nlabs(): Allows for customization of the plot labels, including the title, axis labels, and legend.\ncoord_*(): A family of functions used to change the coordinate system of the plot. For example, coord_flip() will flip the x and y axes, coord_polar() will change the plot to a polar coordinate system.\nannotate(): Allows you to add text, shapes, and lines to the plot to highlight specific observations or provide additional information.\nggtitle() : Allows you to add a title to the plot.\nxlab() and ylab() : Allows you to add labels to the x and y axis of the plot.\nscale_*_*() : A family of functions used to customize the scales of the plot, like scale_color_gradient() and scale_x_log10()\nstat_*() : A family of functions used to add summary statistics to the plot, like stat_smooth() and stat_summary()\nThese are some of the most commonly used functions in ggplot2, but there are many more that can be used to create and customize a wide variety of plots. The best way to learn how to use ggplot2 is to experiment with the different functions and see how they work.\nThe theme function allows you to customize many aspects of the overall appearance of the plot such as background color, gridlines, font size, axis labels, and more. For example, to remove the background gridlines and change the axis labels to a smaller font size, you can use the following code:\nscss Copy code ggplot(data, aes(x, y)) + geom_point() + theme( panel.grid.major = element_blank(),\nThe theme() function in ggplot2 allows you to customize many aspects of the overall appearance of the plot, such as the background color, gridlines, font size, axis labels, and more. It takes a series of element_*() functions as arguments, each of which corresponds to a different aspect of the plot.\nFor example, to remove the background gridlines and change the axis labels to a smaller font size, you can use the following code:\nscss Copy code ggplot(data, aes(x, y)) + geom_point() + theme( panel.grid.major = element_blank(), axis.text.x = element_text(size = 8), axis.text.y = element_text(size = 8) ) The element_blank() function is used to remove the gridlines, and the element_text() function is used to change the font size of the axis labels.\nOther common element_*() functions include:\nelement_line(): Allows you to customize the appearance of lines, such as the axis lines and gridlines.\nelement_rect(): Allows you to customize the appearance of rectangles, such as the background of the plot.\nelement_text(): Allows you to customize the appearance of text, such as the axis labels and legend titles.\nelement_blank(): Allows you to remove elements from the plot.\nYou can also use theme_set() to set a pre-defined theme. The most common ones are theme_gray(), theme_bw(), theme_light(), theme_dark() and\n\nTheme\nThe ggplot2 package have different themes. By default it uses the theme_grey (theme_gray()), so we don’t need to specify it. Themes provided by ggplot are below\ntheme_gray() – default ggplot2 theme with a grey background and white gridlines\ntheme_bw() – dark and light (black and white) ggplot2 theme\ntheme_linedraw() – uses black lines on white backgrounds only\ntheme_light() – similar to linedraw() but with grey lines\ntheme_dark() – lines on a dark background\ntheme_minimal() – no background annotations\ntheme_classic() – theme with no grid lines\ntheme_void() – empty theme with no elements\nWe can also modify the plot base size by using base_size argument in the theme functions.\n\nlibrary(ggplot2)\n\niris-&gt;dataset\n\n# Scatter Plot\nggplot(dataset, aes(x = Sepal.Length, y = Sepal.Width)) +\n  geom_point() -&gt;p\n\np+ facet_wrap(~Species)-&gt;p\n\n## theme_bw()\np+theme_bw(base_size=20)-&gt;p1\np1\n\n## theme_dark()\np+theme_dark()-&gt;p2\np2\n\n\n\nLab funtion\nWhit using of labs() function we can set a title, subtitle, caption, and axis title of the plot.\n\nlibrary(ggplot2)\n\niris-&gt;dataset\n\n# Scatter Plot\nggplot(dataset, aes(x = Sepal.Length, y = Sepal.Width)) +\n  geom_point() -&gt;p\n\np+ facet_wrap(~Species)-&gt;p\n\n## theme_bw()\np+theme_bw(base_size=20)-&gt;p\n\n## Lab Function\np+labs(title = \"Title of the plot\",\n       subtitle = \"Subtitle of the plot\",\n       caption = \"Caption of the plot\",\n       x = \"x-axis\",\n       y = \"y-axis\")-&gt;p\np\n\n\n\nModify plot with theme function\nWe can modify our plot with the use of `theme() function. Here we can define position of the title, subtile, caption, panel background, legend position, and many more things. You can define your own theme, size, color, shape of the plot as you want. Below given some use theme arguments which are also my favorite\ntheme(\n  axis.title,        ## for both axis\n  axis.title.x,      ## for x axis\n  axis.title.y,      ## for y axis\n  axis.text,         ## for both axis\n  axis.text.x,       ## for x axis\n  axis.text.y,       ## for y axis\n  axis.ticks,        ## for both axis\n  axis.ticks.x,      ## for x axis\n  axis.ticks.y,      ## for y axis\n  axis.line,         ## for both axis\n  axis.line.x,       ## for x axis\n  axis.line.y,       ## for y axis\n  legend.background,\n  legend.margin,\n  legend.text,\n  legend.title,\n  legend.position,\n  legend.direction,\n  legend.box,\n  panel.background,\n  panel.border,\n  panel.grid,\n  panel.grid.major,\n  panel.grid.minor,\n  plot.background,\n  plot.title,\n  plot.subtitle,\n  plot.caption,\n  plot.tag,\n  plot.margin,\n  strip.background,\n  strip.background.x,\n  strip.background.y,\n  strip.text,\n  strip.text.x,\n  strip.text.y)\nWith the using of these arguments we are able to modify plot, these arguments\nelement_line() use for line\nelement_rect() use for color\nelement_text() use for text\nelement_blank() use for blank\nFor example\ntheme(plot.title = element_text(hjust = 1),\n      plot.subtitle = element_text(size = 0.5),\n      panel.background = element_rect(fill = \"yellow\"),\n      axis.text = element_text(size = 2))\n\nlibrary(ggplot2)\n\niris-&gt;dataset\n\n# Scatter Plot\nggplot(dataset, aes(x = Sepal.Length, y = Sepal.Width, color = Species)) +\n  geom_point() -&gt;p\n\np+ facet_wrap(~Species)-&gt;p\n\n## theme of the plot\np+theme_bw()-&gt;p\n\n## Lab Function\np+labs(title = \"Title of the plot\",\n       subtitle = \"Subtitle of the plot\",\n       caption = \"Caption of the plot\")-&gt;p\n\n## theme function\np+theme(legend.position = \"bottom\",\n        plot.title = element_text(family = \"serif\",              # Font family\n                                  face = \"bold\",                 # Font face\n                                  size = 15,                     # Font size\n                                  hjust = 1,                     # Horizontal adjustment\n                                  vjust = 1),                   # Vertical adjustment\n        plot.subtitle = element_text(hjust = 1),\n        plot.caption = element_text(hjust = 0.1),\n        panel.background = element_rect(fill = \"yellow\"),\n        axis.text = element_text(size = 2),\n        strip.background = element_rect(fill = \"pink\"),\n        strip.text = element_text(size = 9),\n        plot.background = element_rect(fill = \"green\"),\n        panel.border = element_rect(linetype = \"dashed\"),\n        panel.grid.major = element_line(colour = \"black\"))-&gt;p \np\n\n\n\nCombine multiple plot\nThe ggplot2 package doesn’t providing function to arrange multiples plots in a single figure, but there are some packages, that allow combine multiples plots into a single figure with custom layouts, width, height, such as cowplot, gridExtra, patchwork. (https://medium.com/@pawanjangra1198/combining-plots-in-ggplot2-9699acaa2942#6632-36f5b0859cff)\n\nlibrary(ggplot2)\n\niris-&gt;dataset\n\n# Scatter Plot\nggplot(dataset, aes(x = Sepal.Length, y = Sepal.Width)) +\n  geom_point() -&gt;p\n\np+ facet_wrap(~Species)-&gt;p\n\n## theme_bw()\np+theme_bw(base_size=20)-&gt;p1\np1\n\n## theme_dark()\np+theme_dark()-&gt;p2\np2\n\nThe gridExtra package provides the grid.arrange function to combine several plots on a single figure.\n\n# install.packages(\"gridExtra\")\nlibrary(ggplot2)\nlibrary(gridExtra)\n\n# Combine the plots with gridExtra\ngrid.arrange(p1, p2) \n\n\n\nSave plot\nWe can save the plot by using ggsave() function and in this we can define the height, width of the plot.\n\nlibrary(ggplot2)\n\niris-&gt;dataset\n\n# Scatter Plot\nggplot(dataset, aes(x = Sepal.Length, y = Sepal.Width)) +\n  geom_point() -&gt;p\n\np+ facet_wrap(~Species)-&gt;p\n\n## theme_bw()\np+theme_bw(base_size=20)-&gt;p\n\n## save the plot\nggsave(\"~/ggplot/plot.png\", width = 3200, height = 2800, unit = \"px\")"
+  },
+  {
+    "objectID": "geoms.html",
+    "href": "geoms.html",
+    "title": "Geom Functions",
+    "section": "",
+    "text": "Geoms are the geometric objects used to represent data. Every geom function starts with geom_. You can stack multiple geoms in one plot by chaining them with +.",
+    "crumbs": [
+      "Home",
+      "ggplot2 Core",
+      "Geom Functions"
+    ]
+  },
+  {
+    "objectID": "geoms.html#scatter-geom_point",
+    "href": "geoms.html#scatter-geom_point",
+    "title": "Geom Functions",
+    "section": "Scatter — geom_point()",
+    "text": "Scatter — geom_point()\nlibrary(ggplot2)\n\n# Basic scatter\nggplot(mtcars, aes(x = wt, y = mpg)) +\n  geom_point()\n\n# Colour, size, alpha\nggplot(mtcars, aes(x = wt, y = mpg, colour = factor(cyl))) +\n  geom_point(size = 3, alpha = 0.8)\n\n# Add regression line\nggplot(mtcars, aes(x = wt, y = mpg)) +\n  geom_point(colour = \"steelblue\", size = 2) +\n  geom_smooth(method = \"lm\", se = FALSE, colour = \"tomato\")\n\n# Bubble chart — size mapped to data\nggplot(mtcars, aes(x = wt, y = mpg, size = hp, colour = factor(cyl))) +\n  geom_point(alpha = 0.7) +\n  scale_size_continuous(range = c(2, 12))",
+    "crumbs": [
+      "Home",
+      "ggplot2 Core",
+      "Geom Functions"
+    ]
+  },
+  {
+    "objectID": "geoms.html#lines-geom_line-geom_path",
+    "href": "geoms.html#lines-geom_line-geom_path",
+    "title": "Geom Functions",
+    "section": "Lines — geom_line() / geom_path()",
+    "text": "Lines — geom_line() / geom_path()\n# Time-series line chart\nggplot(economics, aes(x = date, y = unemploy)) +\n  geom_line()\n\n# Styled line\nggplot(economics, aes(x = date, y = unemploy)) +\n  geom_line(colour = \"#2d6be4\", linewidth = 1)\n\n# Multiple lines by group\nggplot(economics_long, aes(x = date, y = value01, colour = variable)) +\n  geom_line()\n\n# Step line (useful for step-wise data)\nggplot(economics, aes(x = date, y = unemploy)) +\n  geom_step()\n\n# geom_path — connects in data order (not sorted by x)\nggplot(economics, aes(x = unemploy/pop, y = psavert)) +\n  geom_path(alpha = 0.4) +\n  labs(x = \"Unemployment rate\", y = \"Personal savings rate\")",
+    "crumbs": [
+      "Home",
+      "ggplot2 Core",
+      "Geom Functions"
+    ]
+  },
+  {
+    "objectID": "geoms.html#bars-geom_bar-geom_col",
+    "href": "geoms.html#bars-geom_bar-geom_col",
+    "title": "Geom Functions",
+    "section": "Bars — geom_bar() / geom_col()",
+    "text": "Bars — geom_bar() / geom_col()\n# Count bars (default stat=\"count\")\nggplot(mtcars, aes(x = factor(cyl))) +\n  geom_bar()\n\n# Identity bars (pre-summarised)\ndf &lt;- data.frame(group = LETTERS[1:4], values = c(5,2,7,2))\n\nggplot(df, aes(x = group, y = values)) +\n  geom_bar(stat = \"identity\")\n\n# geom_col — shorthand for stat=\"identity\"\nggplot(df, aes(x = group, y = values, fill = group)) +\n  geom_col()\n\n# Horizontal with coord_flip\nggplot(df, aes(x = values, y = reorder(group, values))) +\n  geom_col(fill = \"#2d6be4\")\n\n# With value labels on top\nggplot(df, aes(x = group, y = values)) +\n  geom_col(fill = \"steelblue\") +\n  geom_text(aes(label = values), vjust = -0.4, fontface = \"bold\")",
+    "crumbs": [
+      "Home",
+      "ggplot2 Core",
+      "Geom Functions"
+    ]
+  },
+  {
+    "objectID": "geoms.html#histogram-geom_histogram",
+    "href": "geoms.html#histogram-geom_histogram",
+    "title": "Geom Functions",
+    "section": "Histogram — geom_histogram()",
+    "text": "Histogram — geom_histogram()\n# Basic histogram\nggplot(mtcars, aes(x = mpg)) +\n  geom_histogram(bins = 10)\n\n# Custom bin width & fill\nggplot(mtcars, aes(x = mpg)) +\n  geom_histogram(binwidth = 3, fill = \"steelblue\", colour = \"white\")\n\n# Density overlay\nggplot(mtcars, aes(x = mpg, y = after_stat(density))) +\n  geom_histogram(fill = \"#c3e7ff\", colour = \"white\", bins = 12) +\n  geom_density(colour = \"#2d6be4\", linewidth = 1)\n\n# Multiple groups\nggplot(mtcars, aes(x = mpg, fill = factor(cyl))) +\n  geom_histogram(alpha = 0.6, binwidth = 2, position = \"identity\")",
+    "crumbs": [
+      "Home",
+      "ggplot2 Core",
+      "Geom Functions"
+    ]
+  },
+  {
+    "objectID": "geoms.html#density-geom_density",
+    "href": "geoms.html#density-geom_density",
+    "title": "Geom Functions",
+    "section": "Density — geom_density()",
+    "text": "Density — geom_density()\n# Basic density\nggplot(mtcars, aes(x = mpg)) +\n  geom_density(fill = \"steelblue\", alpha = 0.5)\n\n# Multiple groups\ncyls &lt;- as.factor(mtcars$cyl)\nggplot(mtcars, aes(x = mpg, fill = cyls)) +\n  geom_density(alpha = 0.6) +\n  theme(legend.position = \"top\")\n\n# 2D density heat map\nggplot(mtcars, aes(x = wt, y = mpg)) +\n  geom_density_2d_filled(alpha = 0.7) +\n  geom_point(colour = \"white\", size = 1.5)",
+    "crumbs": [
+      "Home",
+      "ggplot2 Core",
+      "Geom Functions"
+    ]
+  },
+  {
+    "objectID": "geoms.html#boxplot-geom_boxplot",
+    "href": "geoms.html#boxplot-geom_boxplot",
+    "title": "Geom Functions",
+    "section": "Boxplot — geom_boxplot()",
+    "text": "Boxplot — geom_boxplot()\n# Basic boxplot\nggplot(mtcars, aes(x = factor(cyl), y = mpg)) +\n  geom_boxplot()\n\n# Coloured fill + notches\nggplot(mtcars, aes(x = factor(cyl), y = mpg, fill = factor(cyl))) +\n  geom_boxplot(notch = TRUE, outlier.colour = \"tomato\", outlier.size = 2) +\n  scale_fill_brewer(palette = \"Set2\") +\n  theme(legend.position = \"none\")\n\n# With jittered points overlaid\nggplot(mtcars, aes(x = factor(cyl), y = mpg)) +\n  geom_boxplot(fill = \"grey90\", outlier.shape = NA) +\n  geom_jitter(aes(colour = factor(cyl)), width = 0.15, size = 2, alpha = 0.7)",
+    "crumbs": [
+      "Home",
+      "ggplot2 Core",
+      "Geom Functions"
+    ]
+  },
+  {
+    "objectID": "geoms.html#violin-geom_violin",
+    "href": "geoms.html#violin-geom_violin",
+    "title": "Geom Functions",
+    "section": "Violin — geom_violin()",
+    "text": "Violin — geom_violin()\n# Basic violin\nggplot(mtcars, aes(x = factor(cyl), y = mpg)) +\n  geom_violin(fill = \"steelblue\", alpha = 0.6)\n\n# Violin + boxplot combo\nggplot(mtcars, aes(x = factor(cyl), y = mpg, fill = factor(cyl))) +\n  geom_violin(alpha = 0.5) +\n  geom_boxplot(width = 0.12, fill = \"white\") +\n  scale_fill_brewer(palette = \"Set1\") +\n  theme(legend.position = \"none\") +\n  labs(x = \"Cylinders\", y = \"MPG\")\n\n# Half violin — gghalves package\n# install.packages(\"gghalves\")\n# library(gghalves)\n# ggplot(mtcars, aes(x = factor(cyl), y = mpg)) +\n#   geom_half_violin() + geom_half_point()",
+    "crumbs": [
+      "Home",
+      "ggplot2 Core",
+      "Geom Functions"
+    ]
+  },
+  {
+    "objectID": "geoms.html#area-geom_area-geom_ribbon",
+    "href": "geoms.html#area-geom_area-geom_ribbon",
+    "title": "Geom Functions",
+    "section": "Area — geom_area() / geom_ribbon()",
+    "text": "Area — geom_area() / geom_ribbon()\n# Area chart\nggplot(economics, aes(x = date, y = unemploy)) +\n  geom_area(fill = rgb(0, 0.5, 1, alpha = 0.5), colour = \"#2d6be4\")\n\n# Ribbon — shaded confidence band\nggplot(economics, aes(x = date)) +\n  geom_ribbon(aes(ymin = unemploy - 500, ymax = unemploy + 500),\n              fill = \"#2d6be4\", alpha = 0.3) +\n  geom_line(aes(y = unemploy), colour = \"#2d6be4\")\n\n# Stacked area chart\nlibrary(tidyr)\neconomics_long |&gt;\n  dplyr::filter(variable %in% c(\"pce\",\"pop\")) |&gt;\n  ggplot(aes(x = date, y = value01, fill = variable)) +\n  geom_area(alpha = 0.7, position = \"stack\")",
+    "crumbs": [
+      "Home",
+      "ggplot2 Core",
+      "Geom Functions"
+    ]
+  },
+  {
+    "objectID": "geoms.html#heatmap-geom_tile-geom_raster",
+    "href": "geoms.html#heatmap-geom_tile-geom_raster",
+    "title": "Geom Functions",
+    "section": "Heatmap — geom_tile() / geom_raster()",
+    "text": "Heatmap — geom_tile() / geom_raster()\n# Correlation matrix heatmap\nlibrary(tidyr)\n\ncor_df &lt;- as.data.frame(cor(mtcars))\ncor_df$var1 &lt;- rownames(cor_df)\ncor_long &lt;- pivot_longer(cor_df, -var1, names_to = \"var2\", values_to = \"corr\")\n\nggplot(cor_long, aes(x = var1, y = var2, fill = corr)) +\n  geom_tile() +\n  scale_fill_gradient2(\n    low = \"#2d6be4\", mid = \"white\", high = \"#e84855\", midpoint = 0\n  ) +\n  theme_minimal() +\n  theme(axis.text.x = element_text(angle = 45, hjust = 1)) +\n  labs(title = \"mtcars Correlation Matrix\", fill = \"r\")\n\n# Calendar heatmap style\nggplot(diamonds, aes(x = cut, y = color, fill = carat)) +\n  geom_tile() +\n  scale_fill_viridis_c()",
+    "crumbs": [
+      "Home",
+      "ggplot2 Core",
+      "Geom Functions"
+    ]
+  },
+  {
+    "objectID": "geoms.html#smooth-trend-geom_smooth",
+    "href": "geoms.html#smooth-trend-geom_smooth",
+    "title": "Geom Functions",
+    "section": "Smooth trend — geom_smooth()",
+    "text": "Smooth trend — geom_smooth()\n# Default LOESS smooth\nggplot(mtcars, aes(x = wt, y = mpg)) +\n  geom_point() +\n  geom_smooth()\n\n# Linear regression\nggplot(mtcars, aes(x = wt, y = mpg)) +\n  geom_point() +\n  geom_smooth(method = \"lm\", se = FALSE, colour = \"tomato\")\n\n# By group\nggplot(mtcars, aes(x = wt, y = mpg, colour = factor(cyl))) +\n  geom_point() +\n  geom_smooth(method = \"lm\", se = FALSE)\n\n# method options: \"lm\", \"glm\", \"gam\", \"loess\", \"rlm\"",
+    "crumbs": [
+      "Home",
+      "ggplot2 Core",
+      "Geom Functions"
+    ]
+  },
+  {
+    "objectID": "geoms.html#jitter-geom_jitter",
+    "href": "geoms.html#jitter-geom_jitter",
+    "title": "Geom Functions",
+    "section": "Jitter — geom_jitter()",
+    "text": "Jitter — geom_jitter()\n# Avoid overplotting in categorical data\nggplot(mtcars, aes(x = factor(cyl), y = mpg)) +\n  geom_jitter(width = 0.2, height = 0, colour = \"steelblue\", size = 2, alpha = 0.7)\n\n# geom_jitter is shorthand for geom_point(position = position_jitter())\nggplot(mtcars, aes(x = factor(cyl), y = mpg, colour = factor(cyl))) +\n  geom_point(position = position_jitter(width = 0.15), size = 3, alpha = 0.7)",
+    "crumbs": [
+      "Home",
+      "ggplot2 Core",
+      "Geom Functions"
+    ]
+  },
+  {
+    "objectID": "geoms.html#error-bars-geom_errorbar-geom_crossbar",
+    "href": "geoms.html#error-bars-geom_errorbar-geom_crossbar",
+    "title": "Geom Functions",
+    "section": "Error bars — geom_errorbar() / geom_crossbar()",
+    "text": "Error bars — geom_errorbar() / geom_crossbar()\nlibrary(dplyr)\n\n# Compute mean and SE per group\nsummary_df &lt;- mtcars |&gt;\n  group_by(cyl) |&gt;\n  summarise(mean_mpg = mean(mpg),\n            se_mpg   = sd(mpg) / sqrt(n()))\n\n# Error bar plot\nggplot(summary_df, aes(x = factor(cyl), y = mean_mpg)) +\n  geom_col(fill = \"steelblue\", alpha = 0.7) +\n  geom_errorbar(aes(ymin = mean_mpg - se_mpg,\n                    ymax = mean_mpg + se_mpg),\n                width = 0.2, linewidth = 0.8) +\n  labs(x = \"Cylinders\", y = \"Mean MPG ± SE\")\n\n# Point + errorbar\nggplot(summary_df, aes(x = factor(cyl), y = mean_mpg)) +\n  geom_point(size = 4, colour = \"#e84855\") +\n  geom_errorbar(aes(ymin = mean_mpg - se_mpg,\n                    ymax = mean_mpg + se_mpg),\n                width = 0.2)",
+    "crumbs": [
+      "Home",
+      "ggplot2 Core",
+      "Geom Functions"
+    ]
+  },
+  {
+    "objectID": "geoms.html#rug-marks-geom_rug",
+    "href": "geoms.html#rug-marks-geom_rug",
+    "title": "Geom Functions",
+    "section": "Rug marks — geom_rug()",
+    "text": "Rug marks — geom_rug()\nggplot(mtcars, aes(x = wt, y = mpg)) +\n  geom_point() +\n  geom_rug(alpha = 0.4, linewidth = 0.6)\n\n# Only on x-axis\nggplot(mtcars, aes(x = wt, y = mpg)) +\n  geom_point() +\n  geom_rug(sides = \"b\")   # \"b\"=bottom, \"l\"=left, \"t\"=top, \"r\"=right",
+    "crumbs": [
+      "Home",
+      "ggplot2 Core",
+      "Geom Functions"
+    ]
+  },
+  {
+    "objectID": "geoms.html#complete-geom-reference",
+    "href": "geoms.html#complete-geom-reference",
+    "title": "Geom Functions",
+    "section": "Complete Geom Reference",
+    "text": "Complete Geom Reference\n\n\n\nGeom\nChart type\nRequired aes()\n\n\n\n\ngeom_point()\nScatter\nx, y\n\n\ngeom_line()\nLine (sorted x)\nx, y\n\n\ngeom_path()\nLine (data order)\nx, y\n\n\ngeom_step()\nStep line\nx, y\n\n\ngeom_bar()\nBar (counts)\nx\n\n\ngeom_col()\nBar (identity)\nx, y\n\n\ngeom_histogram()\nHistogram\nx\n\n\ngeom_density()\nKernel density\nx\n\n\ngeom_density_2d()\n2D density contour\nx, y\n\n\ngeom_boxplot()\nBoxplot\nx, y\n\n\ngeom_violin()\nViolin\nx, y\n\n\ngeom_dotplot()\nDot plot\nx\n\n\ngeom_jitter()\nJittered scatter\nx, y\n\n\ngeom_area()\nArea chart\nx, y\n\n\ngeom_ribbon()\nShaded band\nx, ymin, ymax\n\n\ngeom_tile()\nHeatmap tiles\nx, y, fill\n\n\ngeom_raster()\nRaster image\nx, y, fill\n\n\ngeom_smooth()\nSmoothed trend\nx, y\n\n\ngeom_hline()\nHorizontal ref line\nyintercept\n\n\ngeom_vline()\nVertical ref line\nxintercept\n\n\ngeom_abline()\nDiagonal line\nslope, intercept\n\n\ngeom_segment()\nLine segment\nx,y,xend,yend\n\n\ngeom_curve()\nCurved segment\nx,y,xend,yend\n\n\ngeom_text()\nText labels\nx, y, label\n\n\ngeom_label()\nText with box\nx, y, label\n\n\ngeom_errorbar()\nError bars\nx, ymin, ymax\n\n\ngeom_crossbar()\nCrossbar\nx, y, ymin, ymax\n\n\ngeom_polygon()\nFilled polygon\nx, y\n\n\ngeom_map()\nMap polygons\nmap_id\n\n\ngeom_rug()\nMarginal rug marks\nx or y\n\n\ngeom_blank()\nEmpty — axis range only\nx, y\n\n\n\n\n\n\n\n\n\nNoteAdditional geom packages\n\n\n\n\nggrepel — geom_text_repel(), geom_label_repel() for non-overlapping labels\n\nggtext — geom_richtext() for Markdown/HTML in annotations\n\nggbeeswarm — geom_beeswarm() for beeswarm scatter\n\nggridges — geom_density_ridges() for ridge plots\n\nggsignif — geom_signif() for significance brackets",
+    "crumbs": [
+      "Home",
+      "ggplot2 Core",
+      "Geom Functions"
+    ]
+  },
+  {
+    "objectID": "background-grid.html",
+    "href": "background-grid.html",
+    "title": "Background & Grid",
+    "section": "",
+    "text": "By default ggplot2 has a grey panel and white grid lines.\nlibrary(ggplot2)\n\nset.seed(123)\ndf &lt;- data.frame(x = 1:220, y = 1:220 + rnorm(220, sd = 50))\n\nggplot(df, aes(x, y)) +\n  geom_point()",
+    "crumbs": [
+      "Home",
+      "ggplot2 Core",
+      "Background & Grid"
+    ]
+  },
+  {
+    "objectID": "background-grid.html#default-plot",
+    "href": "background-grid.html#default-plot",
+    "title": "Background & Grid",
+    "section": "",
+    "text": "By default ggplot2 has a grey panel and white grid lines.\nlibrary(ggplot2)\n\nset.seed(123)\ndf &lt;- data.frame(x = 1:220, y = 1:220 + rnorm(220, sd = 50))\n\nggplot(df, aes(x, y)) +\n  geom_point()",
+    "crumbs": [
+      "Home",
+      "ggplot2 Core",
+      "Background & Grid"
+    ]
+  },
+  {
+    "objectID": "background-grid.html#panel-background-colour",
+    "href": "background-grid.html#panel-background-colour",
+    "title": "Background & Grid",
+    "section": "Panel Background Colour",
+    "text": "Panel Background Colour\n# Change panel (inner plot area) background\nggplot(mtcars, aes(x = mpg, y = cyl)) +\n  geom_point() +\n  theme(panel.background = element_rect(fill = \"#67c9ff\"))\n\n# White panel\nggplot(mtcars, aes(x = mpg, y = cyl)) +\n  geom_point() +\n  theme(panel.background = element_rect(fill = \"white\"))",
+    "crumbs": [
+      "Home",
+      "ggplot2 Core",
+      "Background & Grid"
+    ]
+  },
+  {
+    "objectID": "background-grid.html#panel-border",
+    "href": "background-grid.html#panel-border",
+    "title": "Background & Grid",
+    "section": "Panel Border",
+    "text": "Panel Border\n# Option 1 — panel.border (recommended)\nggplot(df, aes(x, y)) +\n  geom_point() +\n  theme_bw() +\n  theme(panel.border = element_rect(\n    fill  = \"transparent\",   # MUST be transparent — hides data otherwise\n    colour = 4,              # border colour (index 4 = blue)\n    linewidth = 2\n  ))\n\n# Option 2 — panel.background colour argument\nggplot(df, aes(x, y)) +\n  geom_point() +\n  theme_bw() +\n  theme(panel.background = element_rect(colour = 4, linewidth = 2))\n\n# Custom border style\nggplot(mtcars, aes(wt, mpg)) +\n  geom_point() +\n  theme_minimal() +\n  theme(panel.border = element_rect(\n    fill = \"transparent\", colour = \"#e84855\", linewidth = 1.5, linetype = \"dashed\"\n  ))",
+    "crumbs": [
+      "Home",
+      "ggplot2 Core",
+      "Background & Grid"
+    ]
+  },
+  {
+    "objectID": "background-grid.html#plot-background-colour",
+    "href": "background-grid.html#plot-background-colour",
+    "title": "Background & Grid",
+    "section": "Plot Background Colour",
+    "text": "Plot Background Colour\nThe plot background is the area outside the panel — the full figure.\nggplot(mtcars, aes(x = mpg, y = cyl)) +\n  geom_point() +\n  theme(plot.background = element_rect(fill = \"grey86\"))\n\n# Plot border\nggplot(df, aes(x, y)) +\n  geom_point() +\n  theme(plot.background = element_rect(\n    colour = \"black\",\n    linewidth = 2\n  ))",
+    "crumbs": [
+      "Home",
+      "ggplot2 Core",
+      "Background & Grid"
+    ]
+  },
+  {
+    "objectID": "background-grid.html#using-themes-for-background",
+    "href": "background-grid.html#using-themes-for-background",
+    "title": "Background & Grid",
+    "section": "Using Themes for Background",
+    "text": "Using Themes for Background\nggplot(df, aes(x, y)) +\n  geom_point() +\n  theme_dark()      # dark panel background\n\nggplot(df, aes(x, y)) +\n  geom_point() +\n  theme_minimal()   # white background, no border\n\nggplot(df, aes(x, y)) +\n  geom_point() +\n  theme_bw()        # white panel, black border\n\nggplot(df, aes(x, y)) +\n  geom_point() +\n  theme_classic()   # white, no grid",
+    "crumbs": [
+      "Home",
+      "ggplot2 Core",
+      "Background & Grid"
+    ]
+  },
+  {
+    "objectID": "background-grid.html#grid-customisation",
+    "href": "background-grid.html#grid-customisation",
+    "title": "Background & Grid",
+    "section": "Grid Customisation",
+    "text": "Grid Customisation\n\nFull grid\nggplot(mtcars, aes(hp, mpg)) +\n  geom_point() +\n  theme(panel.grid = element_line(\n    colour   = \"#8ccde3\",\n    linewidth = 0.75,\n    linetype = 2          # 1=solid, 2=dashed, 3=dotted\n  ))\n\n\nMajor grid\nggplot(mtcars, aes(hp, mpg)) +\n  geom_point() +\n  theme(panel.grid.major = element_line(\n    colour = \"red\", linewidth = 0.5, linetype = 2\n  ))\n\n# Only vertical major lines\nggplot(mtcars, aes(hp, mpg)) +\n  geom_point() +\n  theme(panel.grid.major.x = element_line(colour = \"red\", linewidth = 0.5, linetype = 2))\n\n# Only horizontal major lines\nggplot(mtcars, aes(hp, mpg)) +\n  geom_point() +\n  theme(panel.grid.major.y = element_line(colour = \"red\", linewidth = 0.5, linetype = 2))\n\n\nMinor grid\nggplot(mtcars, aes(hp, mpg)) +\n  geom_point() +\n  theme(panel.grid.minor = element_line(colour = \"tomato\", linewidth = 0.25))\n\n# Only minor x lines\nggplot(mtcars, aes(hp, mpg)) +\n  geom_point() +\n  theme(panel.grid.minor.x = element_line(colour = \"tomato\", linewidth = 0.25))\n\n# Only minor y lines\nggplot(mtcars, aes(hp, mpg)) +\n  geom_point() +\n  theme(panel.grid.minor.y = element_line(colour = \"tomato\", linewidth = 0.25))",
+    "crumbs": [
+      "Home",
+      "ggplot2 Core",
+      "Background & Grid"
+    ]
+  },
+  {
+    "objectID": "background-grid.html#custom-grid-breaks",
+    "href": "background-grid.html#custom-grid-breaks",
+    "title": "Background & Grid",
+    "section": "Custom Grid Breaks",
+    "text": "Custom Grid Breaks\n# Custom Y-axis breaks (every unit 10–35)\nggplot(mtcars, aes(hp, mpg)) +\n  geom_point() +\n  scale_y_continuous(breaks = seq(10, 35, by = 1))\n\n# Custom X-axis breaks\nggplot(mtcars, aes(hp, mpg)) +\n  geom_point() +\n  scale_x_continuous(breaks = seq(50, 350, by = 25))\n\n# Major and minor breaks\nggplot(mtcars, aes(hp, mpg)) +\n  geom_point() +\n  scale_x_continuous(\n    breaks       = seq(50, 350, by = 25),\n    minor_breaks = seq(50, 350, by = 10)\n  )\n\n# Set number of major breaks (approximate)\nggplot(mtcars, aes(hp, mpg)) +\n  geom_point() +\n  scale_x_continuous(n.breaks = 20)",
+    "crumbs": [
+      "Home",
+      "ggplot2 Core",
+      "Background & Grid"
+    ]
+  },
+  {
+    "objectID": "background-grid.html#removing-grid-lines",
+    "href": "background-grid.html#removing-grid-lines",
+    "title": "Background & Grid",
+    "section": "Removing Grid Lines",
+    "text": "Removing Grid Lines\n# Remove ALL grids\nggplot(mtcars, aes(hp, mpg)) +\n  geom_point() +\n  theme(panel.grid = element_blank())\n\n# Remove only major\nggplot(mtcars, aes(hp, mpg)) +\n  geom_point() +\n  theme(panel.grid.major = element_blank())\n\n# Remove only minor\nggplot(mtcars, aes(hp, mpg)) +\n  geom_point() +\n  theme(panel.grid.minor = element_blank())\n\n# Common clean style — remove minor, keep major\nggplot(mtcars, aes(hp, mpg)) +\n  geom_point() +\n  theme_minimal() +\n  theme(panel.grid.minor = element_blank())",
+    "crumbs": [
+      "Home",
+      "ggplot2 Core",
+      "Background & Grid"
+    ]
+  },
+  {
+    "objectID": "background-grid.html#plot-margins",
+    "href": "background-grid.html#plot-margins",
+    "title": "Background & Grid",
+    "section": "Plot Margins",
+    "text": "Plot Margins\nlibrary(ggplot2)\n\n# Default margins\nggplot() +\n  stat_function(fun = dnorm, geom = \"density\",\n                xlim = c(-4, 4), fill = rgb(0, 0, 1, 0.1)) +\n  theme(plot.background = element_rect(colour = 1, linewidth = 1))\n\n# Increase margins (in points — default unit)\nggplot() +\n  stat_function(fun = dnorm, geom = \"density\",\n                xlim = c(-4, 4), fill = rgb(0, 0, 1, 0.1)) +\n  theme(\n    plot.background = element_rect(colour = 1, linewidth = 1),\n    plot.margin     = margin(\n      t = 20,   # Top\n      r = 50,   # Right\n      b = 40,   # Bottom\n      l = 10    # Left\n    )\n  )\n\n# In centimetres\nggplot() +\n  stat_function(fun = dnorm, geom = \"density\",\n                xlim = c(-4, 4), fill = rgb(0, 0, 1, 0.1)) +\n  theme(\n    plot.margin = margin(t = 1, r = 1, b = 3, l = 2, unit = \"cm\")\n  )\n\n# Remove margins\nggplot() +\n  stat_function(fun = dnorm, geom = \"density\",\n                xlim = c(-4, 4), fill = rgb(0, 0, 1, 0.1)) +\n  theme(\n    plot.margin = margin(0, 0, 0, 0)\n  )\n\n\n\n\n\n\nTipRemember TRBL\n\n\n\nmargin() order: Top, Right, Bottom, Left — the word TRou BLe helps remember it.",
+    "crumbs": [
+      "Home",
+      "ggplot2 Core",
+      "Background & Grid"
+    ]
+  },
+  {
+    "objectID": "background-grid.html#full-custom-background-example",
+    "href": "background-grid.html#full-custom-background-example",
+    "title": "Background & Grid",
+    "section": "Full Custom Background Example",
+    "text": "Full Custom Background Example\nlibrary(ggplot2)\n\nggplot(mtcars, aes(x = wt, y = mpg, colour = factor(cyl))) +\n  geom_point(size = 3, alpha = 0.85) +\n  scale_colour_manual(values = c(\"#e84855\", \"#2d6be4\", \"#12a36a\")) +\n  labs(title = \"Custom Background & Grid\", colour = \"Cylinders\") +\n  theme_minimal() +\n  theme(\n    panel.background  = element_rect(fill = \"#f0f4f8\", colour = NA),\n    plot.background   = element_rect(fill = \"#ffffff\", colour = NA),\n    panel.grid.major  = element_line(colour = \"#dce3ec\", linewidth = 0.4),\n    panel.grid.minor  = element_blank(),\n    panel.border      = element_rect(fill = \"transparent\", colour = \"#c8d0dc\"),\n    plot.title        = element_text(face = \"bold\", size = 14),\n    legend.position   = \"top\",\n    plot.margin       = margin(16, 16, 16, 16)\n  )",
+    "crumbs": [
+      "Home",
+      "ggplot2 Core",
+      "Background & Grid"
+    ]
+  },
+  {
+    "objectID": "r-guide.html",
+    "href": "r-guide.html",
+    "title": "R Guide & Basics",
+    "section": "",
+    "text": "R is one of the most popular programming languages in statistical computing. It’s open-source, easy to learn, and powerful for manipulating and visualizing data.\n\n\n\n\n\n\nNote\n\n\n\nThis guide covers R fundamentals needed before diving into ggplot2. If you already know R, skip ahead to ggplot2 Introduction.",
+    "crumbs": [
+      "Home",
+      "Getting Started",
+      "R Guide & Basics"
+    ]
+  },
+  {
+    "objectID": "r-guide.html#getting-started-with-r",
+    "href": "r-guide.html#getting-started-with-r",
+    "title": "R Guide & Basics",
+    "section": "",
+    "text": "R is one of the most popular programming languages in statistical computing. It’s open-source, easy to learn, and powerful for manipulating and visualizing data.\n\n\n\n\n\n\nNote\n\n\n\nThis guide covers R fundamentals needed before diving into ggplot2. If you already know R, skip ahead to ggplot2 Introduction.",
+    "crumbs": [
+      "Home",
+      "Getting Started",
+      "R Guide & Basics"
+    ]
+  },
+  {
+    "objectID": "r-guide.html#download-install-r-and-rstudio",
+    "href": "r-guide.html#download-install-r-and-rstudio",
+    "title": "R Guide & Basics",
+    "section": "Download & Install R and RStudio",
+    "text": "Download & Install R and RStudio\nYou need two things: R (the language engine) and RStudio (the IDE).\n\nR (CRAN): https://cran.r-project.org/\nRStudio: https://www.rstudio.com/products/rstudio/download/\n\n\nLinux (Debian / Ubuntu / Mint)\n# Install R base\nsudo apt-get install r-base\n\n# Install RStudio (.deb downloaded from rstudio.com)\nsudo apt install -f ./rstudio-2024.x.x-amd64.deb\n\n# Alternative\nsudo apt-get install rstudio-desktop\n\n\nWindows\n\nGo to https://cran.r-project.org/ → Download R for Windows → save .exe\nRun the .exe and follow the installer\nDownload RStudio Desktop from https://www.rstudio.com/products/rstudio/download/\nRun the RStudio .exe\n\n\n\n\n\n\n\nTip\n\n\n\nAlways install R before RStudio so RStudio can detect R automatically.\n\n\n\n\nmacOS\n\nGo to https://cran.r-project.org/ → Download R for macOS → download .pkg\nDouble-click and follow the installer\nDownload RStudio .dmg → drag to Applications\n\n# Or with Homebrew\nbrew install --cask r\nbrew install --cask rstudio",
+    "crumbs": [
+      "Home",
+      "Getting Started",
+      "R Guide & Basics"
+    ]
+  },
+  {
+    "objectID": "r-guide.html#the-working-directory",
+    "href": "r-guide.html#the-working-directory",
+    "title": "R Guide & Basics",
+    "section": "The Working Directory",
+    "text": "The Working Directory\nThe working directory is the default file path R uses for reading and writing files.\n# See your current working directory\ngetwd()\n# e.g. \"/Users/pawan/Documents/R\"\n\n# Change the working directory\nsetwd(\"~/R\")\nsetwd(\"/home/pawan/projects\")    # Linux / Mac\nsetwd(\"C:/Users/Pawan/R\")        # Windows — use / not \\",
+    "crumbs": [
+      "Home",
+      "Getting Started",
+      "R Guide & Basics"
+    ]
+  },
+  {
+    "objectID": "r-guide.html#using-packages-in-r",
+    "href": "r-guide.html#using-packages-in-r",
+    "title": "R Guide & Basics",
+    "section": "Using Packages in R",
+    "text": "Using Packages in R\nPackages are collections of functions built by the R community that extend R’s capabilities.\n# Install a package (only once)\ninstall.packages(\"ggplot2\")\n\n# Install multiple at once\ninstall.packages(c(\"ggplot2\", \"ggthemes\", \"patchwork\", \"dplyr\", \"tidyr\"))\n\n# Load a package (every session)\nlibrary(ggplot2)\nlibrary(tidyverse)\n\n# Update all installed packages\nupdate.packages()\n\n# See all installed packages\ninstalled.packages()[, \"Package\"]\n\n\n\n\n\n\nImportant\n\n\n\ninstall.packages() is run once. library() is needed at the start of every new R session.",
+    "crumbs": [
+      "Home",
+      "Getting Started",
+      "R Guide & Basics"
+    ]
+  },
+  {
+    "objectID": "r-guide.html#vectors-in-r",
+    "href": "r-guide.html#vectors-in-r",
+    "title": "R Guide & Basics",
+    "section": "Vectors in R",
+    "text": "Vectors in R\nA vector is a one-dimensional array that holds numeric, character, logical, or factor data.\n\nTypes of vector\n\n\n\nType\nExample\nNotes\n\n\n\n\nNumeric\nc(1, 2.5, 3)\nDecimal and whole numbers\n\n\nInteger\nc(1L, 2L, 3L)\nWhole numbers (suffix L)\n\n\nCharacter\nc(\"a\", \"hello\")\nText strings in quotes\n\n\nFactor\nfactor(c(\"M\",\"F\",\"M\"))\nCategorical levels\n\n\nLogical\nc(TRUE, FALSE, TRUE)\nBoolean values\n\n\n\n\n\nCreating vectors\n# Numeric — comma\nc(1, 3, 5)\n\n# Integer sequence — colon\nc(1:7)           # 1 2 3 4 5 6 7\n\n# Character\nc(\"a\", \"b\", \"hello\")\n\n# Store with &lt;- or -&gt;\nv &lt;- c(1:10)\nc(\"Mon\", \"Tue\", \"Wed\") -&gt; days\n\n# Sequence with step\nseq(1, 20, by = 3)      # 1 4 7 10 13 16 19\n\n# Repeated elements\nrep(3, times = 4)              # 3 3 3 3\nrep(c(1:4), times = 2)         # 1 2 3 4 1 2 3 4\nrep(c(1:4), each  = 2)         # 1 1 2 2 3 3 4 4\n\n# Check type\nclass(v)    # \"integer\"\ntypeof(v)   # \"integer\"\nlength(v)   # 10\n\n\nVector functions\nc(1,3,5,2,7,4,9,24,12,25,13,22,12,3) -&gt; a\n\nsort(a)         # ascending order\nsort(a, decreasing = TRUE)  # descending\nrev(a)          # reverse the order\ntable(a)        # frequency of each value\nunique(a)       # remove duplicates\nlength(a)       # number of elements\nsum(a)          # total\nmean(a)         # arithmetic mean\nmedian(a)       # median\nvar(a)          # variance\nsd(a)           # standard deviation\nwhich(a &gt; 10)   # indices where condition is TRUE\n\n\n\nFunction\nReturns\n\n\n\n\nsort(v)\nSorted vector (ascending)\n\n\nrev(v)\nReversed vector\n\n\ntable(v)\nFrequency count\n\n\nunique(v)\nDistinct elements\n\n\nlength(v)\nNumber of elements\n\n\nsum(v)\nSum of elements\n\n\nmean(v)\nArithmetic mean\n\n\nwhich(v &gt; 5)\nIndices where TRUE\n\n\ncumsum(v)\nCumulative sum\n\n\ndiff(v)\nFirst differences",
+    "crumbs": [
+      "Home",
+      "Getting Started",
+      "R Guide & Basics"
+    ]
+  },
+  {
+    "objectID": "r-guide.html#data-frames",
+    "href": "r-guide.html#data-frames",
+    "title": "R Guide & Basics",
+    "section": "Data Frames",
+    "text": "Data Frames\nA data frame is R’s tabular data structure — like a spreadsheet. Each column is a vector; all columns have equal length.\nSyntax: df[row, column] — first argument = row, second = column.\n# Create a data frame\ndata.frame(\n  x = 1:7,\n  y = c(\"Sun\",\"Mon\",\"Tue\",\"Wed\",\"Thurs\",\"Fri\",\"Sat\")\n) -&gt; df\ndf\n\n# Access columns\ndf[ , 2]      # all rows, column 2\ndf$x          # column x by name (returns vector)\ndf[2,  ]      # all columns of row 2\ndf[1:3, 1]    # rows 1–3, column 1\n\n# Useful info\nnrow(df)      # number of rows\nncol(df)      # number of columns\ndim(df)       # c(rows, cols)\nstr(df)       # structure overview\nhead(df)      # first 6 rows\ntail(df)      # last 6 rows\nsummary(df)   # descriptive statistics\nnames(df)     # column names\ncolnames(df)  # same as names\n\nCombine data frames\ndf1 &lt;- data.frame(x = 1:3, y = c(\"a\",\"b\",\"c\"), z = 12:14)\ndf2 &lt;- data.frame(x = 4:6, y = c(\"A\",\"B\",\"C\"), z = 21:23)\n\ncbind(df1, df2)   # by columns (side by side) — same nrow required\nrbind(df1, df2)   # by rows   (stacked)       — same column names required\n\n\nSubsetting\n# subset() — filter rows\nsubset(mtcars, mpg &gt; 25) -&gt; fast_cars\n\n# Select specific columns only\nsubset(mtcars, select = c(\"mpg\", \"cyl\", \"hp\")) -&gt; small_df\n\n# Using [ ] brackets\nmtcars[mtcars$mpg &gt; 25, ]        # filter rows\nmtcars[, c(\"mpg\", \"hp\")]          # select columns\n\n# dplyr (tidyverse) — most readable\nlibrary(dplyr)\nmtcars |&gt; filter(mpg &gt; 25)\nmtcars |&gt; select(mpg, cyl, hp)\nmtcars |&gt; arrange(desc(mpg))\nmtcars |&gt; mutate(kpl = mpg * 0.425)",
+    "crumbs": [
+      "Home",
+      "Getting Started",
+      "R Guide & Basics"
+    ]
+  },
+  {
+    "objectID": "r-guide.html#built-in-datasets",
+    "href": "r-guide.html#built-in-datasets",
+    "title": "R Guide & Basics",
+    "section": "Built-in Datasets",
+    "text": "Built-in Datasets\nR ships with many practice datasets:\ndata(mtcars)     # car performance data (32 cars, 11 variables)\ndata(iris)       # Fisher's iris flowers (150 rows, 5 variables)\ndata(economics)  # US economic data (in ggplot2 package)\ndata(diamonds)   # Diamond prices (in ggplot2)\ndata(gapminder)  # Country data (install.packages(\"gapminder\"))\n\n# See all available datasets\ndata()",
+    "crumbs": [
+      "Home",
+      "Getting Started",
+      "R Guide & Basics"
+    ]
+  },
+  {
+    "objectID": "r-guide.html#saving-plots-with-ggsave",
+    "href": "r-guide.html#saving-plots-with-ggsave",
+    "title": "R Guide & Basics",
+    "section": "Saving Plots with ggsave()",
+    "text": "Saving Plots with ggsave()\nlibrary(ggplot2)\n\n# Build a plot\np &lt;- ggplot(mtcars, aes(x = wt, y = mpg)) +\n  geom_point() +\n  theme_minimal()\n\n# Save the last-rendered plot\nggsave(\"my_plot.png\", width = 8, height = 5, dpi = 300)\n\n# Save a specific plot object\nggsave(\"my_plot.pdf\", plot = p, width = 10, height = 7)\n\n# Common formats\nggsave(\"plot.svg\",  device = \"svg\")\nggsave(\"plot.tiff\", device = \"tiff\", dpi = 300)\nggsave(\"plot.jpg\",  device = \"jpeg\", quality = 95)\n\n# Units: \"in\" (default), \"cm\", \"mm\", \"px\"\nggsave(\"~/ggplot/plot.png\", width = 3200, height = 2800, units = \"px\")",
+    "crumbs": [
+      "Home",
+      "Getting Started",
+      "R Guide & Basics"
+    ]
+  },
+  {
+    "objectID": "r-guide.html#next-steps",
+    "href": "r-guide.html#next-steps",
+    "title": "R Guide & Basics",
+    "section": "Next steps",
+    "text": "Next steps\n\nggplot2 Introduction →",
+    "crumbs": [
+      "Home",
+      "Getting Started",
+      "R Guide & Basics"
+    ]
+  },
+  {
+    "objectID": "bin/r-guide.html#installing-r-and-rstudio-on-linux",
+    "href": "bin/r-guide.html#installing-r-and-rstudio-on-linux",
+    "title": "R-Guide",
+    "section": "Installing R and RStudio on Linux",
+    "text": "Installing R and RStudio on Linux\nInstall the R-base package using the following code or Use your package manager to install R and R-studio.\n\nDebian/Ubuntu/Linux Mint\napt-get install r-base (as superuser)\nor\nsudo apt-get install r-base\n\n\nInstall RStudio on Linux\nTo install RStudio, go to download RStudio, click on the download button for RStudio desktop, click the link for the latest RStudio version.\nDownload the correct version of R-Studio from https://www.rstudio.com/products/rstudio/download/#download\nsudo apt install -f ./file-path (e.g. ~/Downloads/rstudio-2022.12.0-353-amd64.deb)\nOther way to install RStudio use the following command\nsudo apt-get install rstudio-desktop"
+  },
+  {
+    "objectID": "bin/r-guide.html#installing-r-and-rstudio-on-window",
+    "href": "bin/r-guide.html#installing-r-and-rstudio-on-window",
+    "title": "R-Guide",
+    "section": "Installing R and RStudio on Window",
+    "text": "Installing R and RStudio on Window\nTo install R and RStudio on Window, go through the following steps:\n\nInstall R on windows\nStep – 1: Go to R project website.\nStep – 2: Click on the Download R for Windows link and save the .exe file.\nStep – 3: Run the .exe file and follow the installation instructions.\n\n\nInstall RStudio on Windows\nStep – 1: Go to download RStudio and click on the download button for RStudio desktop.\nStep – 2: Click on the link for the windows version of RStudio and save the .exe file.\nStep – 3: Run the .exe and follow the installation instructions."
+  },
+  {
+    "objectID": "bin/r-guide.html#installing-r-and-rstudio-on-mac-os",
+    "href": "bin/r-guide.html#installing-r-and-rstudio-on-mac-os",
+    "title": "R-Guide",
+    "section": "Installing R and RStudio on Mac OS",
+    "text": "Installing R and RStudio on Mac OS\nTo install R and RStudio on Mac OS, go through the following steps:\n\nInstall R on Mac\nStep – 1: Go to CRAN R Project Website.\nStep – 2: Click on the Download for Mac OS link.\nStep – 3: Click on the link for the pkg file of the latest R version and save it.\nStep – 4: Double click the downloaded file and follow installation instructions.\n\n\nInstall RStudio on Mac OS\nStep – 1: Go to download RStudio and click on the download button for the RStudio desktop.\nStep – 2: Click on the link for the Mac OS RStudio and save the .dmg file.\nStep – 3: Double click the downloaded file and then drag-and-drop it into your applications folder.\nNote:- Download suitable version of R and RStudio according to Mac OS version"
+  },
+  {
+    "objectID": "bin/r-guide.html#types-of-vector",
+    "href": "bin/r-guide.html#types-of-vector",
+    "title": "R-Guide",
+    "section": "Types of Vector",
+    "text": "Types of Vector\n\nNumeric Vector (e.g 1,2,3)\n\n\nNumeric vector can be a numeric or an integer.\n\n\n\nCharacters (e.g “a”, “b”, “r-language”,)\n\nFactor (categorize the data and store it as levels)\n\nBoolean (True/False)"
+  },
+  {
+    "objectID": "bin/r-guide.html#creating-vectors-in-r",
+    "href": "bin/r-guide.html#creating-vectors-in-r",
+    "title": "R-Guide",
+    "section": "Creating Vectors in R",
+    "text": "Creating Vectors in R\n\nThere are two ways to create a vector i) using comma (,), ii) using colon (:)\n\n\n## Numeric Vector\nc(1,3,5) ## numeric\nc(1:7)   ## integer\n\n## Character Vector\nc(\"a\",\"b\",\"hello\")\n\nHere “c” means “combine”, and which is represent as the vector is an one dimensional.\n\nWe can store or save vector using this “-&gt;”\n\n\nc(1:10)-&gt;v\nv\nc(1,2,3,4)-&gt;v1\nv1\nc(\"my\",\"vector\")-&gt;vector\nvector\n\n\nCheck vector\n\n\nclass(v)\nclass(v1)\nclass(vector)\n\n\nCreate a vector with a specified interval between each element\n\n\nseq(1,20,by = 3)\n## Same as \nc(seq(1,20,by = 3))\n\n\nWe can create a vector of with repeated elements as well a number of times\n\n\nrep(3, times = 4)\nrep(3,4)\nrep(c(1:4), times = 4)\nrep(c(1:4),each = 4)"
+  },
+  {
+    "objectID": "bin/r-guide.html#vector-functions-in-r",
+    "href": "bin/r-guide.html#vector-functions-in-r",
+    "title": "R-Guide",
+    "section": "Vector Functions in R",
+    "text": "Vector Functions in R\n\nsort(my_vector) : Returns my_vector sorted\nrev(my_vector) : Reverses the order of my_vector\ntable(my_vector) : Count the values in a vector\nunique(my_vector) : Distinct elements in a vector\n\n\n## First let's create a dummy vecrtor\nc(1,3,5,2,7,4,9,24,12,25,13,22,12,3,4,6,10,9,25,22,22,21,12)-&gt;a\na\nsort(a)\nrev(a)\ntable(a)\nunique(a)"
+  },
+  {
+    "objectID": "bin/r-guide.html#subset-of-data-frame",
+    "href": "bin/r-guide.html#subset-of-data-frame",
+    "title": "R-Guide",
+    "section": "Subset of Data frame",
+    "text": "Subset of Data frame\nWe can also pick a subset from data frame\nsubset(data1,var1&gt;10000)-&gt;data2 A subset of data frame data1 and store it into data2, which will be also a data frame.\nsubset(data1,select=c(\"var1\",\"var5\",\"var10\"))-&gt;data2 Also we can select a subset by selecting particular columns as we want."
+  },
+  {
+    "objectID": "bin/r-guide.html#data-table-in-r",
+    "href": "bin/r-guide.html#data-table-in-r",
+    "title": "R-Guide",
+    "section": "Data Table in R",
+    "text": "Data Table in R"
+  },
+  {
+    "objectID": "bin/ggplot.html",
+    "href": "bin/ggplot.html",
+    "title": "ggplot2 : title, subtitle, and caption",
+    "section": "",
+    "text": "When using ggplot2 you can set a title, a subtitle, a caption in the plot. There are two ways to add title, subtitle (i) using ggtitle, (ii) using labs function."
+  },
+  {
+    "objectID": "bin/ggplot.html#title",
+    "href": "bin/ggplot.html#title",
+    "title": "ggplot2 : title, subtitle, and caption",
+    "section": "Title",
+    "text": "Title\nLet’s adding a title of the plot in ggplot2 with ggtitle\n\nlibrary(ggplot2)\n\nggplot(economics, aes(date, unemploy)) +\n  geom_area(fill = rgb(0, 0.5, 1, alpha = 0.5)) + \n  ggtitle(\"Title of the plot using ggtitle()\") \n\n\nOption 2. Using labs\nYou can also use the labs function to add the title.\n\n# install.packages(ggplot2)\nlibrary(ggplot2)\n\nggplot(economics, aes(date, unemploy)) +\n  geom_area(fill = rgb(0, 0.5, 1, alpha = 0.5)) + \n  labs(title = \"Title of the plot using labs()\") \n\n\n\nTitle position\nThe title position can be set respect to the whole plot instead of the panel with the plot.title.position component of the theme function. Default value is “panel”. This configuration also applies to the subtitle.\n\n# install.packages(ggplot2)\nlibrary(ggplot2)\n\nggplot(economics, aes(date, unemploy)) +\n  geom_area(fill = rgb(0, 0.5, 1, alpha = 0.5)) + \n  labs(title = \"Title on the plot margin\") + \n  theme(plot.title.position = \"plot\")"
+  },
+  {
+    "objectID": "bin/ggplot.html#subtitle",
+    "href": "bin/ggplot.html#subtitle",
+    "title": "ggplot2 : title, subtitle, and caption",
+    "section": "Subtitle",
+    "text": "Subtitle\nYou can add a subtitle the same way you added the title, but with the subtitle argument.\n\nOption 1. Using ggtitle\nAdd a subtitle in ggplot2\n\n# install.packages(ggplot2)\nlibrary(ggplot2)\n\nggplot(economics, aes(date, unemploy)) +\n  geom_area(fill = rgb(0, 0.5, 1, alpha = 0.5)) +  \n  ggtitle(\"Title of the plot\",\n          subtitle = \"Subtitle of the plot\") \n\n\n\nOption 2. Using labs\nSubtitle in ggplot2 using labs\n\n# install.packages(ggplot2)\nlibrary(ggplot2)\n\nggplot(economics, aes(date, unemploy)) +\n  geom_area(fill = rgb(0, 0.5, 1, alpha = 0.5)) + \n  labs(title = \"Title of the plot\",\n       subtitle = \"Subtitle of the plot\")"
+  },
+  {
+    "objectID": "bin/ggplot.html#caption",
+    "href": "bin/ggplot.html#caption",
+    "title": "ggplot2 : title, subtitle, and caption",
+    "section": "Caption",
+    "text": "Caption\nA caption can be used to describe the figure. You can add it with the caption argument of the labs function.\nAdding a caption in ggplot2\n\n# install.packages(ggplot2)\nlibrary(ggplot2)\n\nggplot(economics, aes(date, unemploy)) +\n  geom_area(fill = rgb(0, 0.5, 1, alpha = 0.5)) + \n  labs(title = \"Title of the plot\",\n       subtitle = \"Subtitle of the plot\",\n       caption = \"This is the caption\") \n\nThe plot.caption.position of the theme function allows aliging the caption to the panel (“panel”, default) or the whole plot (“plot”).\n\n# install.packages(ggplot2)\nlibrary(ggplot2)\n\nggplot(economics, aes(date, unemploy)) +\n  geom_area(fill = rgb(0, 0.5, 1, alpha = 0.5)) + \n  labs(caption = \"This is the caption\") +\n  theme(plot.caption.position = \"plot\",\n        plot.caption = element_text(hjust = 0)) \n\nChanging the caption position in ggplot2\nNote that the default for the caption is right alignment, so you can set hjust = 0 to move the caption to the left of the whole plot."
+  },
+  {
+    "objectID": "bin/ggplot.html#tag",
+    "href": "bin/ggplot.html#tag",
+    "title": "ggplot2 : title, subtitle, and caption",
+    "section": "Tag",
+    "text": "Tag\nAdding a tag to the plot in ggplot2\nTags are useful to indicate the figure numbering. You can add it with the tag argument of the labs function.\n\n# install.packages(ggplot2)\nlibrary(ggplot2)\n\nggplot(economics, aes(date, unemploy)) +\n  geom_area(fill = rgb(0, 0.5, 1, alpha = 0.5)) + \n  labs(title = \"Title of the plot\",\n       subtitle = \"Subtitle of the plot\",\n       caption = \"This is the caption\",\n       tag = \"Fig. 1\") \n\n\nTag position\nChanging the tag position in ggplot2\nThe position of the tag can be set with the plot.tag.position component of the theme function. Possible values are “topleft” (default), “top”, “topright”, “left”, “right”, “bottomleft”, “bottom” or “bottomright”.\n\n# install.packages(ggplot2)\nlibrary(ggplot2)\n\nggplot(economics, aes(date, unemploy)) +\n  geom_area(fill = rgb(0, 0.5, 1, alpha = 0.5)) + \n  labs(tag = \"Fig. 1\") +\n  theme(plot.tag.position = \"bottomright\")"
+  },
+  {
+    "objectID": "bin/ggplot.html#further-styles-and-adjustments",
+    "href": "bin/ggplot.html#further-styles-and-adjustments",
+    "title": "ggplot2 : title, subtitle, and caption",
+    "section": "Further styles and adjustments",
+    "text": "Further styles and adjustments\nThe titles, subtitles, captions and tags can be customized with the plot.title, plot.subtitle, plot.caption and plot.tag components of the theme function, making use of element_text. You can modify the color, the font family, the text size, the text face, the angle or the vertical and horizontal adjustment for each text as in the example below.\nStyling the titles in ggplot2, such as modifying the color, size, face, family, lineheight and margins\n\n# install.packages(ggplot2)\nlibrary(ggplot2)\n\nggplot(economics, aes(date, unemploy)) +\n  geom_area(fill = rgb(0, 0.5, 1, alpha = 0.5)) + \n  labs(title = \"Title of the plot\",\n       subtitle = \"Subtitle of the plot\",\n       caption = \"This is the caption\",\n       tag = \"Fig. 1\") + \n  theme(plot.title = element_text(family = \"serif\",              # Font family\n                                  face = \"bold\",                 # Font face\n                                  color = 4,                     # Font color\n                                  size = 15,                     # Font size\n                                  hjust = 1,                     # Horizontal adjustment\n                                  vjust = 1,                     # Vertical adjustment\n                                  angle = -10,                   # Font angle\n                                  lineheight = 1,                # Line spacing\n                                  margin = margin(20, 0, 0, 0)), # Margins (t, r, b, l)\n        plot.subtitle = element_text(hjust = 0),                 # Subtitle customization\n        plot.caption = element_text(hjust = 0.25),               # Caption customization\n        plot.tag = element_text(face = \"italic\"),                # Tag customization\n        plot.title.position = \"plot\",                            # Title and subtitle position (\"plot\" or \"panel\")\n        plot.caption.position = \"panel\",                         # Caption position (\"plot\" or \"panel\")\n        plot.tag.position = \"top\")                               # Tag position"
+  },
+  {
+    "objectID": "bin/ggplot.html#panel-background-color",
+    "href": "bin/ggplot.html#panel-background-color",
+    "title": "ggplot2 : title, subtitle, and caption",
+    "section": "Panel background color",
+    "text": "Panel background color"
+  },
+  {
+    "objectID": "bin/ggplot.html#panel-border-color",
+    "href": "bin/ggplot.html#panel-border-color",
+    "title": "ggplot2 : title, subtitle, and caption",
+    "section": "Panel border color",
+    "text": "Panel border color"
+  },
+  {
+    "objectID": "bin/ggplot.html#plot-background-color",
+    "href": "bin/ggplot.html#plot-background-color",
+    "title": "ggplot2 : title, subtitle, and caption",
+    "section": "Plot background color",
+    "text": "Plot background color"
+  },
+  {
+    "objectID": "bin/ggplot.html#plot-border-color",
+    "href": "bin/ggplot.html#plot-border-color",
+    "title": "ggplot2 : title, subtitle, and caption",
+    "section": "Plot border color",
+    "text": "Plot border color\nChanging the colors with themes Color picker Default plot\nBy default, ggplot2 plots have a gray panel and a white background.\n\nlibrary(ggplot2)\n\n# Sample data\nset.seed(123)\nx &lt;- 1:220\ny &lt;- x + rnorm(220, sd = 50)\n\ndf &lt;- data.frame(x = x, y = y)\n\n# Plot\nggplot(data = df, aes(x = x, y = y)) + \n  geom_point()\n\nDefault background color in ggplot2\nPanel background color You can change the panel background color setting an element_rect in the panel.background component of the theme function as follows.\nChange the background panel color in ggplot2\n\nlibrary(ggplot2)\n\nggplot(data = mtcars, aes(x = mpg, y = cyl))+ \n  geom_point() + \n  theme(panel.background = element_rect(fill = \"#67c9ff\")) \n\nPanel border color Option 1\nggplot2 panel border color\nThe panel.border component of the theme function controls the color and width of the border of the panel with the color and size arguments. However, you will need to set fill = “transparent” to avoid hiding the data.\n\nlibrary(ggplot2)\n\nggplot(data = df, aes(x = x, y = y)) + \n  geom_point() + \n  theme_bw() + \n  theme(panel.border = element_rect(fill = \"transparent\", # Needed to add the border\n                                    color = 4,            # Color of the border\n                                    size = 2))            # Border width \n\nOption 2\nBorder color of the plot in ggplot2\nYou can also set a element_rect for the panel.background component and modify the border color with the color argument. However, this is not the recommended workflow, as it doesn’t override the current border. You can check this with theme_bw (Note that the black border is behind the blue border).\n\nlibrary(ggplot2)\n\nggplot(data = df, aes(x = x, y = y)) + \n  geom_point() + \n  theme_bw() + \n  theme(panel.background = element_rect(color = 4, # Color of the border\n                                        size = 2)) # Border width \n\nPlot background color The plot.background component of the theme function allows modifying the background color of the figure. Set the color inside the fill argument of an element_rect.\nPlot background color in ggplot2\n\nlibrary(ggplot2)\n\nggplot(data = mtcars, aes(x = mpg, y = cyl))+ \n  geom_point() + \n  theme(plot.background = element_rect(fill = \"gray86\")) # Background color of the plot \n\nPlot border color Plot border color in ggplot\nYou can also set a border color for the whole figure. Just pass an element_rect to the plot.background component of the theme function and modify the color and the width of the border with the arguments color and size, respectively.\n\nlibrary(ggplot2)\n\nggplot(data = df, aes(x = x, y = y)) + \n  geom_point() + \n  theme(plot.background = element_rect(color = \"black\", # Border color\n                                       size = 2))       # Border width \n\nChanging the colors with themes It is worth mentioning that there are lots of ggplot themes available that provide different background colors.\nIn this example we are setting the theme_dark, which is one of the in-built ggplot2 themes.\n\nlibrary(ggplot2)\n\nggplot(data = df, aes(x = x, y = y)) + \n  geom_point() + \n  theme_dark() \n\nNote that the default theme is theme_grey.\nChange the color of a plot with a ggplot theme\nColor picker Use the color pickers to change the panel color (left) and the plot color (right), or to generate random colors pressing the blue button. Then you can copy the colors and use them in your plots.\n#EBEBEB #FFFFFF Generate random"
+  },
+  {
+    "objectID": "bin/barplot.html",
+    "href": "bin/barplot.html",
+    "title": "How to Draw",
+    "section": "",
+    "text": "How to Draw a Barplot in R (5 Examples)\nThis tutorial illustrates how to create a barchart in R programming.\nI will explain how to plot barplots using Base R as well as using the ggplot2 add-on package. Furthermore, I’ll demonstrate how to draw stacked and grouped barcharts.\nLet’s start right away!\nConstruction of Example Data Before all else, let’s create some example data in R.\n\ndf1 &lt;- data.frame(values = c(5, 2, 7, 2),              # Create example data frame\n                  group = LETTERS[1:4])\ndf1\n\nAs you can see based on the previous RStudio console output, our example data is a data frame containing four rows and two columns. The variable values has the numeric class and the variable group is a character.\nExample 1: Create Barchart Using Base R In this example, I’ll show how to draw barcharts using the basic installation of the R programming language.\nIf we want to create a Base R barplot with default specifications, we can apply the code as shown below:\n\nbarplot(values ~ group,                                # Draw Base R barplot\n        df1)\n\nr graph figure 1 draw barplot\nAs shown in Figure 1, we have created a bargraph with vertical gray bars.\nWe can modify the alignment of the bars using the horiz argument:\n\nbarplot(values ~ group,                                # Horizontal barplot\n        df1,\n        horiz = TRUE)\n\nr graph figure 2 draw barplot\nBy executing the previous R code, we have created Figure 2, i.e. a barplot with horizontal bars.\nWe can also change the colors of our barplot:\n\nbarplot(values ~ group,                                # Barplot with colors\n        df1,\n        col = 1:4)\n\nr graph figure 3 draw barplot\nThe output of the previous R code is shown in Figure 3: A barplot with a different color in each bar.\nIf we want to add a legend on top of this barchart, we can apply the legend function as shown below:\nlegend(\"topright\",                                     # Add legend to barplot\n       df1$group,\n       fill = 1:4)\nr graph figure 4 draw barplot\nAs revealed in Figure 4, the previous R programming syntax has added a legend on top of our Base R barchart.\nBase R provides many further options on how to manipulate our barcharts. However, I want to move on to a very common add-on package for graphics in R – the ggplot2 package!\nExample 2: Create Barchart Using ggplot2 Package The following syntax explains how to use the ggplot2 package to draw basically the same types of barcharts as in the previous section.\nFirst, we need to install and load the ggplot2 package:\n\n## install.packages(\"ggplot2\")                            # Install & load ggplot2\nlibrary(\"ggplot2\")\n\nNext, we can draw a ggplot2 barplot with default setting as shown below:\n\nggplot(df1,                                            # Draw ggplot2 barplot\n       aes(x = group,\n           y = values)) +\n  geom_bar(stat = \"identity\")\n\nr graph figure 5 draw barplot\nAs shown in Figure 5, we have created a vertical barchart without colors by executing the previous R syntax.\nIf we want to draw a horizontal bargraph, we can apply the coord_flip function as shown below:\n\nggplot(df1,                                            # Horizontal barplot\n       aes(x = group,\n           y = values)) +\n  geom_bar(stat = \"identity\") +\n  coord_flip()\n\nr graph figure 6 draw barplot\nBy executing the previously shown R code, we have created Figure 6, i.e. a horizontally aligned bargraph.\nWe can also add colors and a legend to our barplot by using the fill argument within the aesthetics of our ggplot2 plot:\n\nggplot(df1,                                            # Barplot with colors\n       aes(x = group,\n           y = values,\n           fill = group)) +\n  geom_bar(stat = \"identity\")\n\nr graph figure 7 draw barplot\nIn Figure 7 you can see that we have plotted a colored ggplot2 barplot using the previous R programming syntax.\nSo far, so good – Let’s draw some more advanced barplots!\nExample 3: Create Stacked Barchart Using ggplot2 Package The following sections explain how to visualize more complex data, i.e. data with main and subgroups, in a barplot.\nFirst, we have to create another data set:\n\ndf2 &lt;- data.frame(values = c(3, 2, 6, 3, 4, 3, 8, 2),  # Data frame with subgroups\n                  maingroup = rep(LETTERS[1:4], each = 2),\n                  subgroup = letters[1:2])\ndf2                                                    # Print new data frame\n\nIn the previous console output you can see that we have created another data set with the previous R code. This data set contains three columns, a values column as well as a main and sub group indicator.\nWe can now visualize these data in a so called stacked barplot, i.e. where the subgroups are plotted on top of each other within the same bar:\n\nggplot(df2,                                            # Draw stacked barplot\n       aes(x = maingroup,\n           y = values,\n           fill = subgroup)) +\n  geom_bar(stat = \"identity\")\n\nr graph figure 8 draw barplot\nBy running the previous syntax, we have created Figure 8, i.e. a stacked ggplot2 barchart.\nExample 4: Create Stacked Barchart Scaled to 100% Using ggplot2 Package To make the comparison between the subgroups more visual, we may scale the bars in our barplot to the same height.\nThis code demonstrates how to scale all bars to the value 1:\n\nggplot(df2,                                            # Scale to 1.0\n       aes(x = maingroup,\n           y = values,\n           fill = subgroup)) +\n  geom_bar(stat = \"identity\",\n           position = \"fill\")\n\nr graph figure 9 draw barplot\nAs shown in Figure 9, we have created a barplot scaled to 1.\nAlternatively, we may scale all bars to 100%:\n\nggplot(df2,                                            # Scale to 100%\n       aes(x = maingroup,\n           y = values,\n           fill = subgroup)) +\n  geom_bar(stat = \"identity\",\n           position = \"fill\") +\n  scale_y_continuous(labels = scales::percent_format())\n\nr graph figure 10 draw barplot\nThe output of the previous syntax is shown in Figure 10: The stacked bars are exactly the same as in the previous graph. However, the y-axis was changed to percentage points.\nExample 5: Create Grouped Barchart Using ggplot2 Package Another very popular way to visualize subgroups are so called grouped barplots.\nWe can use the ggplot2 package to draw a grouped barplot as shown below. Note that the following R code specifies the position argument within the geom_bar function to be equal to “dodge”:\n\nggplot(df2,                                            # Draw grouped barplot\n       aes(x = maingroup,\n           y = values,\n           fill = subgroup)) +\n  geom_bar(stat = \"identity\",\n           position = \"dodge\")\n\nr graph figure 11 draw barplot\nAs visualized in Figure 11, the previous R programming code has created a grouped ggplot2 barplot."
+  },
+  {
+    "objectID": "bin/ggplot-theme.html",
+    "href": "bin/ggplot-theme.html",
+    "title": "ggplot2-theme",
+    "section": "",
+    "text": "Themes in ggplot2\nThe ggplot2 package have different themes. By default it uses the theme_grey (theme_gray()), so we don’t need to specify it.\nWe can adjusted themes by adding an in-build theme from ggplot2.\ntheme_gray() – default ggplot2 theme with a grey background and white gridlines\ntheme_bw() – dark and light (black and white) ggplot2 theme\ntheme_linedraw() – uses black lines on white backgrounds only\ntheme_light() – similar to linedraw() but with grey lines\ntheme_dark() – lines on a dark background\ntheme_minimal() – no background annotations\ntheme_classic() – theme with no grid lines\ntheme_void() – empty theme with no elements\nWe can also modify the plot base size by using base_size argument in the theme functions.\n\nlibrary(ggplot2)\n\niris-&gt;dataset\n\n## Bar plot\nggplot(dataset, aes(x = Sepal.Length, y = Sepal.Width, fill = Species)) +\n  geom_bar(stat = \"identity\", position = \"stack\") +\n  facet_wrap(~Species)-&gt;p\n\n## theme_bw()\np+theme_bw(base_size=20) +\n  theme(legend.position = \"top\")-&gt;p1\np1\n\n## theme_dark()\np+theme_dark() +\n  theme(legend.position = \"top\")-&gt;p2 \n\np2\n\n\n\nggthemes package\nThe ggthemes package contains several very popular themes.\ntheme_base()         theme_cala()                  theme_clean()\ntheme_economist()    theme_excel()                 theme_excel_new()\ntheme_few()          theme_fivethirtyeight()       theme_foundation()\ntheme_gdocs()        theme_hc()                    theme_igray()\ntheme_map()          theme_pander()                theme_par()\ntheme_solarized()    theme_solid()                 theme_stata()\n\nlibrary(ggplot2)\n## install.packages(\"ggthemes\")\nlibrary(ggthemes)\n\niris-&gt;dataset\n\n## Bar plot\nggplot(dataset, aes(x = Sepal.Length, y = Sepal.Width, fill = Species)) +\n  geom_bar(stat = \"identity\", position = \"stack\") +\n  facet_wrap(~Species)-&gt;p\n\n## theme_base()\np+theme_base() +\n  theme(legend.position = \"top\")-&gt;p1\n\n## theme_economist()\np+theme_economist() +\n  theme(legend.position = \"top\")-&gt;p2\np1\np2\n\n\n\nhrbrthemes package\nhrbrthemes provides typography-centric themes and theme components for ggplot2. The available themes are listed below,\ntheme_ipsum()              theme_ipsum_es()             theme_ipsum_rc()\ntheme_ipsum_ps()           theme_ipsum_pub()            theme_ipsum_tw()\ntheme_ipsum_modern_rc()    theme_ft_rc()\n\nlibrary(ggplot2)\n## install.apckages(\"hrbrthemes\")\nlibrary(hrbrthemes)\n\niris-&gt;dataset\n\n## Bar plot\nggplot(dataset, aes(x = Sepal.Length, y = Sepal.Width, fill = Species)) +\n  geom_bar(stat = \"identity\", position = \"stack\") +\n  facet_wrap(~Species)-&gt;p\n\np+theme_ipsum()  +\n  theme(legend.position = \"top\")-&gt;p\np\n\n\n\nggdark package\nggdark provides the dark mode themes of the ggplot2 themes. This package can convert any theme into a dark theme. The available themes are listed below.\ndark_theme_gray()         dark_theme_linedraw()          dark_theme_light()          dark_theme_dark()         dark_theme_minimal()           dark_theme_classic()        dark_theme_void()         dark_mode()\n\nlibrary(ggplot2)\n## install.packages(\"ggdark\")\nlibrary(ggdark)\n\nmtcars-&gt;dt\ncyls &lt;- as.factor(dt$cyl)\n\nggplot(mtcars, aes(x = mpg, fill = cyls)) +\n  geom_density(alpha = 0.7)-&gt;p\n\np+dark_theme_classic() +\n  theme(legend.position = \"top\")-&gt;p1 \np1\np+dark_theme_linedraw() +\n  theme(legend.position = \"top\")-&gt;p2 \np2\n\n\n\nmdthemes\nmdthemes contains all the themes provided by ggplot2, ggthemes, hrbrthemes, and other themes packages. Like as below\nmd_theme_grey()\n\nmd_theme_bw()\n\nmd_theme_linedraw()\n\nmd_theme_light()\n\nmd_theme_dark()\n\nmd_theme_minimal()\n\nmd_theme_classic()\n\nlibrary(ggplot2)\n# install.packages(\"mdthemes\")\nlibrary(mdthemes)\nmtcars-&gt;dt\ncyls &lt;- as.factor(dt$cyl)\n\nggplot(dt, aes(x = mpg, fill = cyls)) +\n  geom_density(alpha = 0.7)-&gt;p\np+labs(title = \"**Plot title**\",\n       subtitle = \"*Plot subtitle*\")-&gt;p\n\n## theme_bw()\np+theme_bw() +\n  theme(legend.position = \"top\")-&gt;p1\np1\n\n## md_theme_linedraw()\np+md_theme_bw() +\n  theme(legend.position = \"top\")-&gt;p2 \n\np2\n\n\n\nggthemr package\nNote that you will need to call ggthemr_reset() to reset to the default ggplot2 theme.\nThe ggthemr package works different than the other packages. Instead of using the theme function and set a theme you can set a theme globally making use of the ggthemr function and passing the theme as string as argument.\nggthemr(\"flat\")           ggthemr(\"flat dark\")          ggthemr(\"camouflage\")\nggthemr(\"carrot\")         ggthemr(\"chalk\")              ggthemr(\"copper\")\nggthemr(\"dust\")           ggthemr(\"earth\")              ggthemr(\"fresh\")\nggthemr(\"grape\")          ggthemr(\"grass\")              ggthemr(\"greyscale\")\nggthemr(\"light\")          ggthemr(\"lilac\")              ggthemr(\"pale\")\nggthemr(\"sea\")            ggthemr(\"sky\")                ggthemr(\"solarized\")\n\nlibrary(ggplot2)\n##devtools::install_github('Mikata-Project/ggthemr')\nlibrary(ggthemr)\n\nmtcars-&gt;dt\ncyls &lt;- as.factor(dt$cyl)\n\nggthemr(\"flat\")\n\nggplot(dt, aes(x = mpg, fill = cyls)) +\n  geom_density(alpha = 0.7) +\n  theme(legend.position = \"top\")\n\n\n\nggtech package\nThe ggtech package provides themes inspired by tech companies, such as Airbnb, Google, Twitter or Facebook.\ntheme_tech(theme=\"airbnb\")               theme_tech(theme=\"etsy\")\ntheme_tech(theme=\"facebook\")             theme_tech(theme=\"google\")\ntheme_tech(theme=\"tiwtter\")              theme_airbnb_fancy()\n\nlibrary(ggplot2)\n##devtools::install_github(\"ricardo-bion/ggtech\",\n##                          dependencies=TRUE)\nlibrary(ggtech)\n\nmtcars-&gt;dt\ncyls &lt;- as.factor(dt$cyl)\n\nggplot(dt, aes(x = mpg, fill = cyls)) +\n  geom_density(alpha = 0.7) +\n  ggtitle(\"Title of the plot\") +\n  theme_tech(theme = \"airbnb\") +\n  scale_fill_tech(theme = \"airbnb\") +\n  theme(legend.position = \"top\")\n\nggplot(dt, aes(x = mpg, fill = cyls)) +\n  geom_density(alpha = 0.7) +\n  ggtitle(\"Title of the plot\") +\n  theme_tech(theme = \"facebook\") +\n  scale_fill_tech(theme = \"facebook\") +\n  theme(legend.position = \"top\")"
+  },
+  {
+    "objectID": "bin/combine-plot.html",
+    "href": "bin/combine-plot.html",
+    "title": "Combining plots in ggplot2",
+    "section": "",
+    "text": "The ggplot2 package doesn’t providing function to arrange multiples plots in a single figure, but there are some packages, that allow combine multiples plots into a single figure with custom layouts, width, height, such as cowplot, gridExtra, patchwork"
+  },
+  {
+    "objectID": "bin/combine-plot.html#combining-ggplot2-plots",
+    "href": "bin/combine-plot.html#combining-ggplot2-plots",
+    "title": "Combining plots in ggplot2",
+    "section": "Combining ggplot2 plots",
+    "text": "Combining ggplot2 plots\npatchwork is designed to combine ggplot2 plots into the same figure easily with using the + operator to combine the charts.\n\n# install.packages(\"patchwork\")\nlibrary(ggplot2)\nlibrary(patchwork)\n\n# Combine the plots\np1 + p2"
+  },
+  {
+    "objectID": "bin/combine-plot.html#controlling-the-layout",
+    "href": "bin/combine-plot.html#controlling-the-layout",
+    "title": "Combining plots in ggplot2",
+    "section": "Controlling the layout",
+    "text": "Controlling the layout\nIf you want to customize the number of rows or columns of the figure you can use the plot_layout function. Also you can also specify the widths and heights of the plots with widths and heights arguments.\n\nlibrary(ggplot2)\nlibrary(patchwork)\n\n# Combine the plots\np1 + p2 + p3 + p4 +\n  plot_layout(ncol = 3) \n\nThe most interesting functionality of the plot_layout function is that you can create a custom layout design as shown in the example below, where 1, 2, 3 and 4 represents the locations for p1,p2, p3 and p4, respectively, and # represents an empty space. Recall that you can use numbers but also letters to represent the plot locations.\n\nlibrary(ggplot2)\nlibrary(patchwork)\n\n# Combine the plots with a custom layout\np1 + p2 + p3 + p4 +\n  plot_layout(design =\"111\n                       2#3\n                       443\") \n\n\nThe wrap_plots function\nSometimes you can’t use the + operator programatically, so if you don’t know the number of plots beforehand you can use the wrap_plots function and pass a list of plots to it. This function also allows specifying the number of rows and columns, the sizes and the custom layouts.\n\nlibrary(ggplot2)\nlibrary(patchwork)\n\n# Combine the plots\nwrap_plots(p1, p2, p3, p4, \n           ncol = 2, nrow = 2,\n           widths = c(1, 0.5), heights = c(0.5, 1)) \n\n\n\nAdding spacers\nWhen creating a custom layout you can use # to add spaces, as shown in one of the previous examples, but if you are using + there is also a function named plot_spacer to add spaces or gaps between plots.\n\nlibrary(ggplot2)\nlibrary(patchwork)\n\n# Plots with spaces\np1 + plot_spacer() + plot_spacer() + p3"
+  },
+  {
+    "objectID": "bin/combine-plot.html#operators",
+    "href": "bin/combine-plot.html#operators",
+    "title": "Combining plots in ggplot2",
+    "section": "Operators",
+    "text": "Operators\nThe patchwork package also provides two operators to place plots beside each other or to stack them.\n\nArranging ggplot2 plots in rows (beside each other)\nThe | operator places plots in a row. This operator is similar to + when you have two plots but | will place all plots in a single row while + will try to create a square layout if possible.\n\nlibrary(ggplot2)\nlibrary(patchwork)\n\n# Combine the plots in rows\np1 | p2\n\n\n\nArranging ggplot2 plots in columns (stacked)\nThe / operator stacks the ggplot2 plots into columns without the need of using the plot_layout function and specifying ncol = 1.\n\nlibrary(ggplot2)\nlibrary(patchwork)\n\n# Combine the plots as column\np1 / p2\n\nYou can create complex layouts. The | and / operators can be use to create complex layouts combining plots. In the following example we are creating a layout with two plots at the top and one wider at the bottom.\n\nlibrary(ggplot2)\nlibrary(patchwork)\n\n# Two plots on top and one at the bottom\n(p1 | p2) / p3 \n\nThe following example is similar to the previous, but with one plot at the left and two at the right.\n\nlibrary(ggplot2)\nlibrary(patchwork)\n\n# One plot at the left and two at the right\np1 | (p2 / p3)"
+  },
+  {
+    "objectID": "bin/combine-plot.html#titles-and-labels",
+    "href": "bin/combine-plot.html#titles-and-labels",
+    "title": "Combining plots in ggplot2",
+    "section": "Titles and labels",
+    "text": "Titles and labels\n\nTitle for all the plots\nYou can add a title, subtitle and captions to all plots with the plot_annotation function.\n\nlibrary(ggplot2)\nlibrary(patchwork)\n\n# Title for the combined plots\np1 + ((p2 | p3) / p4) + \nplot_annotation(title = \"Title\",\n                subtitle = \"Subtitle\",\n                caption = \"Caption\") \n\nThe plot_annotation function can also be used to label each plot individually with the tags_level argument. Possible options are “1” for numbers, “a” for lowercase letters, “A” for uppercase letters, “i” for lowercase Roman numerals, “I” for uppercase Roman numerals or a vector with your own tags.\n\nlibrary(ggplot2)\nlibrary(patchwork)\n\n# Labels for each plot\np1 + p2 + plot_annotation(tag_levels = \"A\") \n\nThe labels can be customized with the tag_prefix, tag_suffix and tag_sep arguments.\n\nlibrary(ggplot2)\nlibrary(patchwork)\n\n# Labels for each plot\np1 + p2 + plot_annotation(tag_levels = \"A\", tag_prefix = \"Plot \")"
+  },
+  {
+    "objectID": "bin/combine-plot.html#adding-more-layers",
+    "href": "bin/combine-plot.html#adding-more-layers",
+    "title": "Combining plots in ggplot2",
+    "section": "Adding more layers",
+    "text": "Adding more layers\nThe figures created with patchwork behave the same way as a ggplot2 object, so you can add new layers as with normal plots, but the layer will be applied to the last added plot.\n\nlibrary(ggplot2)\nlibrary(patchwork)\n\n# Add a new layer\np2 + p1 +\n  geom_jitter(color = \"blue\")\n\n# Equivalent to:\np &lt;- p2 + p1\np + geom_jitter(color = \"blue\") \n\nIf you want to customize other than the last plot added you can add the new layer to it or save the patchwork, access the desired element and customize it, as shown in the following example.\n\nlibrary(ggplot2)\nlibrary(patchwork)\n\n# Add a new layer to the first plot\np2 + theme_bw() + p1\n\n# Equivalent to:\np &lt;- p2 + p1\np[[1]] &lt;- p[[1]] + theme_bw()\np\n\n\nModifying all plots at the same time\npatchwork also provides the & operator to modify all the plots at the same time to set the same theme for all plots at the same time.\n\nlibrary(ggplot2)\nlibrary(patchwork)\n\n# Change the theme for all plots\np1 + p2 + p3 + p4 & theme_classic()"
+  },
+  {
+    "objectID": "bin/combine-plot.html#adding-tables-and-text",
+    "href": "bin/combine-plot.html#adding-tables-and-text",
+    "title": "Combining plots in ggplot2",
+    "section": "Adding tables and text",
+    "text": "Adding tables and text\nWhen adding base R plots and ggplot2 plots patchwork won’t be able to align the plots, so you will need to customize the margins for one of the plots and try to fine tune the values until you reach a good alignment.\nMaking use of the tableGrob function from the gridExtra package you can add a table to a layout created with patchwork.\n\n# install.packages(\"gridExtra\")\nlibrary(ggplot2)\nlibrary(patchwork)\nlibrary(gridExtra)\n\ntab &lt;- t(round(quantile(df$mpg), 2))\n\n# ggplot2 with table\np1 / tableGrob(tab) \n\nYou can also use the textGrob function from gridExtra to add a text to the layout, but note that if you want the text to be the first element you will need to use the wrap_elements function.\n\nlibrary(ggplot2)\nlibrary(patchwork)\nlibrary(grid)\n\n# ggplot2 with text\np1 + textGrob(\"Text at the right\")\n\n# To put the text first use:\nwrap_elements(textGrob(\"Text at the left\")) + p1"
+  },
+  {
+    "objectID": "bin/combine-plot.html#aligning-the-plots",
+    "href": "bin/combine-plot.html#aligning-the-plots",
+    "title": "Combining plots in ggplot2",
+    "section": "Aligning the plots",
+    "text": "Aligning the plots\nThe plot_grid function also customize the number of rows and columns of plots with the nrow and ncol arguments.\n\nlibrary(ggplot2)\nlibrary(cowplot)\n\nplot_grid(p1, p2, p3, ncol = 1)"
+  },
+  {
+    "objectID": "bin/combine-plot.html#adding-labels-to-each-plot",
+    "href": "bin/combine-plot.html#adding-labels-to-each-plot",
+    "title": "Combining plots in ggplot2",
+    "section": "Adding labels to each plot",
+    "text": "Adding labels to each plot\nIf you want to label each plot individually you can make use the labels argument of the function, where you can specify a vector of labels or use the “A” or “a” keywords for automatic labels in uppercase or lowercase, respectively. The function also provides several arguments to customize the style of the texts.\n\nlibrary(ggplot2)\nlibrary(cowplot)\n\nplot_grid(p1, p2, p4,\n          labels = c(\"A\", \"b\", 1),\n          label_fontfamily = \"serif\",\n          label_fontface = \"bold\",\n          label_colour = \"dodgerblue2\")"
+  },
+  {
+    "objectID": "bin/combine-plot.html#mixing-plots-with-cowplot",
+    "href": "bin/combine-plot.html#mixing-plots-with-cowplot",
+    "title": "Combining plots in ggplot2",
+    "section": "Mixing plots with cowplot",
+    "text": "Mixing plots with cowplot\nWith cowplot you can also create more complex layouts combining plot_grid functions, as shown in the example below, where we are creating a layout with two plots at the bottom and one at the top.\n\nlibrary(ggplot2)\nlibrary(cowplot)\n\n# Grid layout with cowplot\nplot_grid(p3, plot_grid(p1, p2), ncol = 1)"
+  },
+  {
+    "objectID": "bin/plot-title.html",
+    "href": "bin/plot-title.html",
+    "title": "ggplot-plot-title",
+    "section": "",
+    "text": "When using ggplot2 we can set a title, subtitle, caption, and tag of the plot. There are two ways to add title, subtitle; (i) using ggtitle, (ii) using labs function."
+  },
+  {
+    "objectID": "bin/plot-title.html#option-2.-using-labs",
+    "href": "bin/plot-title.html#option-2.-using-labs",
+    "title": "ggplot-plot-title",
+    "section": "Option 2. Using labs",
+    "text": "Option 2. Using labs\nYou can also use the labs function to add the title.\n\n# install.packages(ggplot2)\nlibrary(ggplot2)\ndata&lt;-iris\n\nggplot(data, aes(x = Sepal.Width, y = Petal.Width, fill = Species)) +\n  geom_bar(stat = \"identity\") + \n  facet_wrap(~Species) + \n  labs(title = \"Title of the plot\",\n       subtitle = \"Subtitle of the plot\")-&gt;p\np"
+  },
+  {
+    "objectID": "bin/plot-title.html#title-position",
+    "href": "bin/plot-title.html#title-position",
+    "title": "ggplot-plot-title",
+    "section": "Title position",
+    "text": "Title position\nThe title position can be set respect to the whole plot instead of the panel with the plot.title.position component of the theme function. Default value is “panel”. This configuration also applies to the subtitle.\n\n# install.packages(ggplot2)\nlibrary(ggplot2)\n\nggplot(data, aes(x = Sepal.Width, y = Petal.Width)) +\n  geom_area(fill = rgb(0, 0.5, 1, alpha = 0.5)) + \n  labs(title = \"Title on the plot\") + \n  theme(plot.title.position = \"plot\")"
+  },
+  {
+    "objectID": "bin/plot-title.html#option-1.-using-ggtitle",
+    "href": "bin/plot-title.html#option-1.-using-ggtitle",
+    "title": "ggplot-plot-title",
+    "section": "Option 1. Using ggtitle",
+    "text": "Option 1. Using ggtitle\nAdd a subtitle in ggplot2\n\n# install.packages(ggplot2)\nlibrary(ggplot2)\n\nggplot(data, aes(x = Sepal.Width, y = Petal.Width)) +\n  geom_area(fill = rgb(0, 0.5, 1, alpha = 0.5)) +\n  labs(subtitle = \"Subtitle on the plot\")"
+  },
+  {
+    "objectID": "bin/plot-title.html#option-2.-using-labs-1",
+    "href": "bin/plot-title.html#option-2.-using-labs-1",
+    "title": "ggplot-plot-title",
+    "section": "Option 2. Using labs",
+    "text": "Option 2. Using labs\nSubtitle in ggplot2 using labs\n\n# install.packages(ggplot2)\nlibrary(ggplot2)\n\nggplot(economics, aes(date, unemploy)) +\n  geom_area(fill = rgb(0, 0.5, 1, alpha = 0.5)) + \n  labs(title = \"Title of the plot\",\n       subtitle = \"Subtitle of the plot\")"
+  },
+  {
+    "objectID": "bin/plot-title.html#tag-position",
+    "href": "bin/plot-title.html#tag-position",
+    "title": "ggplot-plot-title",
+    "section": "Tag position",
+    "text": "Tag position\nChanging the tag position in ggplot2\nThe position of the tag can be set with the plot.tag.position component of the theme function. Possible values are “topleft” (default), “top”, “topright”, “left”, “right”, “bottomleft”, “bottom” or “bottomright”.\n\n# install.packages(ggplot2)\nlibrary(ggplot2)\n\nggplot(economics, aes(date, unemploy)) +\n  geom_area(fill = rgb(0, 0.5, 1, alpha = 0.5)) + \n  labs(tag = \"Fig. 1\") +\n  theme(plot.tag.position = \"bottomright\")"
+  },
+  {
+    "objectID": "coordinates.html",
+    "href": "coordinates.html",
+    "title": "Coordinate Systems",
+    "section": "",
+    "text": "Coordinate functions change how the plot space is set up — they affect the axes themselves, not the data.\n\n\n\nFunction\nPurpose\n\n\n\n\ncoord_cartesian()\nZoom without dropping data\n\n\ncoord_flip()\nSwap x and y axes\n\n\ncoord_polar()\nPolar / pie / radar charts\n\n\ncoord_trans()\nTransform the coordinate system\n\n\ncoord_fixed()\nFix aspect ratio\n\n\ncoord_equal()\nEqual units on both axes\n\n\ncoord_map()\nMap projections",
+    "crumbs": [
+      "Home",
+      "ggplot2 Core",
+      "Coordinates"
+    ]
+  },
+  {
+    "objectID": "coordinates.html#overview",
+    "href": "coordinates.html#overview",
+    "title": "Coordinate Systems",
+    "section": "",
+    "text": "Coordinate functions change how the plot space is set up — they affect the axes themselves, not the data.\n\n\n\nFunction\nPurpose\n\n\n\n\ncoord_cartesian()\nZoom without dropping data\n\n\ncoord_flip()\nSwap x and y axes\n\n\ncoord_polar()\nPolar / pie / radar charts\n\n\ncoord_trans()\nTransform the coordinate system\n\n\ncoord_fixed()\nFix aspect ratio\n\n\ncoord_equal()\nEqual units on both axes\n\n\ncoord_map()\nMap projections",
+    "crumbs": [
+      "Home",
+      "ggplot2 Core",
+      "Coordinates"
+    ]
+  },
+  {
+    "objectID": "coordinates.html#coord_cartesian-zoom-without-clipping",
+    "href": "coordinates.html#coord_cartesian-zoom-without-clipping",
+    "title": "Coordinate Systems",
+    "section": "coord_cartesian() — zoom without clipping",
+    "text": "coord_cartesian() — zoom without clipping\ncoord_cartesian() zooms into a region without removing data outside the view (unlike xlim() / ylim() which remove data and affect statistical calculations).\nlibrary(ggplot2)\n\np &lt;- ggplot(mtcars, aes(x = wt, y = mpg)) +\n  geom_point() +\n  geom_smooth(method = \"lm\")\n\n# Full plot\np\n\n# Zoom in on x: 2–4, y: 15–30  (data outside still used for smooth)\np + coord_cartesian(xlim = c(2, 4), ylim = c(15, 30))\n\n# Compare — xlim() REMOVES data; affects the smooth line\np + xlim(2, 4) + ylim(15, 30)\n\n\n\n\n\n\nImportantcoord_cartesian() vs xlim() / ylim()\n\n\n\ncoord_cartesian() zooms — all data is still used for statistical layers like geom_smooth().\nxlim() / ylim() filter — data outside the range is dropped, which can distort stat layers.\n\n\n# Expand ratio (add padding around data)\np + coord_cartesian(expand = FALSE)          # remove padding\np + coord_cartesian(xlim = c(1.5, 5.5),\n                    ylim = c(10, 35),\n                    expand = FALSE)          # tight zoom, no padding",
+    "crumbs": [
+      "Home",
+      "ggplot2 Core",
+      "Coordinates"
+    ]
+  },
+  {
+    "objectID": "coordinates.html#coord_flip-swap-axes",
+    "href": "coordinates.html#coord_flip-swap-axes",
+    "title": "Coordinate Systems",
+    "section": "coord_flip() — swap axes",
+    "text": "coord_flip() — swap axes\nUseful for horizontal bar charts, boxplots, and any chart where switching x/y improves readability.\nlibrary(ggplot2)\n\n# Vertical bar chart (default)\nggplot(mtcars, aes(x = factor(cyl))) +\n  geom_bar()\n\n# Horizontal bar chart with coord_flip\nggplot(mtcars, aes(x = factor(cyl))) +\n  geom_bar() +\n  coord_flip()\n\n# Horizontal sorted bar chart\nggplot(mtcars, aes(x = reorder(rownames(mtcars), mpg), y = mpg)) +\n  geom_col(fill = \"steelblue\") +\n  coord_flip() +\n  labs(x = NULL, y = \"Miles per Gallon\",\n       title = \"Fuel Economy by Car Model\")\n\n# Horizontal boxplot\nggplot(mtcars, aes(x = factor(cyl), y = mpg, fill = factor(cyl))) +\n  geom_boxplot() +\n  coord_flip() +\n  theme(legend.position = \"none\")\n\n# Modern alternative: swap aes() directly (ggplot2 ≥ 3.3)\nggplot(mtcars, aes(y = factor(cyl))) +\n  geom_bar()",
+    "crumbs": [
+      "Home",
+      "ggplot2 Core",
+      "Coordinates"
+    ]
+  },
+  {
+    "objectID": "coordinates.html#coord_polar-pie-radar-charts",
+    "href": "coordinates.html#coord_polar-pie-radar-charts",
+    "title": "Coordinate Systems",
+    "section": "coord_polar() — pie / radar charts",
+    "text": "coord_polar() — pie / radar charts\ncoord_polar() maps one of the axes to the angle and the other to the radius.\nlibrary(ggplot2)\n\n# Pie chart (theta = \"y\" maps y to angle)\nggplot(mtcars, aes(x = factor(1), fill = factor(cyl))) +\n  geom_bar(width = 1) +\n  coord_polar(theta = \"y\") +\n  theme_void() +\n  labs(fill = \"Cylinders\",\n       title = \"Cylinder distribution in mtcars\")\n\n# Coxcomb / Rose chart (theta = \"x\")\nggplot(mtcars, aes(x = factor(cyl), fill = factor(cyl))) +\n  geom_bar(width = 1, colour = \"white\") +\n  coord_polar(theta = \"x\") +\n  theme_minimal() +\n  labs(title = \"Coxcomb chart by cylinder count\")\n\n# Radar / spider chart (with line geom)\n# For proper radar charts use the fmsb or ggradar packages\n# Quick approximation:\nggplot(mtcars[1, ], aes(x = \"mpg\", y = mpg)) +\n  geom_col(fill = \"steelblue\", width = 0.8) +\n  coord_polar() +\n  theme_minimal()",
+    "crumbs": [
+      "Home",
+      "ggplot2 Core",
+      "Coordinates"
+    ]
+  },
+  {
+    "objectID": "coordinates.html#coord_trans-transform-coordinates",
+    "href": "coordinates.html#coord_trans-transform-coordinates",
+    "title": "Coordinate Systems",
+    "section": "coord_trans() — transform coordinates",
+    "text": "coord_trans() — transform coordinates\nTransforms the visual coordinate space (unlike scale_*_log10() which transforms the data before plotting).\nlibrary(ggplot2)\n\np &lt;- ggplot(mtcars, aes(x = wt, y = mpg)) + geom_point()\n\n# Log10 Y axis\np + coord_trans(y = \"log10\")\n\n# Square root on both axes\np + coord_trans(x = \"sqrt\", y = \"sqrt\")\n\n# Log on X, reverse Y\np + coord_trans(x = \"log10\") + scale_y_reverse()\n\n# Compare: scale_y_log10 (transforms data) vs coord_trans (transforms display)\np + scale_y_log10()                    # stat layers use log-transformed data\np + coord_trans(y = \"log10\")          # stat layers use original data",
+    "crumbs": [
+      "Home",
+      "ggplot2 Core",
+      "Coordinates"
+    ]
+  },
+  {
+    "objectID": "coordinates.html#coord_fixed-fixed-aspect-ratio",
+    "href": "coordinates.html#coord_fixed-fixed-aspect-ratio",
+    "title": "Coordinate Systems",
+    "section": "coord_fixed() — fixed aspect ratio",
+    "text": "coord_fixed() — fixed aspect ratio\nForces a fixed ratio between x and y units. Default ratio = 1 means one unit on x equals one unit on y.\nlibrary(ggplot2)\n\np &lt;- ggplot(mtcars, aes(x = wt, y = qsec)) + geom_point()\n\n# Default (free aspect ratio)\np\n\n# 1:1 aspect ratio — one unit on y = one unit on x\np + coord_fixed()\n\n# 2:1 — one unit on y = 2 units on x\np + coord_fixed(ratio = 2)\n\n# Great for correlation matrices, maps, raster images\nggplot(faithfuld, aes(waiting, eruptions, fill = density)) +\n  geom_raster() +\n  coord_fixed()",
+    "crumbs": [
+      "Home",
+      "ggplot2 Core",
+      "Coordinates"
+    ]
+  },
+  {
+    "objectID": "coordinates.html#coord_equal-equal-units",
+    "href": "coordinates.html#coord_equal-equal-units",
+    "title": "Coordinate Systems",
+    "section": "coord_equal() — equal units",
+    "text": "coord_equal() — equal units\nSimilar to coord_fixed(ratio = 1). Useful for geographic data and correlation plots.\nggplot(mtcars, aes(x = mpg, y = mpg + rnorm(32))) +\n  geom_point() +\n  geom_abline(slope = 1, intercept = 0, colour = \"tomato\") +\n  coord_equal()",
+    "crumbs": [
+      "Home",
+      "ggplot2 Core",
+      "Coordinates"
+    ]
+  },
+  {
+    "objectID": "coordinates.html#reversing-axes",
+    "href": "coordinates.html#reversing-axes",
+    "title": "Coordinate Systems",
+    "section": "Reversing axes",
+    "text": "Reversing axes\nlibrary(ggplot2)\n\n# Reverse the Y axis\nggplot(mtcars, aes(x = wt, y = mpg)) +\n  geom_point() +\n  scale_y_reverse()\n\n# Reverse the X axis\nggplot(mtcars, aes(x = wt, y = mpg)) +\n  geom_point() +\n  scale_x_reverse()\n\n# Both — with coord_cartesian zoom\nggplot(mtcars, aes(x = wt, y = mpg)) +\n  geom_point() +\n  scale_y_reverse() +\n  coord_cartesian(ylim = c(35, 10))",
+    "crumbs": [
+      "Home",
+      "ggplot2 Core",
+      "Coordinates"
+    ]
+  },
+  {
+    "objectID": "coordinates.html#date-time-coordinates",
+    "href": "coordinates.html#date-time-coordinates",
+    "title": "Coordinate Systems",
+    "section": "Date / time coordinates",
+    "text": "Date / time coordinates\nlibrary(ggplot2)\n\n# Zoom into a date range\nggplot(economics, aes(x = date, y = unemploy)) +\n  geom_line() +\n  coord_cartesian(xlim = as.Date(c(\"2000-01-01\", \"2015-01-01\")))\n\n# Custom date axis breaks and labels\nggplot(economics, aes(x = date, y = unemploy)) +\n  geom_line(colour = \"steelblue\") +\n  scale_x_date(\n    date_breaks  = \"5 years\",\n    date_labels  = \"%Y\"\n  ) +\n  labs(x = NULL, y = \"Unemployed (thousands)\",\n       title = \"US Unemployment 1967–2015\")",
+    "crumbs": [
+      "Home",
+      "ggplot2 Core",
+      "Coordinates"
+    ]
+  },
+  {
+    "objectID": "coordinates.html#quick-reference",
+    "href": "coordinates.html#quick-reference",
+    "title": "Coordinate Systems",
+    "section": "Quick reference",
+    "text": "Quick reference\n\n\n\nFunction\nKey argument\nUse case\n\n\n\n\ncoord_cartesian(xlim, ylim)\nexpand = FALSE\nSafe zoom\n\n\ncoord_flip()\n—\nHorizontal bars, boxplots\n\n\ncoord_polar(theta)\n\"x\" or \"y\"\nPie / coxcomb\n\n\ncoord_trans(x, y)\n\"log10\", \"sqrt\"\nVisual transform\n\n\ncoord_fixed(ratio)\ndefault 1\nEqual units\n\n\ncoord_equal()\n—\n1:1 aspect\n\n\nscale_x_reverse()\n—\nReverse x axis\n\n\nscale_y_reverse()\n—\nReverse y axis",
+    "crumbs": [
+      "Home",
+      "ggplot2 Core",
+      "Coordinates"
+    ]
+  },
+  {
+    "objectID": "ggplot2-intro.html",
+    "href": "ggplot2-intro.html",
+    "title": "ggplot2 — Introduction & Grammar of Graphics",
+    "section": "",
+    "text": "ggplot2 is a powerful, open-source data visualization library for R developed by Hadley Wickham. It is based on the Grammar of Graphics — a systematic framework for describing any statistical graphic as a combination of layers.\nOne of ggplot2’s defining strengths is layered plot construction: start with data, map aesthetics, add geometric objects, then refine with scales, facets, and themes — each + call adds a new layer.\ninstall.packages(\"ggplot2\")\nlibrary(ggplot2)",
+    "crumbs": [
+      "Home",
+      "ggplot2 Core",
+      "Introduction & Grammar"
+    ]
+  },
+  {
+    "objectID": "ggplot2-intro.html#what-is-ggplot2",
+    "href": "ggplot2-intro.html#what-is-ggplot2",
+    "title": "ggplot2 — Introduction & Grammar of Graphics",
+    "section": "",
+    "text": "ggplot2 is a powerful, open-source data visualization library for R developed by Hadley Wickham. It is based on the Grammar of Graphics — a systematic framework for describing any statistical graphic as a combination of layers.\nOne of ggplot2’s defining strengths is layered plot construction: start with data, map aesthetics, add geometric objects, then refine with scales, facets, and themes — each + call adds a new layer.\ninstall.packages(\"ggplot2\")\nlibrary(ggplot2)",
+    "crumbs": [
+      "Home",
+      "ggplot2 Core",
+      "Introduction & Grammar"
+    ]
+  },
+  {
+    "objectID": "ggplot2-intro.html#basic-template",
+    "href": "ggplot2-intro.html#basic-template",
+    "title": "ggplot2 — Introduction & Grammar of Graphics",
+    "section": "Basic Template",
+    "text": "Basic Template\nggplot(data = &lt;DATA&gt;, mapping = aes(&lt;MAPPINGS&gt;)) +\n  &lt;GEOM_FUNCTION&gt;(\n    mapping  = aes(&lt;MAPPINGS&gt;),\n    stat     = &lt;STAT&gt;,\n    position = &lt;POSITION&gt;\n  ) +\n  &lt;COORDINATE_FUNCTION&gt; +\n  &lt;FACET_FUNCTION&gt; +\n  &lt;SCALE_FUNCTION&gt; +\n  &lt;THEME_FUNCTION&gt;\nMinimal working example:\nlibrary(ggplot2)\n\nggplot(mtcars, aes(x = mpg, y = wt)) +\n  geom_point()",
+    "crumbs": [
+      "Home",
+      "ggplot2 Core",
+      "Introduction & Grammar"
+    ]
+  },
+  {
+    "objectID": "ggplot2-intro.html#the-7-layers-of-grammar-of-graphics",
+    "href": "ggplot2-intro.html#the-7-layers-of-grammar-of-graphics",
+    "title": "ggplot2 — Introduction & Grammar of Graphics",
+    "section": "The 7 Layers of Grammar of Graphics",
+    "text": "The 7 Layers of Grammar of Graphics\n\n\n\n\n\n\n\n\nLayer\nPurpose\nExample\n\n\n\n\n1. Data\nThe data frame to visualize\nggplot(data = mtcars)\n\n\n2. Aesthetics\nMap variables to visual properties\naes(x = wt, y = mpg, colour = factor(cyl))\n\n\n3. Geometries\nShape used to represent data\ngeom_point(), geom_line(), geom_bar()\n\n\n4. Facets\nSplit into sub-panels\nfacet_wrap(~ cyl)\n\n\n5. Statistics\nStatistical transformation\nstat_smooth(), stat_bin()\n\n\n6. Coordinates\nCoordinate system\ncoord_flip(), coord_polar()\n\n\n7. Themes\nNon-data visual appearance\ntheme_minimal(), theme(...)",
+    "crumbs": [
+      "Home",
+      "ggplot2 Core",
+      "Introduction & Grammar"
+    ]
+  },
+  {
+    "objectID": "ggplot2-intro.html#aesthetics-aes",
+    "href": "ggplot2-intro.html#aesthetics-aes",
+    "title": "ggplot2 — Introduction & Grammar of Graphics",
+    "section": "Aesthetics (aes)",
+    "text": "Aesthetics (aes)\nThe aes() function maps data variables to visual properties. There are two kinds:\n\nMapped (inside aes()) — value varies by data\nFixed (outside aes()) — constant for all data points\n\n# MAPPED — colour changes per group\nggplot(mtcars, aes(x = mpg, y = wt, colour = factor(cyl))) +\n  geom_point()\n\n# FIXED — all points are steelblue, size 3\nggplot(mtcars, aes(x = mpg, y = wt)) +\n  geom_point(colour = \"steelblue\", size = 3, alpha = 0.7)\n\n# BOTH — shape mapped to data, colour fixed\nggplot(mtcars, aes(x = mpg, y = wt, shape = factor(cyl))) +\n  geom_point(colour = \"tomato\", size = 3)\n\nAesthetic reference\n\n\n\nAesthetic\nMaps to\nExample\n\n\n\n\nx\nHorizontal axis position\naes(x = weight)\n\n\ny\nVertical axis position\naes(y = height)\n\n\ncolour\nOutline / point colour\naes(colour = species)\n\n\nfill\nFill colour (bars, areas)\naes(fill = group)\n\n\nsize\nPoint size / line width\naes(size = population)\n\n\nshape\nPoint shape (0–24)\naes(shape = type)\n\n\nalpha\nTransparency (0–1)\naes(alpha = confidence)\n\n\nlinetype\nSolid / dashed / dotted\naes(linetype = group)\n\n\nlabel\nText labels\naes(label = name)\n\n\ngroup\nGrouping without visual encoding\naes(group = id)",
+    "crumbs": [
+      "Home",
+      "ggplot2 Core",
+      "Introduction & Grammar"
+    ]
+  },
+  {
+    "objectID": "ggplot2-intro.html#building-a-plot-step-by-step",
+    "href": "ggplot2-intro.html#building-a-plot-step-by-step",
+    "title": "ggplot2 — Introduction & Grammar of Graphics",
+    "section": "Building a Plot Step by Step",
+    "text": "Building a Plot Step by Step\nlibrary(ggplot2)\n\n# Step 1: data + aesthetics\nggplot(mtcars, aes(x = wt, y = mpg))\n\n# Step 2: add geometry\nggplot(mtcars, aes(x = wt, y = mpg)) +\n  geom_point()\n\n# Step 3: map colour to a third variable\nggplot(mtcars, aes(x = wt, y = mpg, colour = factor(cyl))) +\n  geom_point(size = 3)\n\n# Step 4: add a smooth trend line\nggplot(mtcars, aes(x = wt, y = mpg, colour = factor(cyl))) +\n  geom_point(size = 3) +\n  geom_smooth(method = \"lm\", se = FALSE)\n\n# Step 5: labels\nggplot(mtcars, aes(x = wt, y = mpg, colour = factor(cyl))) +\n  geom_point(size = 3) +\n  geom_smooth(method = \"lm\", se = FALSE) +\n  labs(title = \"Weight vs MPG\", colour = \"Cylinders\",\n       x = \"Weight (1,000 lbs)\", y = \"Miles per Gallon\")\n\n# Step 6: theme\nggplot(mtcars, aes(x = wt, y = mpg, colour = factor(cyl))) +\n  geom_point(size = 3) +\n  geom_smooth(method = \"lm\", se = FALSE) +\n  labs(title = \"Weight vs MPG\", colour = \"Cylinders\",\n       x = \"Weight (1,000 lbs)\", y = \"Miles per Gallon\") +\n  theme_minimal(base_size = 13) +\n  theme(legend.position = \"top\",\n        plot.title = element_text(face = \"bold\"))",
+    "crumbs": [
+      "Home",
+      "ggplot2 Core",
+      "Introduction & Grammar"
+    ]
+  },
+  {
+    "objectID": "ggplot2-intro.html#scales",
+    "href": "ggplot2-intro.html#scales",
+    "title": "ggplot2 — Introduction & Grammar of Graphics",
+    "section": "Scales",
+    "text": "Scales\nScales control how data values map to visual properties.\n# Axis limits\nscale_x_continuous(limits = c(0, 50), breaks = seq(0, 50, by = 10))\nscale_y_log10()\nscale_x_date(date_labels = \"%Y-%m\")\nscale_x_reverse()\n\n# Colour & fill — continuous\nscale_colour_gradient(low = \"white\", high = \"darkred\")\nscale_fill_gradient2(low = \"blue\", mid = \"white\", high = \"red\", midpoint = 0)\n\n# Colour & fill — discrete\nscale_colour_manual(values = c(\"#e84855\", \"#2d6be4\", \"#12a36a\"))\nscale_fill_brewer(palette = \"Set2\")\nscale_colour_viridis_d()          # colorblind-friendly\n\n# Axis labels\nscale_y_continuous(labels = scales::percent_format())\nscale_y_continuous(labels = scales::comma)\nscale_x_continuous(labels = scales::dollar)",
+    "crumbs": [
+      "Home",
+      "ggplot2 Core",
+      "Introduction & Grammar"
+    ]
+  },
+  {
+    "objectID": "ggplot2-intro.html#faceting",
+    "href": "ggplot2-intro.html#faceting",
+    "title": "ggplot2 — Introduction & Grammar of Graphics",
+    "section": "Faceting",
+    "text": "Faceting\nFaceting splits data into multiple sub-panels.\nlibrary(ggplot2)\n\n# facet_wrap — one variable\nggplot(mtcars, aes(x = mpg, y = wt)) +\n  geom_point(colour = \"steelblue\", size = 2) +\n  facet_wrap(~ gear)\n\n# Custom rows / columns\nggplot(mtcars, aes(x = mpg, y = wt)) +\n  geom_point() +\n  facet_wrap(~ cyl, nrow = 1)\n\n# Free scales per panel\nggplot(mtcars, aes(x = mpg, y = wt)) +\n  geom_point() +\n  facet_wrap(~ cyl, scales = \"free\")\n\n# facet_grid — two variables\nggplot(mtcars, aes(x = mpg, y = wt)) +\n  geom_point() +\n  facet_grid(am ~ cyl)            # rows ~ columns\n\n# Only column facets\nggplot(mtcars, aes(x = mpg, y = wt)) +\n  geom_point() +\n  facet_grid(. ~ cyl)",
+    "crumbs": [
+      "Home",
+      "ggplot2 Core",
+      "Introduction & Grammar"
+    ]
+  },
+  {
+    "objectID": "ggplot2-intro.html#key-ggplot2-functions",
+    "href": "ggplot2-intro.html#key-ggplot2-functions",
+    "title": "ggplot2 — Introduction & Grammar of Graphics",
+    "section": "Key ggplot2 Functions",
+    "text": "Key ggplot2 Functions\n# Labels\nlabs(title = , subtitle = , caption = , x = , y = , colour = , fill = , tag = )\nggtitle(\"Title\", subtitle = \"Subtitle\")\nxlab(\"X axis\")  ;  ylab(\"Y axis\")\n\n# Coordinates\ncoord_flip()                    # swap x and y\ncoord_polar(theta = \"y\")        # pie / radar charts\ncoord_cartesian(xlim = c(0,5))  # zoom without dropping data\ncoord_fixed()                   # equal unit lengths on both axes\n\n# Annotations\nannotate(\"text\",  x = 2, y = 3, label = \"Note\")\nannotate(\"rect\",  xmin = 1, xmax = 2, ymin = 0, ymax = 5, alpha = 0.1)\nannotate(\"segment\", x = 1, y = 1, xend = 3, yend = 3, arrow = arrow())\n\n# Theme shortcuts\ntheme_grey()       # default\ntheme_bw()         # black & white\ntheme_minimal()    # no background\ntheme_classic()    # axes only, no grid\ntheme_dark()       # dark panel\ntheme_void()       # blank canvas\n\n# Set global theme\nold &lt;- theme_set(theme_minimal())\ntheme_set(old)     # restore\n\n# Save\nggsave(\"plot.png\", width = 8, height = 5, dpi = 300)",
+    "crumbs": [
+      "Home",
+      "ggplot2 Core",
+      "Introduction & Grammar"
+    ]
+  },
+  {
+    "objectID": "ggplot2-intro.html#the-theme-function",
+    "href": "ggplot2-intro.html#the-theme-function",
+    "title": "ggplot2 — Introduction & Grammar of Graphics",
+    "section": "The theme() Function",
+    "text": "The theme() Function\nThe theme() function overrides any non-data visual element:\nggplot(mtcars, aes(x = wt, y = mpg)) +\n  geom_point() +\n  theme(\n    # Text elements\n    plot.title        = element_text(face = \"bold\", size = 16, hjust = 0.5),\n    plot.subtitle     = element_text(size = 12, colour = \"grey50\"),\n    plot.caption      = element_text(size = 9, hjust = 1),\n    axis.title        = element_text(size = 11),\n    axis.text         = element_text(size = 10),\n    axis.text.x       = element_text(angle = 45, hjust = 1),\n\n    # Panel\n    panel.background  = element_rect(fill = \"#f0f4f8\"),\n    panel.grid.major  = element_line(colour = \"#dce3ec\", linewidth = 0.4),\n    panel.grid.minor  = element_blank(),\n    panel.border      = element_rect(colour = \"black\", fill = NA),\n\n    # Legend\n    legend.position   = \"top\",\n    legend.title      = element_text(face = \"bold\"),\n    legend.background = element_rect(fill = \"white\"),\n\n    # Margins\n    plot.margin       = margin(t = 20, r = 20, b = 20, l = 20)\n  )\n\ntheme() element functions\n\n\n\n\n\n\n\nFunction\nUsed for\n\n\n\n\nelement_text(face, size, colour, hjust, vjust, angle)\nText elements\n\n\nelement_line(colour, linewidth, linetype)\nLines & grid\n\n\nelement_rect(fill, colour, linewidth)\nBackgrounds & borders\n\n\nelement_blank()\nRemove an element\n\n\n\n\n\n\n\n\n\n\nTipTip — save & store your theme\n\n\n\nCreate a custom theme object once and reuse it across all your plots:\nmy_theme &lt;- theme_minimal(base_size = 13) +\n  theme(\n    plot.title    = element_text(face = \"bold\"),\n    panel.grid.minor = element_blank(),\n    legend.position  = \"top\"\n  )\n\n# Apply to any plot\nggplot(mtcars, aes(x = wt, y = mpg)) +\n  geom_point() +\n  my_theme",
+    "crumbs": [
+      "Home",
+      "ggplot2 Core",
+      "Introduction & Grammar"
+    ]
+  },
+  {
+    "objectID": "legends.html",
+    "href": "legends.html",
+    "title": "Legends in ggplot2",
+    "section": "",
+    "text": "A legend appears automatically whenever you map a variable to colour, fill, shape, size, alpha, or linetype inside aes(). No extra code needed.\n# Sample data used throughout this page\nset.seed(1)\ndf &lt;- data.frame(\n  x     = c(rnorm(300, -3, 1.5), rnorm(300, 0, 1)),\n  group = c(rep(\"A\", 300), rep(\"B\", 300))\n)",
+    "crumbs": [
+      "Home",
+      "ggplot2 Core",
+      "Legends"
+    ]
+  },
+  {
+    "objectID": "legends.html#how-legends-are-created",
+    "href": "legends.html#how-legends-are-created",
+    "title": "Legends in ggplot2",
+    "section": "",
+    "text": "A legend appears automatically whenever you map a variable to colour, fill, shape, size, alpha, or linetype inside aes(). No extra code needed.\n# Sample data used throughout this page\nset.seed(1)\ndf &lt;- data.frame(\n  x     = c(rnorm(300, -3, 1.5), rnorm(300, 0, 1)),\n  group = c(rep(\"A\", 300), rep(\"B\", 300))\n)",
+    "crumbs": [
+      "Home",
+      "ggplot2 Core",
+      "Legends"
+    ]
+  },
+  {
+    "objectID": "legends.html#adding-a-legend-by-aesthetic-mapping",
+    "href": "legends.html#adding-a-legend-by-aesthetic-mapping",
+    "title": "Legends in ggplot2",
+    "section": "Adding a legend (by aesthetic mapping)",
+    "text": "Adding a legend (by aesthetic mapping)\n\ncolour\nlibrary(ggplot2)\n\n# Colour — creates a colour legend\nggplot(df, aes(x = x, colour = group)) +\n  geom_density(alpha = 0.5)\n\n# Scatter with colour\nset.seed(1)\ndf2 &lt;- data.frame(x = runif(200),\n                  y = 3 * runif(200)^2 + rnorm(200, sd = 2.5),\n                  group = ifelse(runif(200) &lt; 0.5, \"A\", \"B\"))\n\nggplot(df2, aes(x = x, y = y, colour = group)) +\n  geom_point(size = 2)\n\n\nfill\nggplot(df, aes(x = x, fill = group)) +\n  geom_density(alpha = 0.5)\n\n\ncolour + fill together\nggplot(df, aes(x = x, fill = group, colour = group)) +\n  geom_density(alpha = 0.5)\n\n\nalpha\nggplot(df2, aes(x = x, y = y, alpha = y)) +\n  geom_point(colour = 4)\n\n\nshape\nggplot(mtcars, aes(x = wt, y = mpg, shape = factor(cyl))) +\n  geom_point(size = 3)",
+    "crumbs": [
+      "Home",
+      "ggplot2 Core",
+      "Legends"
+    ]
+  },
+  {
+    "objectID": "legends.html#changing-the-legend-title",
+    "href": "legends.html#changing-the-legend-title",
+    "title": "Legends in ggplot2",
+    "section": "Changing the legend title",
+    "text": "Changing the legend title\nThree equivalent options — choose the one that fits your workflow.\n\nOption 1 — guides()\nggplot(df, aes(x = x, fill = group)) +\n  geom_density(alpha = 0.5) +\n  guides(fill = guide_legend(title = \"Group\"))\n\n\nOption 2 — labs()\nggplot(df, aes(x = x, fill = group)) +\n  geom_density(alpha = 0.5) +\n  labs(fill = \"Group\")          # or colour = , shape = , size = , alpha =\n\n\nOption 3 — scale function name =\nggplot(df, aes(x = x, fill = group)) +\n  geom_density(alpha = 0.5) +\n  scale_fill_discrete(name = \"Group\")\n\n\nRemove the title\nggplot(df, aes(x = x, fill = group)) +\n  geom_density(alpha = 0.5) +\n  theme(legend.title = element_blank())",
+    "crumbs": [
+      "Home",
+      "ggplot2 Core",
+      "Legends"
+    ]
+  },
+  {
+    "objectID": "legends.html#changing-legend-labels",
+    "href": "legends.html#changing-legend-labels",
+    "title": "Legends in ggplot2",
+    "section": "Changing legend labels",
+    "text": "Changing legend labels\n# Rename labels with scale_fill_hue\nggplot(df, aes(x = x, fill = group)) +\n  geom_density(alpha = 0.5) +\n  scale_fill_hue(labels = c(\"Group 1\", \"Group 2\"))\n\n# Custom colours + labels at once\nggplot(df, aes(x = x, fill = group)) +\n  geom_density(alpha = 0.5) +\n  scale_fill_manual(\n    values = c(\"A\" = \"#e84855\", \"B\" = \"#2d6be4\"),\n    labels = c(\"A\" = \"Control\",  \"B\" = \"Treatment\")\n  )",
+    "crumbs": [
+      "Home",
+      "ggplot2 Core",
+      "Legends"
+    ]
+  },
+  {
+    "objectID": "legends.html#reordering-legend-labels",
+    "href": "legends.html#reordering-legend-labels",
+    "title": "Legends in ggplot2",
+    "section": "Reordering legend labels",
+    "text": "Reordering legend labels\n# Reorder by factor levels\ndf$group2 &lt;- factor(df$group, levels = c(\"B\", \"A\"))\n\nggplot(df, aes(x = x, fill = group2)) +\n  geom_density(alpha = 0.5) +\n  labs(fill = \"Group\")",
+    "crumbs": [
+      "Home",
+      "ggplot2 Core",
+      "Legends"
+    ]
+  },
+  {
+    "objectID": "legends.html#legend-position",
+    "href": "legends.html#legend-position",
+    "title": "Legends in ggplot2",
+    "section": "Legend position",
+    "text": "Legend position\nDefault position is \"right\". Use theme(legend.position = ...) to change it.\n# Top\nggplot(df, aes(x = x, fill = group)) +\n  geom_density(alpha = 0.5) +\n  theme(legend.position = \"top\")\n\n# Bottom\nggplot(df, aes(x = x, fill = group)) +\n  geom_density(alpha = 0.5) +\n  theme(legend.position = \"bottom\")\n\n# Left\nggplot(df, aes(x = x, fill = group)) +\n  geom_density(alpha = 0.5) +\n  theme(legend.position = \"left\")\n\n# None (remove)\nggplot(df, aes(x = x, fill = group)) +\n  geom_density(alpha = 0.5) +\n  theme(legend.position = \"none\")\n\nCustom coordinates (inside the plot)\nSet legend.position to a vector c(x, y) where both values are between 0 and 1 (fraction of the plot area).\nggplot(df, aes(x = x, fill = group)) +\n  geom_density(alpha = 0.5) +\n  theme(\n    legend.position   = c(0.2, 0.8),        # x=20%, y=80%\n    legend.background = element_rect(fill = \"white\", colour = \"grey80\")\n  )\n\n\n\n\n\n\nTipRelated arguments\n\n\n\n\nlegend.justification — anchor point of the legend box (c(0,0) = bottom-left, c(1,1) = top-right)\nlegend.direction — \"horizontal\" or \"vertical\"\nlegend.box — arrangement when multiple legends: \"horizontal\" or \"vertical\"\nlegend.box.just — justification of entire legend box",
+    "crumbs": [
+      "Home",
+      "ggplot2 Core",
+      "Legends"
+    ]
+  },
+  {
+    "objectID": "legends.html#legend-appearance-customisation",
+    "href": "legends.html#legend-appearance-customisation",
+    "title": "Legends in ggplot2",
+    "section": "Legend appearance customisation",
+    "text": "Legend appearance customisation\n\nStyle the title\nggplot(df, aes(x = x, fill = group)) +\n  geom_density(alpha = 0.5) +\n  theme(\n    legend.title = element_text(\n      colour = \"steelblue\",\n      size   = 11,\n      face   = \"bold\",\n      family = \"sans\"\n    )\n  )\n\n\nStyle the text labels\nggplot(df, aes(x = x, fill = group)) +\n  geom_density(alpha = 0.5) +\n  theme(\n    legend.text = element_text(size = 11, colour = \"grey30\")\n  )\n\n\nBackground and border\nggplot(df, aes(x = x, fill = group)) +\n  geom_density(alpha = 0.5) +\n  theme(\n    legend.background = element_rect(\n      fill   = \"#f0f4ff\",   # background colour\n      colour = \"steelblue\", # border colour\n      linewidth = 0.6\n    )\n  )\n\n\nKey size\nggplot(df, aes(x = x, fill = group)) +\n  geom_density(alpha = 0.5) +\n  theme(legend.key.size = unit(1, \"cm\"))   # width & height of colour keys\n\n\nOverride symbol size (scatter)\nggplot(df2, aes(x = x, y = y, colour = group)) +\n  geom_point(size = 1, alpha = 0.5) +\n  guides(colour = guide_legend(\n    override.aes = list(size = 4, alpha = 1)  # bigger symbols in legend\n  ))\n\n\nHorizontal legend with multiple rows\nggplot(df, aes(x = x, fill = group)) +\n  geom_density(alpha = 0.5) +\n  theme(legend.position = \"bottom\") +\n  guides(fill = guide_legend(nrow = 1, byrow = TRUE))",
+    "crumbs": [
+      "Home",
+      "ggplot2 Core",
+      "Legends"
+    ]
+  },
+  {
+    "objectID": "legends.html#removing-a-specific-legend",
+    "href": "legends.html#removing-a-specific-legend",
+    "title": "Legends in ggplot2",
+    "section": "Removing a specific legend",
+    "text": "Removing a specific legend\nWhen multiple aesthetics create multiple legends, you can remove just one:\n# Remove only fill legend — keep colour legend\nggplot(df, aes(x = x, fill = group, colour = group)) +\n  geom_density(alpha = 0.5) +\n  guides(fill = \"none\")     # or guides(fill = FALSE)",
+    "crumbs": [
+      "Home",
+      "ggplot2 Core",
+      "Legends"
+    ]
+  },
+  {
+    "objectID": "legends.html#full-styled-example",
+    "href": "legends.html#full-styled-example",
+    "title": "Legends in ggplot2",
+    "section": "Full styled example",
+    "text": "Full styled example\nlibrary(ggplot2)\n\nggplot(mtcars, aes(x = wt, y = mpg,\n                   colour = factor(cyl),\n                   shape  = factor(am))) +\n  geom_point(size = 3, alpha = 0.85) +\n  scale_colour_manual(\n    values = c(\"4\" = \"#e84855\", \"6\" = \"#2d6be4\", \"8\" = \"#12a36a\"),\n    name   = \"Cylinders\"\n  ) +\n  scale_shape_manual(\n    values = c(\"0\" = 16, \"1\" = 17),\n    labels = c(\"0\" = \"Automatic\", \"1\" = \"Manual\"),\n    name   = \"Transmission\"\n  ) +\n  labs(title = \"mtcars: Weight vs Fuel Economy\") +\n  theme_minimal(base_size = 13) +\n  theme(\n    legend.position   = \"top\",\n    legend.title      = element_text(face = \"bold\", size = 10),\n    legend.text       = element_text(size = 10),\n    legend.background = element_rect(fill = \"white\", colour = \"grey85\"),\n    legend.key.size   = unit(0.9, \"cm\"),\n    plot.title        = element_text(face = \"bold\")\n  )",
+    "crumbs": [
+      "Home",
+      "ggplot2 Core",
+      "Legends"
+    ]
+  },
+  {
+    "objectID": "legends.html#quick-reference",
+    "href": "legends.html#quick-reference",
+    "title": "Legends in ggplot2",
+    "section": "Quick reference",
+    "text": "Quick reference\n\n\n\n\n\n\n\nGoal\nCode\n\n\n\n\nMove legend top\ntheme(legend.position = \"top\")\n\n\nMove legend inside\ntheme(legend.position = c(0.2, 0.8))\n\n\nRemove legend\ntheme(legend.position = \"none\")\n\n\nRemove one legend\nguides(fill = \"none\")\n\n\nChange title via labs\nlabs(fill = \"My title\")\n\n\nRemove title\ntheme(legend.title = element_blank())\n\n\nRename labels\nscale_fill_manual(labels = c(...))\n\n\nReorder labels\nfactor(var, levels = c(\"B\",\"A\"))\n\n\nBigger keys\ntheme(legend.key.size = unit(1,\"cm\"))\n\n\nBigger symbols\nguides(colour = guide_legend(override.aes = list(size=4)))",
+    "crumbs": [
+      "Home",
+      "ggplot2 Core",
+      "Legends"
+    ]
+  },
+  {
+    "objectID": "combining.html",
+    "href": "combining.html",
+    "title": "Combining Plots",
+    "section": "",
+    "text": "ggplot2 doesn’t include a built-in layout function. Three packages fill this gap:\n\n\n\n\n\n\n\n\nPackage\nFunction\nStyle\n\n\n\n\npatchwork\n+, |, /, & operators\nOperator-based — most intuitive\n\n\ngridExtra\ngrid.arrange()\nFunction-based — good for tables\n\n\ncowplot\nplot_grid()\nFunction-based — great for publication",
+    "crumbs": [
+      "Home",
+      "Customization",
+      "Combining Plots"
+    ]
+  },
+  {
+    "objectID": "combining.html#overview",
+    "href": "combining.html#overview",
+    "title": "Combining Plots",
+    "section": "",
+    "text": "ggplot2 doesn’t include a built-in layout function. Three packages fill this gap:\n\n\n\n\n\n\n\n\nPackage\nFunction\nStyle\n\n\n\n\npatchwork\n+, |, /, & operators\nOperator-based — most intuitive\n\n\ngridExtra\ngrid.arrange()\nFunction-based — good for tables\n\n\ncowplot\nplot_grid()\nFunction-based — great for publication",
+    "crumbs": [
+      "Home",
+      "Customization",
+      "Combining Plots"
+    ]
+  },
+  {
+    "objectID": "combining.html#sample-plots",
+    "href": "combining.html#sample-plots",
+    "title": "Combining Plots",
+    "section": "Sample plots",
+    "text": "Sample plots\nCreate four plots to combine throughout this page:\nlibrary(ggplot2)\n\nmtcars -&gt; df\n\n# p1: Box plot\np1 &lt;- ggplot(df, aes(x = \"\", y = mpg)) +\n  geom_boxplot(fill = \"steelblue\", alpha = 0.7) +\n  labs(title = \"p1 — Boxplot\")\n\n# p2: Normal density curve\np2 &lt;- ggplot() +\n  stat_function(fun = dnorm, geom = \"density\",\n                xlim = c(-3, 3), fill = \"#f87060\", alpha = 0.5) +\n  labs(title = \"p2 — Normal density\")\n\n# p3: Line chart\np3 &lt;- ggplot(df, aes(x = mpg, y = disp)) +\n  geom_line(colour = \"grey30\") +\n  labs(title = \"p3 — Line chart\")\n\n# p4: Scatter plot\np4 &lt;- ggplot(df, aes(x = hp, y = wt)) +\n  geom_point(colour = \"grey30\") +\n  labs(title = \"p4 — Scatter\")\n\np1; p2; p3; p4",
+    "crumbs": [
+      "Home",
+      "Customization",
+      "Combining Plots"
+    ]
+  },
+  {
+    "objectID": "combining.html#patchwork",
+    "href": "combining.html#patchwork",
+    "title": "Combining Plots",
+    "section": "patchwork",
+    "text": "patchwork\ninstall.packages(\"patchwork\")\nlibrary(patchwork)\n\nBasic operators\n# + (or |) — side by side\np1 + p2\np1 | p2\n\n# / — stacked (vertical)\np1 / p2\n\n# 4 plots in auto-layout\np1 + p2 + p3 + p4\n\n# Complex nesting\n(p1 | p2) / p3           # two on top, one wide at bottom\np1 | (p2 / p3)            # one at left, two stacked at right\np1 + ((p2 | p3) / p4)     # nested 3-panel right side\n\n\nplot_layout() — control layout\n# Set number of columns\np1 + p2 + p3 + p4 +\n  plot_layout(ncol = 3)\n\n# Relative widths and heights\np1 + p2 + p3 + p4 +\n  plot_layout(widths = c(2, 1), heights = c(1, 2))\n\n# Custom design string\n# 1,2,3,4 = plot numbers; # = empty space\np1 + p2 + p3 + p4 +\n  plot_layout(design = \"\n    111\n    2#3\n    443\n  \")\n\n\nwrap_plots() — for lists of plots\n# When you don't know the number of plots at coding time\nwrap_plots(p1, p2, p3, p4,\n           ncol    = 2,\n           nrow    = 2,\n           widths  = c(1, 0.5),\n           heights = c(0.5, 1))\n\n# From a list (e.g. from lapply)\nplot_list &lt;- list(p1, p2, p3, p4)\nwrap_plots(plot_list, ncol = 2)\n\n\nplot_spacer() — add empty gaps\np1 + plot_spacer() + p3         # p1 | gap | p3\n\n# Multi-row with spacers\n(p1 + plot_spacer() + p2) /\n(p3 + p4 + plot_spacer())\n\n\nplot_annotation() — overall title & panel labels\n# Overall title, subtitle, caption\np1 + ((p2 | p3) / p4) +\n  plot_annotation(\n    title    = \"Combined plot title\",\n    subtitle = \"A subtitle for the whole figure\",\n    caption  = \"Source: mtcars dataset\"\n  )\n\n# Automatic panel labels\np1 + p2 +\n  plot_annotation(tag_levels = \"A\")    # A, B, C…\n\np1 + p2 + p3 + p4 +\n  plot_annotation(tag_levels = \"1\")    # 1, 2, 3, 4\n\n# Labels with prefix\np1 + p2 +\n  plot_annotation(tag_levels = \"A\",\n                  tag_prefix = \"Fig. \")   # Fig. A, Fig. B\n\n# Roman numerals\np1 + p2 +\n  plot_annotation(tag_levels = \"i\")    # i, ii, iii…\n\n\n& operator — apply to all panels\n# Set same theme for all plots at once\np1 + p2 + p3 + p4 & theme_minimal()\n\n# Combined with annotation\n(p1 + p2 + p3 + p4 & theme_minimal()) +\n  plot_annotation(title = \"All with theme_minimal\")\n\n\nAdd new layers to a patchwork\n# Adds to the LAST plot in the patchwork\np2 + p1 + geom_jitter(colour = \"tomato\")\n\n# Access specific plot by index\npatch &lt;- p2 + p1\npatch[[1]] &lt;- patch[[1]] + theme_bw()\npatch\n\n\nMix ggplot2 with base R plots\nold_par &lt;- par()\npar(mar = c(0, 2, 0, 0), bg = NA)\np1 + wrap_elements(panel = ~ plot(1:10))\npar(old_par)\n\n\nAdd a table (with gridExtra)\nlibrary(gridExtra)\n\ntab &lt;- t(round(quantile(mtcars$mpg), 2))\np1 / tableGrob(tab)\n\n\nAdd text annotations\nlibrary(grid)\n\np1 + textGrob(\"Text at the right\")\nwrap_elements(textGrob(\"Text at the left\")) + p1",
+    "crumbs": [
+      "Home",
+      "Customization",
+      "Combining Plots"
+    ]
+  },
+  {
+    "objectID": "combining.html#gridextra",
+    "href": "combining.html#gridextra",
+    "title": "Combining Plots",
+    "section": "gridExtra",
+    "text": "gridExtra\ninstall.packages(\"gridExtra\")\nlibrary(gridExtra)\n\nBasic grid.arrange()\ngrid.arrange(p2, p3, p1, p4)\n\n\nRows, columns, sizes, side labels\ngrid.arrange(p4, p3, p2, p1,\n             nrow    = 2,\n             ncol    = 2,\n             widths  = c(1, 2),\n             heights = c(2, 3),\n             top     = \"Top label\",\n             bottom  = \"Bottom label\",\n             left    = \"Left label\",\n             right   = \"Right label\")\n\n\nCustom layout matrix\n# Numbers refer to the order of plots passed to grid.arrange\n# 1=p2, 2=p3, 3=p1, 4=p4\nlayout &lt;- matrix(c(1, 1,\n                   2, 3,\n                   4, 4), ncol = 2, byrow = TRUE)\n\ngrid.arrange(p2, p3, p1, p4,\n             layout_matrix = layout)\n\n\nTable alongside plots\ntab &lt;- tableGrob(head(mtcars[, 1:4]))\ngrid.arrange(p1, tab, ncol = 2)",
+    "crumbs": [
+      "Home",
+      "Customization",
+      "Combining Plots"
+    ]
+  },
+  {
+    "objectID": "combining.html#cowplot",
+    "href": "combining.html#cowplot",
+    "title": "Combining Plots",
+    "section": "cowplot",
+    "text": "cowplot\ninstall.packages(\"cowplot\")\nlibrary(cowplot)\n\nBasic plot_grid()\nplot_grid(p1, p2)\n\n\nAlignment\nplot_grid(p1, p2, align = \"h\")   # horizontal alignment\nplot_grid(p1, p2, align = \"v\")   # vertical alignment\nplot_grid(p1, p2, align = \"hv\")  # both\n\n\nRows and columns\nplot_grid(p1, p2, ncol = 1)   # one column (stacked)\nplot_grid(p1, p2, nrow = 2)   # two rows\n\n\nPanel labels\n# Custom labels\nplot_grid(p1, p2,\n          labels           = c(\"A\", \"B\"),\n          label_fontfamily = \"serif\",\n          label_fontface   = \"bold\",\n          label_colour     = \"#2d6be4\")\n\n# Automatic uppercase letters\nplot_grid(p1, p2, p3, p4,\n          labels = \"AUTO\")\n\n# Automatic lowercase letters\nplot_grid(p1, p2, p3, p4,\n          labels = \"auto\")\n\n\nRelative sizes\nplot_grid(p1, p2, p3, p4,\n          rel_widths  = c(1, 0.5),\n          rel_heights = c(1, 0.5))\n\n\nNested layouts\n# Two plots at the bottom, one wide at the top\nplot_grid(p3, plot_grid(p1, p2), ncol = 1)\n\n# One plot at left, two stacked at right\nplot_grid(p3, plot_grid(p1, p2, ncol = 1))",
+    "crumbs": [
+      "Home",
+      "Customization",
+      "Combining Plots"
+    ]
+  },
+  {
+    "objectID": "combining.html#package-comparison",
+    "href": "combining.html#package-comparison",
+    "title": "Combining Plots",
+    "section": "Package comparison",
+    "text": "Package comparison\n\n\n\n\n\n\n\n\n\nFeature\npatchwork\ngridExtra\ncowplot\n\n\n\n\nSyntax\nOperators (+, |, /)\nFunction\nFunction\n\n\nLearning curve\nVery easy\nModerate\nModerate\n\n\nCustom layouts\ndesign = string\nlayout_matrix\nNested calls\n\n\nOverall title\nplot_annotation()\ntop = arg\nggdraw()\n\n\nAuto panel labels\ntag_levels =\nManual\nlabels = \"AUTO\"\n\n\nTables in layout\ntableGrob() (gridExtra)\ntableGrob() native\nLimited\n\n\nAxis alignment\nAutomatic\nManual\nalign = arg\n\n\nApply theme to all\n& theme_*()\nSeparate\nSeparate\n\n\nBest for\nGeneral — most readable\nComplex grids + tables\nPublication figures\n\n\n\n\n\n\n\n\n\nTipWhich to choose?\n\n\n\n\nNew to combining plots? → Use patchwork — the operators are the most intuitive.\n\nNeed tables in the layout? → Use gridExtra with tableGrob().\n\nPublication figures with strict alignment? → Use cowplot with align = \"hv\".",
+    "crumbs": [
+      "Home",
+      "Customization",
+      "Combining Plots"
+    ]
+  },
+  {
+    "objectID": "barplots.html",
+    "href": "barplots.html",
+    "title": "Bar Charts (5 Examples)",
+    "section": "",
+    "text": "# df1 — four groups, simple values\ndf1 &lt;- data.frame(\n  values = c(5, 2, 7, 2),\n  group  = LETTERS[1:4]       # \"A\", \"B\", \"C\", \"D\"\n)\ndf1\n\n# df2 — four main groups, each with two subgroups\ndf2 &lt;- data.frame(\n  values    = c(3, 2, 6, 3, 4, 3, 8, 2),\n  maingroup = rep(LETTERS[1:4], each = 2),\n  subgroup  = letters[1:2]    # \"a\", \"b\"\n)\ndf2",
+    "crumbs": [
+      "Home",
+      "Customization",
+      "Bar Charts"
+    ]
+  },
+  {
+    "objectID": "barplots.html#example-data",
+    "href": "barplots.html#example-data",
+    "title": "Bar Charts (5 Examples)",
+    "section": "",
+    "text": "# df1 — four groups, simple values\ndf1 &lt;- data.frame(\n  values = c(5, 2, 7, 2),\n  group  = LETTERS[1:4]       # \"A\", \"B\", \"C\", \"D\"\n)\ndf1\n\n# df2 — four main groups, each with two subgroups\ndf2 &lt;- data.frame(\n  values    = c(3, 2, 6, 3, 4, 3, 8, 2),\n  maingroup = rep(LETTERS[1:4], each = 2),\n  subgroup  = letters[1:2]    # \"a\", \"b\"\n)\ndf2",
+    "crumbs": [
+      "Home",
+      "Customization",
+      "Bar Charts"
+    ]
+  },
+  {
+    "objectID": "barplots.html#example-1-base-r-barplot",
+    "href": "barplots.html#example-1-base-r-barplot",
+    "title": "Bar Charts (5 Examples)",
+    "section": "Example 1 — Base R barplot",
+    "text": "Example 1 — Base R barplot\nBase R’s barplot() requires no packages.\n# Default — vertical grey bars\nbarplot(values ~ group, df1)\n\n# Horizontal bars\nbarplot(values ~ group,\n        df1,\n        horiz = TRUE)\n\n# With colours\nbarplot(values ~ group,\n        df1,\n        col = 1:4)\n\n# With custom named colours\nbarplot(values ~ group,\n        df1,\n        col = c(\"tomato\",\"steelblue\",\"forestgreen\",\"gold\"))\n\n# Add a legend\nbarplot(values ~ group, df1, col = 1:4)\nlegend(\"topright\",\n       df1$group,\n       fill = 1:4)",
+    "crumbs": [
+      "Home",
+      "Customization",
+      "Bar Charts"
+    ]
+  },
+  {
+    "objectID": "barplots.html#example-2-ggplot2-basic-bar-chart",
+    "href": "barplots.html#example-2-ggplot2-basic-bar-chart",
+    "title": "Bar Charts (5 Examples)",
+    "section": "Example 2 — ggplot2 basic bar chart",
+    "text": "Example 2 — ggplot2 basic bar chart\nlibrary(ggplot2)\n\nVertical (default)\n# stat = \"identity\" — use y values as-is\nggplot(df1, aes(x = group, y = values)) +\n  geom_bar(stat = \"identity\")\n\n# geom_col() is shorthand for geom_bar(stat = \"identity\")\nggplot(df1, aes(x = group, y = values)) +\n  geom_col()\n\n\nHorizontal with coord_flip()\nggplot(df1, aes(x = group, y = values)) +\n  geom_bar(stat = \"identity\") +\n  coord_flip()\n\n\nSorted horizontal bars\nggplot(df1, aes(x = values, y = reorder(group, values))) +\n  geom_col(fill = \"steelblue\") +\n  labs(x = \"Values\", y = \"Group\")\n\n\nWith colours and legend\nggplot(df1, aes(x = group, y = values, fill = group)) +\n  geom_bar(stat = \"identity\") +\n  scale_fill_manual(values = c(\"#e84855\",\"#2d6be4\",\"#12a36a\",\"#d4a017\")) +\n  theme_minimal()\n\n\nWith value labels\nggplot(df1, aes(x = group, y = values, fill = group)) +\n  geom_col() +\n  geom_text(aes(label = values), vjust = -0.4, fontface = \"bold\") +\n  theme_minimal() +\n  theme(legend.position = \"none\")\n\n\nstat = “count” (count rows, no y mapping needed)\nggplot(mtcars, aes(x = factor(cyl))) +\n  geom_bar() +\n  scale_x_discrete(name = \"Number of Cylinders\") +\n  labs(y = \"Count\") +\n  theme_minimal()",
+    "crumbs": [
+      "Home",
+      "Customization",
+      "Bar Charts"
+    ]
+  },
+  {
+    "objectID": "barplots.html#example-3-stacked-bar-chart",
+    "href": "barplots.html#example-3-stacked-bar-chart",
+    "title": "Bar Charts (5 Examples)",
+    "section": "Example 3 — Stacked bar chart",
+    "text": "Example 3 — Stacked bar chart\nStacked bars show how subgroups contribute to a total. Map fill to the subgroup variable.\nggplot(df2, aes(x = maingroup, y = values, fill = subgroup)) +\n  geom_bar(stat = \"identity\")\n\nStyled stacked chart\nggplot(df2, aes(x = maingroup, y = values, fill = subgroup)) +\n  geom_bar(stat = \"identity\") +\n  scale_fill_manual(values = c(\"a\" = \"#2d6be4\", \"b\" = \"#e84855\")) +\n  geom_text(aes(label = values),\n            position = position_stack(vjust = 0.5),\n            colour = \"white\", fontface = \"bold\") +\n  labs(title = \"Stacked Bar Chart\",\n       x = \"Group\", y = \"Values\", fill = \"Subgroup\") +\n  theme_minimal()",
+    "crumbs": [
+      "Home",
+      "Customization",
+      "Bar Charts"
+    ]
+  },
+  {
+    "objectID": "barplots.html#example-4-100-stacked-proportional",
+    "href": "barplots.html#example-4-100-stacked-proportional",
+    "title": "Bar Charts (5 Examples)",
+    "section": "Example 4 — 100% stacked (proportional)",
+    "text": "Example 4 — 100% stacked (proportional)\nScale all bars to the same height to compare proportions across groups.\n\nScaled to 1.0\nggplot(df2, aes(x = maingroup, y = values, fill = subgroup)) +\n  geom_bar(stat = \"identity\", position = \"fill\")\n# Y axis shows 0.00 – 1.00\n\n\nScaled to 100%\nlibrary(scales)\n\nggplot(df2, aes(x = maingroup, y = values, fill = subgroup)) +\n  geom_bar(stat = \"identity\", position = \"fill\") +\n  scale_y_continuous(labels = percent_format()) +\n  labs(y = \"Percentage\") +\n  theme_minimal()\n\n\nWith percentage labels inside bars\nlibrary(dplyr)\nlibrary(scales)\n\ndf2_pct &lt;- df2 |&gt;\n  group_by(maingroup) |&gt;\n  mutate(pct = values / sum(values))\n\nggplot(df2_pct, aes(x = maingroup, y = values, fill = subgroup)) +\n  geom_bar(stat = \"identity\", position = \"fill\") +\n  geom_text(aes(label = percent(pct, accuracy = 1)),\n            position = position_fill(vjust = 0.5),\n            colour = \"white\", fontface = \"bold\") +\n  scale_y_continuous(labels = percent_format()) +\n  scale_fill_manual(values = c(\"a\" = \"#2d6be4\", \"b\" = \"#e84855\")) +\n  labs(title = \"100% Stacked Bar Chart\", y = \"Proportion\") +\n  theme_minimal()",
+    "crumbs": [
+      "Home",
+      "Customization",
+      "Bar Charts"
+    ]
+  },
+  {
+    "objectID": "barplots.html#example-5-grouped-dodged-bar-chart",
+    "href": "barplots.html#example-5-grouped-dodged-bar-chart",
+    "title": "Bar Charts (5 Examples)",
+    "section": "Example 5 — Grouped (dodged) bar chart",
+    "text": "Example 5 — Grouped (dodged) bar chart\nGrouped bars place subgroups side by side. Use position = \"dodge\".\nggplot(df2, aes(x = maingroup, y = values, fill = subgroup)) +\n  geom_bar(stat = \"identity\", position = \"dodge\")\n\nFine-tune gap between bars\nggplot(df2, aes(x = maingroup, y = values, fill = subgroup)) +\n  geom_bar(stat = \"identity\",\n           position = position_dodge(width = 0.8),\n           width    = 0.7)\n\n\nFull styled grouped chart with value labels\nggplot(df2, aes(x = maingroup, y = values, fill = subgroup)) +\n  geom_bar(stat = \"identity\",\n           position = position_dodge(width = 0.8),\n           width    = 0.7) +\n  geom_text(aes(label = values),\n            position = position_dodge(width = 0.8),\n            vjust    = -0.4,\n            fontface = \"bold\",\n            size     = 3.5) +\n  scale_fill_manual(\n    values = c(\"a\" = \"#2d6be4\", \"b\" = \"#e84855\"),\n    labels = c(\"a\" = \"Subgroup A\", \"b\" = \"Subgroup B\")\n  ) +\n  labs(title = \"Grouped Bar Chart\",\n       x     = \"Main Group\",\n       y     = \"Values\",\n       fill  = \"Subgroup\") +\n  theme_minimal(base_size = 13) +\n  theme(legend.position = \"top\",\n        plot.title = element_text(face = \"bold\"))",
+    "crumbs": [
+      "Home",
+      "Customization",
+      "Bar Charts"
+    ]
+  },
+  {
+    "objectID": "barplots.html#position-quick-reference",
+    "href": "barplots.html#position-quick-reference",
+    "title": "Bar Charts (5 Examples)",
+    "section": "position = quick reference",
+    "text": "position = quick reference\n\n\n\nValue\nEffect\nWhen to use\n\n\n\n\n\"stack\"\nSubgroups stacked (default)\nShow totals + composition\n\n\n\"fill\"\nStacked to 1.0 / 100%\nCompare proportions\n\n\n\"dodge\"\nSide by side\nDirect subgroup comparison\n\n\n\"identity\"\nOverlap (no adjustment)\nRarely — need alpha",
+    "crumbs": [
+      "Home",
+      "Customization",
+      "Bar Charts"
+    ]
+  },
+  {
+    "objectID": "barplots.html#extra-error-bars-on-bar-charts",
+    "href": "barplots.html#extra-error-bars-on-bar-charts",
+    "title": "Bar Charts (5 Examples)",
+    "section": "Extra: error bars on bar charts",
+    "text": "Extra: error bars on bar charts\nlibrary(dplyr)\nlibrary(ggplot2)\n\n# Summarise mtcars\nsummary_df &lt;- mtcars |&gt;\n  group_by(cyl) |&gt;\n  summarise(mean_mpg = mean(mpg),\n            se       = sd(mpg) / sqrt(n()))\n\nggplot(summary_df, aes(x = factor(cyl), y = mean_mpg, fill = factor(cyl))) +\n  geom_col(alpha = 0.85) +\n  geom_errorbar(aes(ymin = mean_mpg - se,\n                    ymax = mean_mpg + se),\n                width = 0.25, linewidth = 0.8) +\n  scale_fill_manual(values = c(\"#e84855\",\"#2d6be4\",\"#12a36a\")) +\n  labs(title = \"Mean MPG ± SE by Cylinder Count\",\n       x = \"Cylinders\", y = \"Mean MPG\") +\n  theme_minimal() +\n  theme(legend.position = \"none\")",
+    "crumbs": [
+      "Home",
+      "Customization",
+      "Bar Charts"
+    ]
+  },
+  {
+    "objectID": "barplots.html#extra-lollipop-chart-alternative-to-bars",
+    "href": "barplots.html#extra-lollipop-chart-alternative-to-bars",
+    "title": "Bar Charts (5 Examples)",
+    "section": "Extra: lollipop chart (alternative to bars)",
+    "text": "Extra: lollipop chart (alternative to bars)\nggplot(df1, aes(x = group, y = values)) +\n  geom_segment(aes(xend = group, yend = 0),\n               colour = \"grey60\", linewidth = 1) +\n  geom_point(size = 6, colour = \"#e84855\") +\n  geom_text(aes(label = values), colour = \"white\",\n            fontface = \"bold\", size = 3) +\n  labs(title = \"Lollipop Chart\", x = \"Group\", y = \"Values\") +\n  theme_minimal()",
+    "crumbs": [
+      "Home",
+      "Customization",
+      "Bar Charts"
+    ]
+  },
+  {
+    "objectID": "themes.html",
+    "href": "themes.html",
+    "title": "Themes & Styling",
+    "section": "",
+    "text": "ggplot2 ships with 8 themes. The default is theme_grey() — you never need to specify it unless you want to be explicit.\ninstall.packages(\"ggplot2\")\nlibrary(ggplot2)\n\n\n\nFunction\nDescription\n\n\n\n\ntheme_grey()\nDefault — grey background, white grid lines\n\n\ntheme_bw()\nBlack & white — white panel, dark border\n\n\ntheme_linedraw()\nBlack lines on white background only\n\n\ntheme_light()\nLike linedraw but with grey lines and axes\n\n\ntheme_dark()\nDark panel background\n\n\ntheme_minimal()\nNo background annotations — very clean\n\n\ntheme_classic()\nNo grid lines — axes only\n\n\ntheme_void()\nCompletely empty — blank canvas\n\n\n\n\n\nlibrary(ggplot2)\niris -&gt; dataset\n\np &lt;- ggplot(dataset, aes(x = Sepal.Length, y = Sepal.Width, fill = Species)) +\n  geom_bar(stat = \"identity\", position = \"stack\") +\n  facet_wrap(~ Species)\n\np + theme_grey()      # default\np + theme_bw(base_size = 14)\np + theme_minimal()\np + theme_classic()\np + theme_dark()\np + theme_light()\np + theme_linedraw()\np + theme_void()\n\n\n\n\n\n\nTipbase_size argument\n\n\n\nAll built-in themes accept a base_size argument to scale all text proportionally:\np + theme_bw(base_size = 20)   # larger text\np + theme_minimal(base_size = 9) # smaller text",
+    "crumbs": [
+      "Home",
+      "Customization",
+      "Themes & Styling"
+    ]
+  },
+  {
+    "objectID": "themes.html#built-in-themes",
+    "href": "themes.html#built-in-themes",
+    "title": "Themes & Styling",
+    "section": "",
+    "text": "ggplot2 ships with 8 themes. The default is theme_grey() — you never need to specify it unless you want to be explicit.\ninstall.packages(\"ggplot2\")\nlibrary(ggplot2)\n\n\n\nFunction\nDescription\n\n\n\n\ntheme_grey()\nDefault — grey background, white grid lines\n\n\ntheme_bw()\nBlack & white — white panel, dark border\n\n\ntheme_linedraw()\nBlack lines on white background only\n\n\ntheme_light()\nLike linedraw but with grey lines and axes\n\n\ntheme_dark()\nDark panel background\n\n\ntheme_minimal()\nNo background annotations — very clean\n\n\ntheme_classic()\nNo grid lines — axes only\n\n\ntheme_void()\nCompletely empty — blank canvas\n\n\n\n\n\nlibrary(ggplot2)\niris -&gt; dataset\n\np &lt;- ggplot(dataset, aes(x = Sepal.Length, y = Sepal.Width, fill = Species)) +\n  geom_bar(stat = \"identity\", position = \"stack\") +\n  facet_wrap(~ Species)\n\np + theme_grey()      # default\np + theme_bw(base_size = 14)\np + theme_minimal()\np + theme_classic()\np + theme_dark()\np + theme_light()\np + theme_linedraw()\np + theme_void()\n\n\n\n\n\n\nTipbase_size argument\n\n\n\nAll built-in themes accept a base_size argument to scale all text proportionally:\np + theme_bw(base_size = 20)   # larger text\np + theme_minimal(base_size = 9) # smaller text",
+    "crumbs": [
+      "Home",
+      "Customization",
+      "Themes & Styling"
+    ]
+  },
+  {
+    "objectID": "themes.html#ggthemes",
+    "href": "themes.html#ggthemes",
+    "title": "Themes & Styling",
+    "section": "ggthemes",
+    "text": "ggthemes\nggthemes contains themes inspired by well-known publications and tools. Many come with matching colour scales.\ninstall.packages(\"ggthemes\")\nlibrary(ggplot2)\nlibrary(ggthemes)\n\nAvailable themes\ntheme_base()            theme_calc()\ntheme_clean()           theme_economist()\ntheme_excel()           theme_excel_new()\ntheme_few()             theme_fivethirtyeight()\ntheme_foundation()      theme_gdocs()\ntheme_hc()              theme_igray()\ntheme_map()             theme_pander()\ntheme_solarized()       theme_solid()\ntheme_stata()           theme_tufte()\ntheme_wsj()\n\n\nUsage examples\nlibrary(ggplot2)\nlibrary(ggthemes)\n\ncyls &lt;- as.factor(mtcars$cyl)\np &lt;- ggplot(mtcars, aes(x = mpg, fill = cyls)) +\n  geom_density(alpha = 0.7) +\n  theme(legend.position = \"top\")\n\n# The Economist style\np + theme_economist() + scale_fill_economist()\n\n# FiveThirtyEight style\np + theme_fivethirtyeight() + scale_fill_fivethirtyeight()\n\n# Wall Street Journal\np + theme_wsj() + scale_fill_wsj()\n\n# Stata\np + theme_stata() + scale_color_stata()\n\n# Edward Tufte minimalism\np + theme_tufte()\n\n# Google Docs\np + theme_gdocs() + scale_fill_gdocs()\n\n# Excel (new)\np + theme_excel_new() + scale_fill_excel_new()\n\n# Stephen Few\np + theme_few() + scale_fill_few()\n\n# Highcharts\np + theme_hc() + scale_fill_hc()\n\n# Base R look\np + theme_base()\n\n# Solarized\np + theme_solarized() + scale_fill_solarized()\n\n\nMatching colour scales\n\n\n\n\n\n\n\nTheme\nColour scale\n\n\n\n\ntheme_economist()\nscale_colour_economist() / scale_fill_economist()\n\n\ntheme_fivethirtyeight()\nscale_colour_fivethirtyeight()\n\n\ntheme_wsj()\nscale_colour_wsj() / scale_fill_wsj()\n\n\ntheme_stata()\nscale_colour_stata()\n\n\ntheme_gdocs()\nscale_fill_gdocs()\n\n\ntheme_few()\nscale_colour_few() / scale_fill_few()\n\n\ntheme_hc()\nscale_colour_hc() / scale_fill_hc()\n\n\ntheme_solarized()\nscale_colour_solarized() / scale_fill_solarized()",
+    "crumbs": [
+      "Home",
+      "Customization",
+      "Themes & Styling"
+    ]
+  },
+  {
+    "objectID": "themes.html#hrbrthemes",
+    "href": "themes.html#hrbrthemes",
+    "title": "Themes & Styling",
+    "section": "hrbrthemes",
+    "text": "hrbrthemes\nhrbrthemes provides typography-centric themes — clean, minimal, with beautiful font choices.\ninstall.packages(\"hrbrthemes\")\nlibrary(ggplot2)\nlibrary(hrbrthemes)\n\nAvailable themes\ntheme_ipsum()         # Arial Narrow\ntheme_ipsum_es()      # Esteban\ntheme_ipsum_rc()      # Roboto Condensed\ntheme_ipsum_ps()      # IBM Plex Sans\ntheme_ipsum_pub()     # Public Sans\ntheme_ipsum_tw()      # Titillium Web\ntheme_ipsum_modern_rc() # Modern Roboto Condensed dark\ntheme_ft_rc()         # Roboto Condensed (FT-inspired)\ntheme_modern_rc()     # Dark Roboto Condensed\ntheme_tinyhand()\n\n\nUsage examples\nlibrary(ggplot2)\nlibrary(hrbrthemes)\n\niris -&gt; dataset\n\np &lt;- ggplot(dataset, aes(x = Sepal.Length, y = Sepal.Width, fill = Species)) +\n  geom_bar(stat = \"identity\", position = \"stack\") +\n  facet_wrap(~ Species)\n\n# Arial Narrow\np + theme_ipsum() + theme(legend.position = \"top\")\n\n# Roboto Condensed\np + theme_ipsum_rc() + theme(legend.position = \"top\")\n\n# FT-inspired dark\np + theme_ft_rc() + theme(legend.position = \"top\")\n\n# With matching scale\np + theme_ipsum() + scale_fill_ipsum() +\n  theme(legend.position = \"top\")",
+    "crumbs": [
+      "Home",
+      "Customization",
+      "Themes & Styling"
+    ]
+  },
+  {
+    "objectID": "themes.html#ggdark",
+    "href": "themes.html#ggdark",
+    "title": "Themes & Styling",
+    "section": "ggdark",
+    "text": "ggdark\nggdark provides dark mode versions of all 8 built-in ggplot2 themes. It can also convert any theme into dark mode with dark_mode().\ninstall.packages(\"ggdark\")\nlibrary(ggplot2)\nlibrary(ggdark)\n\nDark theme functions\ndark_theme_gray()       dark_theme_bw()\ndark_theme_linedraw()   dark_theme_light()\ndark_theme_dark()       dark_theme_minimal()\ndark_theme_classic()    dark_theme_void()\n\n# Convert any theme to dark mode\ndark_mode(theme_economist())\ndark_mode(theme_ipsum())\n\n\nUsage examples\nlibrary(ggplot2)\nlibrary(ggdark)\n\nmtcars -&gt; dt\ncyls &lt;- as.factor(dt$cyl)\n\np &lt;- ggplot(mtcars, aes(x = mpg, fill = cyls)) +\n  geom_density(alpha = 0.7) +\n  theme(legend.position = \"top\")\n\np + dark_theme_classic()\np + dark_theme_linedraw()\np + dark_theme_minimal()\n\n# Dark mode on any theme\np + dark_mode(theme_minimal())\np + dark_mode(theme_economist())",
+    "crumbs": [
+      "Home",
+      "Customization",
+      "Themes & Styling"
+    ]
+  },
+  {
+    "objectID": "themes.html#mdthemes",
+    "href": "themes.html#mdthemes",
+    "title": "Themes & Styling",
+    "section": "mdthemes",
+    "text": "mdthemes\nmdthemes wraps all themes from ggplot2, ggthemes, hrbrthemes and other packages with Markdown support — plot titles and labels can use **bold** and *italic* syntax.\ninstall.packages(\"mdthemes\")\nlibrary(ggplot2)\nlibrary(mdthemes)\nlibrary(ggplot2)\nlibrary(mdthemes)\n\ncyls &lt;- as.factor(mtcars$cyl)\n\np &lt;- ggplot(mtcars, aes(x = mpg, fill = cyls)) +\n  geom_density(alpha = 0.7) +\n  labs(title    = \"**Fuel Economy** by *Cylinders*\",\n       subtitle = \"**Bold** and *italic* in titles\") +\n  theme(legend.position = \"top\")\n\n# Regular theme — markdown NOT rendered\np + theme_bw()\n\n# md version — markdown IS rendered\np + md_theme_bw()\np + md_theme_minimal()\np + md_theme_classic()",
+    "crumbs": [
+      "Home",
+      "Customization",
+      "Themes & Styling"
+    ]
+  },
+  {
+    "objectID": "themes.html#ggthemr",
+    "href": "themes.html#ggthemr",
+    "title": "Themes & Styling",
+    "section": "ggthemr",
+    "text": "ggthemr\nggthemr works differently — it sets a global theme for all subsequent plots using ggthemr(), rather than being added as a layer.\n# Install from GitHub\n# devtools::install_github('Mikata-Project/ggthemr')\nlibrary(ggthemr)\nlibrary(ggplot2)\n# Set a global theme\nggthemr(\"flat\")\n\ncyls &lt;- as.factor(mtcars$cyl)\nggplot(mtcars, aes(x = mpg, fill = cyls)) +\n  geom_density(alpha = 0.7) +\n  theme(legend.position = \"top\")\n\n# ALWAYS reset after use\nggthemr_reset()\n\nAvailable palettes\nggthemr(\"flat\")           ggthemr(\"flat dark\")\nggthemr(\"camouflage\")     ggthemr(\"carrot\")\nggthemr(\"chalk\")          ggthemr(\"copper\")\nggthemr(\"dust\")           ggthemr(\"earth\")\nggthemr(\"fresh\")          ggthemr(\"grape\")\nggthemr(\"grass\")          ggthemr(\"greyscale\")\nggthemr(\"light\")          ggthemr(\"lilac\")\nggthemr(\"pale\")           ggthemr(\"sea\")\nggthemr(\"sky\")            ggthemr(\"solarized\")\n\n\n\n\n\n\nWarningAlways reset ggthemr\n\n\n\nggthemr sets a global state. Always call ggthemr_reset() when done to restore the default ggplot2 theme.",
+    "crumbs": [
+      "Home",
+      "Customization",
+      "Themes & Styling"
+    ]
+  },
+  {
+    "objectID": "themes.html#ggtech",
+    "href": "themes.html#ggtech",
+    "title": "Themes & Styling",
+    "section": "ggtech",
+    "text": "ggtech\nggtech provides themes inspired by major tech companies.\n# Install from GitHub\n# devtools::install_github(\"ricardo-bion/ggtech\", dependencies = TRUE)\nlibrary(ggtech)\nlibrary(ggplot2)\ncyls &lt;- as.factor(mtcars$cyl)\n\nggplot(mtcars, aes(x = mpg, fill = cyls)) +\n  geom_density(alpha = 0.7) +\n  ggtitle(\"Tech company themes\") +\n  theme_tech(theme = \"airbnb\") +\n  scale_fill_tech(theme = \"airbnb\") +\n  theme(legend.position = \"top\")\n\nAvailable styles\ntheme_tech(theme = \"airbnb\")    # Airbnb coral & grey\ntheme_tech(theme = \"google\")    # Google colours\ntheme_tech(theme = \"twitter\")   # Twitter blue\ntheme_tech(theme = \"facebook\")  # Facebook blue\ntheme_tech(theme = \"etsy\")      # Etsy orange\ntheme_tech(theme = \"X23andme\")  # 23andMe",
+    "crumbs": [
+      "Home",
+      "Customization",
+      "Themes & Styling"
+    ]
+  },
+  {
+    "objectID": "themes.html#setting-a-global-theme",
+    "href": "themes.html#setting-a-global-theme",
+    "title": "Themes & Styling",
+    "section": "Setting a global theme",
+    "text": "Setting a global theme\nUse theme_set() to apply a theme to all subsequent plots in your session:\nlibrary(ggplot2)\n\n# Save current theme and set a new one\nold &lt;- theme_set(theme_minimal(base_size = 13))\n\n# Now ALL plots use theme_minimal\nggplot(mtcars, aes(x = wt, y = mpg)) + geom_point()\nggplot(iris, aes(x = Sepal.Width)) + geom_histogram()\n\n# Restore the previous theme\ntheme_set(old)",
+    "crumbs": [
+      "Home",
+      "Customization",
+      "Themes & Styling"
+    ]
+  },
+  {
+    "objectID": "themes.html#custom-theme-with-theme",
+    "href": "themes.html#custom-theme-with-theme",
+    "title": "Themes & Styling",
+    "section": "Custom theme with theme()",
+    "text": "Custom theme with theme()\nBuild your own reusable theme:\nlibrary(ggplot2)\n\nmy_theme &lt;- theme_minimal(base_size = 13) +\n  theme(\n    # Titles\n    plot.title      = element_text(face = \"bold\", size = 16,\n                                   colour = \"#0e0f14\", margin = margin(b = 8)),\n    plot.subtitle   = element_text(colour = \"#6b6760\", size = 12,\n                                   margin = margin(b = 12)),\n    plot.caption    = element_text(colour = \"#aaaaaa\", size = 9, hjust = 1),\n\n    # Axes\n    axis.title      = element_text(size = 11, colour = \"#3d3e47\"),\n    axis.text       = element_text(size = 10, colour = \"#6b6760\"),\n    axis.line       = element_line(colour = \"#d8d2c8\"),\n\n    # Grid\n    panel.grid.major = element_line(colour = \"#ede8df\", linewidth = 0.4),\n    panel.grid.minor = element_blank(),\n    panel.background = element_rect(fill = \"#faf8f4\", colour = NA),\n    plot.background  = element_rect(fill = \"#ffffff\", colour = NA),\n\n    # Legend\n    legend.position  = \"top\",\n    legend.title     = element_text(face = \"bold\", size = 10),\n    legend.text      = element_text(size = 10),\n\n    # Facet strips\n    strip.background = element_blank(),\n    strip.text       = element_text(face = \"bold\", size = 11),\n\n    # Margins\n    plot.margin      = margin(16, 16, 16, 16)\n  )\n\n# Apply to any plot\nggplot(mtcars, aes(x = wt, y = mpg, colour = factor(cyl))) +\n  geom_point(size = 3, alpha = 0.85) +\n  scale_colour_manual(values = c(\"#e84855\",\"#2d6be4\",\"#12a36a\")) +\n  labs(title = \"Custom Theme\", colour = \"Cylinders\") +\n  my_theme",
+    "crumbs": [
+      "Home",
+      "Customization",
+      "Themes & Styling"
+    ]
+  },
+  {
+    "objectID": "themes.html#quick-reference-theme-arguments",
+    "href": "themes.html#quick-reference-theme-arguments",
+    "title": "Themes & Styling",
+    "section": "Quick reference — theme() arguments",
+    "text": "Quick reference — theme() arguments\n\n\n\n\n\n\n\n\nArgument\nControls\nFunction\n\n\n\n\nplot.title\nTitle text\nelement_text()\n\n\nplot.subtitle\nSubtitle text\nelement_text()\n\n\nplot.caption\nCaption text\nelement_text()\n\n\nplot.background\nOuter plot area\nelement_rect()\n\n\npanel.background\nInner panel area\nelement_rect()\n\n\npanel.grid.major\nMajor grid lines\nelement_line() / element_blank()\n\n\npanel.grid.minor\nMinor grid lines\nelement_line() / element_blank()\n\n\npanel.border\nPanel border\nelement_rect()\n\n\naxis.title\nAxis label text\nelement_text()\n\n\naxis.text\nAxis tick labels\nelement_text()\n\n\naxis.text.x\nX-axis tick labels\nelement_text(angle = 45)\n\n\naxis.line\nAxis lines\nelement_line()\n\n\naxis.ticks\nTick marks\nelement_line() / element_blank()\n\n\nlegend.position\nLegend location\n\"top\", \"bottom\", \"none\", c(x,y)\n\n\nlegend.title\nLegend title text\nelement_text()\n\n\nlegend.background\nLegend background\nelement_rect()\n\n\nlegend.key.size\nLegend key size\nunit(1, \"cm\")\n\n\nstrip.background\nFacet strip bg\nelement_rect() / element_blank()\n\n\nstrip.text\nFacet strip text\nelement_text()\n\n\nplot.margin\nOuter margins\nmargin(t, r, b, l)",
+    "crumbs": [
+      "Home",
+      "Customization",
+      "Themes & Styling"
+    ]
+  },
+  {
+    "objectID": "reference.html",
+    "href": "reference.html",
+    "title": "Quick Reference",
+    "section": "",
+    "text": "pkgs &lt;- c(\n  \"ggplot2\",     # Core visualization\n  \"ggthemes\",    # Extra themes (economist, wsj, fivethirtyeight…)\n  \"hrbrthemes\",  # Typography-centric themes\n  \"ggdark\",      # Dark mode themes\n  \"mdthemes\",    # Markdown-enabled themes\n  \"patchwork\",   # Combine plots with operators\n  \"ggrepel\",     # Non-overlapping labels\n  \"ggtext\",      # Markdown/HTML in text elements\n  \"gridExtra\",   # grid.arrange() layouts\n  \"cowplot\",     # plot_grid() publication layouts\n  \"scales\",      # Axis formatting helpers\n  \"dplyr\",       # Data wrangling\n  \"tidyr\"        # Reshaping data\n)\ninstall.packages(pkgs)",
+    "crumbs": [
+      "Home",
+      "Reference",
+      "Quick Reference"
+    ]
+  },
+  {
+    "objectID": "reference.html#essential-packages",
+    "href": "reference.html#essential-packages",
+    "title": "Quick Reference",
+    "section": "",
+    "text": "pkgs &lt;- c(\n  \"ggplot2\",     # Core visualization\n  \"ggthemes\",    # Extra themes (economist, wsj, fivethirtyeight…)\n  \"hrbrthemes\",  # Typography-centric themes\n  \"ggdark\",      # Dark mode themes\n  \"mdthemes\",    # Markdown-enabled themes\n  \"patchwork\",   # Combine plots with operators\n  \"ggrepel\",     # Non-overlapping labels\n  \"ggtext\",      # Markdown/HTML in text elements\n  \"gridExtra\",   # grid.arrange() layouts\n  \"cowplot\",     # plot_grid() publication layouts\n  \"scales\",      # Axis formatting helpers\n  \"dplyr\",       # Data wrangling\n  \"tidyr\"        # Reshaping data\n)\ninstall.packages(pkgs)",
+    "crumbs": [
+      "Home",
+      "Reference",
+      "Quick Reference"
+    ]
+  },
+  {
+    "objectID": "reference.html#ggplot2-template",
+    "href": "reference.html#ggplot2-template",
+    "title": "Quick Reference",
+    "section": "ggplot2 template",
+    "text": "ggplot2 template\nlibrary(ggplot2)\n\nggplot(data = &lt;DATA&gt;, mapping = aes(&lt;MAPPINGS&gt;)) +\n  &lt;GEOM_FUNCTION&gt;(\n    mapping  = aes(&lt;MAPPINGS&gt;),\n    stat     = &lt;STAT&gt;,\n    position = &lt;POSITION&gt;   # \"identity\",\"stack\",\"dodge\",\"fill\",\"jitter\"\n  ) +\n  &lt;SCALE_FUNCTION&gt;   +\n  &lt;COORDINATE_FUNCTION&gt; +\n  &lt;FACET_FUNCTION&gt; +\n  &lt;THEME_FUNCTION&gt;",
+    "crumbs": [
+      "Home",
+      "Reference",
+      "Quick Reference"
+    ]
+  },
+  {
+    "objectID": "reference.html#aesthetics",
+    "href": "reference.html#aesthetics",
+    "title": "Quick Reference",
+    "section": "Aesthetics",
+    "text": "Aesthetics\n\n\n\nAesthetic\nMaps to\nUse\n\n\n\n\nx, y\nAxis position\nAll geoms\n\n\ncolour\nStroke / point colour\nPoints, lines, box outlines\n\n\nfill\nFill colour\nBars, boxes, areas, densities\n\n\nsize\nPoint size / line width\nPoints, lines\n\n\nshape\nPoint shape (0–24)\nPoints\n\n\nalpha\nTransparency (0–1)\nAll geoms\n\n\nlinetype\nLine style (1–6)\nLines, borders\n\n\nlabel\nText string\ngeom_text, geom_label\n\n\ngroup\nGrouping (no visual)\nLines, polygons",
+    "crumbs": [
+      "Home",
+      "Reference",
+      "Quick Reference"
+    ]
+  },
+  {
+    "objectID": "reference.html#geoms-complete-list",
+    "href": "reference.html#geoms-complete-list",
+    "title": "Quick Reference",
+    "section": "Geoms — complete list",
+    "text": "Geoms — complete list\n\nOne variable\n\n\n\nGeom\nChart\nKey args\n\n\n\n\ngeom_bar()\nBar (count rows)\nstat=\"count\"\n\n\ngeom_col()\nBar (use y values)\nfill, width\n\n\ngeom_histogram()\nHistogram\nbins, binwidth\n\n\ngeom_density()\nKernel density\nadjust, alpha\n\n\ngeom_dotplot()\nDot plot\nbinwidth\n\n\ngeom_freqpoly()\nFrequency polygon\nbinwidth\n\n\ngeom_rug()\nMarginal rug\nsides = \"b\"\n\n\n\n\n\nTwo variables\n\n\n\nGeom\nChart\nKey args\n\n\n\n\ngeom_point()\nScatter\nsize, shape, alpha\n\n\ngeom_jitter()\nJittered scatter\nwidth, height\n\n\ngeom_line()\nLine (sorted x)\nlinewidth, linetype\n\n\ngeom_path()\nLine (data order)\nlinewidth\n\n\ngeom_step()\nStep line\ndirection=\"hv\"\n\n\ngeom_smooth()\nTrend line\nmethod, se\n\n\ngeom_area()\nArea chart\nfill, alpha\n\n\ngeom_ribbon()\nBand\nymin, ymax, alpha\n\n\ngeom_boxplot()\nBox plot\nnotch, outlier.shape\n\n\ngeom_violin()\nViolin\ntrim, scale\n\n\ngeom_errorbar()\nError bars\nymin, ymax, width\n\n\ngeom_tile()\nHeatmap tiles\nfill\n\n\n\n\n\nReference / annotation\n\n\n\nGeom\nPurpose\nKey args\n\n\n\n\ngeom_hline()\nHorizontal line\nyintercept\n\n\ngeom_vline()\nVertical line\nxintercept\n\n\ngeom_abline()\nDiagonal line\nslope, intercept\n\n\ngeom_segment()\nLine segment\nx,y,xend,yend,arrow\n\n\ngeom_curve()\nCurved segment\ncurvature, arrow\n\n\ngeom_text()\nText labels\nlabel, nudge_y\n\n\ngeom_label()\nText + box\nlabel, fill\n\n\nannotate()\nAd-hoc shapes\n\"text\",\"rect\",\"segment\"\n\n\ngeom_polygon()\nFilled polygon\nfill, colour\n\n\n\n\n\nFrom extension packages\n\n\n\nPackage\nGeom\nPurpose\n\n\n\n\nggrepel\ngeom_text_repel()\nNon-overlapping text\n\n\nggrepel\ngeom_label_repel()\nNon-overlapping labels\n\n\nggtext\ngeom_richtext()\nHTML/Markdown annotations\n\n\nggridges\ngeom_density_ridges()\nRidge / joy plots\n\n\nggbeeswarm\ngeom_beeswarm()\nBeeswarm scatter\n\n\nggsignif\ngeom_signif()\nSignificance brackets",
+    "crumbs": [
+      "Home",
+      "Reference",
+      "Quick Reference"
+    ]
+  },
+  {
+    "objectID": "reference.html#scales",
+    "href": "reference.html#scales",
+    "title": "Quick Reference",
+    "section": "Scales",
+    "text": "Scales\n\nAxis scales\nscale_x_continuous(breaks, labels, limits, expand, trans)\nscale_y_continuous(labels = scales::comma)\nscale_x_log10()          # log10 X\nscale_y_log10()          # log10 Y\nscale_x_reverse()        # reverse X axis\nscale_x_date(date_labels = \"%Y-%m\", date_breaks = \"1 year\")\nscale_x_discrete(limits = c(\"A\",\"B\",\"C\"))\n\n\nColour & fill — discrete\nscale_colour_manual(values = c(\"#e84855\",\"#2d6be4\",\"#12a36a\"))\nscale_fill_brewer(palette = \"Set2\")        # ColorBrewer palettes\nscale_colour_viridis_d()                   # viridis discrete\nscale_colour_grey(start = 0.2, end = 0.8) # greyscale\n\n\nColour & fill — continuous\nscale_colour_gradient(low = \"white\", high = \"darkred\")\nscale_colour_gradient2(low = \"blue\", mid = \"white\", high = \"red\", midpoint = 0)\nscale_fill_viridis_c(option = \"plasma\")\nscale_colour_distiller(palette = \"RdBu\")\n\n\nAxis label formatting\nlibrary(scales)\nscale_y_continuous(labels = comma)                         # 1,000,000\nscale_y_continuous(labels = percent_format(accuracy = 1)) # 45%\nscale_x_continuous(labels = dollar)                        # $1,000\nscale_x_date(labels = date_format(\"%b %Y\"))",
+    "crumbs": [
+      "Home",
+      "Reference",
+      "Quick Reference"
+    ]
+  },
+  {
+    "objectID": "reference.html#labels",
+    "href": "reference.html#labels",
+    "title": "Quick Reference",
+    "section": "Labels",
+    "text": "Labels\nlabs(\n  title    = \"Main title\",\n  subtitle = \"Subtitle\",\n  caption  = \"Source: …\",\n  tag      = \"Fig. 1\",\n  x        = \"X axis\", y = \"Y axis\",\n  colour   = \"Legend title\"   # or fill =, shape =, size =\n)\nggtitle(\"Title\", subtitle = \"Sub\")\nxlab(\"X label\");  ylab(\"Y label\")",
+    "crumbs": [
+      "Home",
+      "Reference",
+      "Quick Reference"
+    ]
+  },
+  {
+    "objectID": "reference.html#faceting",
+    "href": "reference.html#faceting",
+    "title": "Quick Reference",
+    "section": "Faceting",
+    "text": "Faceting\nfacet_wrap(~ var)\nfacet_wrap(~ var, nrow = 2, ncol = 3)\nfacet_wrap(~ var, scales = \"free\")       # or \"free_x\",\"free_y\"\nfacet_wrap(~ var, strip.position = \"bottom\")\n\nfacet_grid(rows ~ cols)\nfacet_grid(rows = vars(r), cols = vars(c))\nfacet_grid(rows ~ cols, scales = \"free\", space = \"free\")\nfacet_grid(. ~ var)    # columns only",
+    "crumbs": [
+      "Home",
+      "Reference",
+      "Quick Reference"
+    ]
+  },
+  {
+    "objectID": "reference.html#coordinates",
+    "href": "reference.html#coordinates",
+    "title": "Quick Reference",
+    "section": "Coordinates",
+    "text": "Coordinates\ncoord_cartesian(xlim = c(0,10), ylim = c(0,50), expand = FALSE)\ncoord_flip()                  # swap x and y\ncoord_polar(theta = \"y\")      # pie chart\ncoord_trans(y = \"log10\")      # visual transform\ncoord_fixed(ratio = 1)        # equal unit length\nscale_x_reverse()             # reverse x\nscale_y_reverse()             # reverse y",
+    "crumbs": [
+      "Home",
+      "Reference",
+      "Quick Reference"
+    ]
+  },
+  {
+    "objectID": "reference.html#built-in-themes",
+    "href": "reference.html#built-in-themes",
+    "title": "Quick Reference",
+    "section": "Built-in themes",
+    "text": "Built-in themes\ntheme_grey()       theme_bw()        theme_linedraw()\ntheme_light()      theme_dark()      theme_minimal()\ntheme_classic()    theme_void()\n# All accept base_size = 12",
+    "crumbs": [
+      "Home",
+      "Reference",
+      "Quick Reference"
+    ]
+  },
+  {
+    "objectID": "reference.html#theme-key-arguments",
+    "href": "reference.html#theme-key-arguments",
+    "title": "Quick Reference",
+    "section": "theme() — key arguments",
+    "text": "theme() — key arguments\ntheme(\n  # Text\n  plot.title       = element_text(face=\"bold\", size=16, hjust=0),\n  plot.subtitle    = element_text(colour=\"grey50\"),\n  plot.caption     = element_text(hjust=1, size=9),\n  axis.title       = element_text(size=11),\n  axis.text        = element_text(size=10),\n  axis.text.x      = element_text(angle=45, hjust=1),\n  legend.title     = element_text(face=\"bold\"),\n  strip.text       = element_text(face=\"bold\"),\n\n  # Rectangles\n  plot.background  = element_rect(fill=\"white\"),\n  panel.background = element_rect(fill=\"#f5f5f5\"),\n  panel.border     = element_rect(fill=\"transparent\", colour=\"grey80\"),\n  legend.background= element_rect(fill=\"white\"),\n  strip.background = element_blank(),\n\n  # Lines\n  panel.grid.major = element_line(colour=\"grey90\"),\n  panel.grid.minor = element_blank(),\n  axis.line        = element_line(colour=\"grey30\"),\n  axis.ticks       = element_blank(),\n\n  # Positioning\n  legend.position  = \"top\",   # \"top\",\"bottom\",\"left\",\"right\",\"none\",c(x,y)\n  legend.direction = \"horizontal\",\n  legend.key.size  = unit(0.8, \"cm\"),\n  plot.margin      = margin(16, 16, 16, 16),\n  panel.spacing    = unit(1, \"lines\"),\n  plot.title.position = \"plot\"\n)\n\nelement functions\nelement_text(family, face, colour, size, hjust, vjust, angle, margin)\nelement_line(colour, linewidth, linetype)\nelement_rect(fill, colour, linewidth, linetype)\nelement_blank()   # remove element",
+    "crumbs": [
+      "Home",
+      "Reference",
+      "Quick Reference"
+    ]
+  },
+  {
+    "objectID": "reference.html#combining-plots",
+    "href": "reference.html#combining-plots",
+    "title": "Quick Reference",
+    "section": "Combining plots",
+    "text": "Combining plots\nlibrary(patchwork)\np1 + p2                    # side by side\np1 / p2                    # stacked\n(p1 | p2) / p3             # nested\np1 + p2 + plot_layout(ncol = 2)\np1 + p2 & theme_minimal()  # apply to all\np1 + p2 + plot_annotation(title = \"Title\", tag_levels = \"A\")\nwrap_plots(list_of_plots, ncol = 2)\nplot_spacer()               # empty gap\n\nlibrary(gridExtra)\ngrid.arrange(p1, p2, ncol = 2)\ngrid.arrange(p1, p2, p3, layout_matrix = matrix(c(1,1,2,3), ncol=2, byrow=TRUE))\n\nlibrary(cowplot)\nplot_grid(p1, p2, labels = \"AUTO\", align = \"hv\", rel_widths = c(2,1))",
+    "crumbs": [
+      "Home",
+      "Reference",
+      "Quick Reference"
+    ]
+  },
+  {
+    "objectID": "reference.html#save-plots",
+    "href": "reference.html#save-plots",
+    "title": "Quick Reference",
+    "section": "Save plots",
+    "text": "Save plots\nggsave(\"plot.png\",  width=8,  height=5, dpi=300)\nggsave(\"plot.pdf\",  plot=p,   width=10, height=7)\nggsave(\"plot.svg\",  device=\"svg\")\nggsave(\"plot.tiff\", dpi=300)\nggsave(\"plot.png\",  width=3200, height=2400, units=\"px\")\n# units: \"in\",\"cm\",\"mm\",\"px\"",
+    "crumbs": [
+      "Home",
+      "Reference",
+      "Quick Reference"
+    ]
+  },
+  {
+    "objectID": "reference.html#useful-helper-packages",
+    "href": "reference.html#useful-helper-packages",
+    "title": "Quick Reference",
+    "section": "Useful helper packages",
+    "text": "Useful helper packages\n\n\n\n\n\n\n\n\nPackage\nPurpose\nKey functions\n\n\n\n\ndplyr\nData wrangling\nfilter(), mutate(), group_by(), summarise()\n\n\ntidyr\nReshaping\npivot_longer(), pivot_wider()\n\n\nforcats\nFactor handling\nfct_reorder(), fct_rev(), fct_lump()\n\n\nlubridate\nDate/time\nymd(), floor_date(), month()\n\n\nscales\nFormatting\ncomma, percent_format(), dollar\n\n\nggrepel\nSmart labels\ngeom_text_repel(), geom_label_repel()\n\n\nggtext\nRich text\nelement_markdown(), geom_richtext()\n\n\nggridges\nRidge plots\ngeom_density_ridges()\n\n\nggsignif\nSignificance\ngeom_signif()\n\n\nplotly\nInteractive\nggplotly()\n\n\nggiraph\nInteractive ggplot2\ngirafe()",
+    "crumbs": [
+      "Home",
+      "Reference",
+      "Quick Reference"
+    ]
+  },
+  {
+    "objectID": "reference.html#common-patterns",
+    "href": "reference.html#common-patterns",
+    "title": "Quick Reference",
+    "section": "Common patterns",
+    "text": "Common patterns\n\nComplete styled scatter\nggplot(mtcars, aes(x = wt, y = mpg, colour = factor(cyl))) +\n  geom_point(size = 3, alpha = 0.85) +\n  geom_smooth(method = \"lm\", se = FALSE, linewidth = 0.8) +\n  scale_colour_manual(values = c(\"4\"=\"#e84855\",\"6\"=\"#2d6be4\",\"8\"=\"#12a36a\"),\n                      name = \"Cylinders\") +\n  labs(title    = \"Vehicle Weight vs Fuel Economy\",\n       subtitle = \"mtcars dataset — 1974 Motor Trend\",\n       caption  = \"Source: Henderson & Velleman (1981)\",\n       x = \"Weight (1,000 lbs)\", y = \"Miles per Gallon\") +\n  theme_minimal(base_size = 13) +\n  theme(legend.position  = \"top\",\n        plot.title       = element_text(face = \"bold\"),\n        panel.grid.minor = element_blank())\n\n\nReusable custom theme\nmy_theme &lt;- theme_minimal(base_size = 13) +\n  theme(\n    plot.title       = element_text(face = \"bold\", size = 15),\n    plot.subtitle    = element_text(colour = \"#6b6760\", margin = margin(b=10)),\n    panel.grid.minor = element_blank(),\n    panel.grid.major = element_line(colour = \"#ede8df\"),\n    legend.position  = \"top\",\n    plot.margin      = margin(16, 16, 16, 16)\n  )\n\nggplot(mtcars, aes(x = wt, y = mpg)) +\n  geom_point() + labs(title = \"My plot\") + my_theme\n\n\nFaceted with highlight\nggplot(mtcars, aes(x = wt, y = mpg, colour = factor(cyl))) +\n  geom_point(data = transform(mtcars, cyl = NULL), colour = \"grey85\", size=2) +\n  geom_point(size = 2.5) +\n  facet_wrap(~ factor(cyl), labeller = label_both) +\n  scale_colour_manual(values = c(\"4\"=\"#e84855\",\"6\"=\"#2d6be4\",\"8\"=\"#12a36a\")) +\n  theme_minimal() +\n  theme(legend.position = \"none\", strip.text = element_text(face = \"bold\"))",
+    "crumbs": [
+      "Home",
+      "Reference",
+      "Quick Reference"
+    ]
+  },
+  {
+    "objectID": "reference.html#rstudio-shortcuts",
+    "href": "reference.html#rstudio-shortcuts",
+    "title": "Quick Reference",
+    "section": "RStudio shortcuts",
+    "text": "RStudio shortcuts\n\n\n\nAction\nShortcut\n\n\n\n\nInsert &lt;-\nAlt + -\n\n\nInsert \\|&gt; (pipe)\nCtrl + Shift + M\n\n\nRun current line\nCtrl + Enter\n\n\nRun all\nCtrl + Shift + Enter\n\n\nComment / uncomment\nCtrl + Shift + C\n\n\nNew script\nCtrl + Shift + N\n\n\nFormat code\nCtrl + Shift + A",
+    "crumbs": [
+      "Home",
+      "Reference",
+      "Quick Reference"
+    ]
+  }
+]

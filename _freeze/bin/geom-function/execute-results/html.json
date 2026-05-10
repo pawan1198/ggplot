@@ -1,0 +1,15 @@
+{
+  "hash": "d36b0060b5d68b489ee5ce3d5384ed22",
+  "result": {
+    "engine": "knitr",
+    "markdown": "---\ntitle: \"geom function\"\nauthor: \"Pawan\"\ndate: \"2026-05-10\"\noutput: html_document\n---\n\n\n",
+    "supporting": [],
+    "filters": [
+      "rmarkdown/pagebreak.lua"
+    ],
+    "includes": {},
+    "engineDependencies": {},
+    "preserve": {},
+    "postProcess": true
+  }
+}
